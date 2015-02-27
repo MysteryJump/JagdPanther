@@ -1,0 +1,125 @@
+﻿<Window x:Class="JagdPanther.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:local="clr-namespace:JagdPanther"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:JagdPanther.ViewModel"
+        Title="{Binding Title}"
+        Width="525"
+        Height="350"
+        mc:Ignorable="d">
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <HierarchicalDataTemplate x:Key="boardListViewTemplate">
+            <TextBlock Text="{Binding Path=Name}" />
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate x:Key="boardListChildTemplate"
+                                  ItemTemplate="{StaticResource boardListViewTemplate}"
+                                  ItemsSource="{Binding Path=Boards}">
+            <TextBlock FontWeight="Bold" Text="{Binding Path=Name}" />
+        </HierarchicalDataTemplate>
+        <Style TargetType="TreeViewItem">
+            <Setter Property="IsExpanded" Value="True" />
+        </Style>
+        <DataTemplate x:Key="threadListView" DataType="vm:ThreadListViewModel">
+            <ListView ItemsSource="{Binding ThreadList}" SelectedItem="{Binding ListViewSelectedItem}">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectedCommand}" CommandParameter="{Binding ListViewSelectedItem}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="タイトル" />
+                        <GridViewColumn DisplayMemberBinding="{Binding CreatedTime}" Header="作成時刻" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </DataTemplate>
+        <DataTemplate x:Key="threadView">
+            <ScrollViewer>
+            <ItemsControl BorderBrush="{x:Null}"
+                      BorderThickness="0"
+                      ItemsSource="{Binding SortedComments}"
+                      ScrollViewer.CanContentScroll="False"
+                     >
+                
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding CommentNumber}" />
+                            <TextBlock Text="{Binding AnchorText}" />
+                            <TextBlock Text="{Binding Body}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+                </ScrollViewer>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="ファイル">
+                <MenuItem Command="{Binding ExitCommand}" Header="終了" />
+            </MenuItem>
+            <MenuItem Header="ヘルプ">
+                <MenuItem Command="{Binding OpenLicenseWindowCommand}" Header="ライセンス情報" />
+                <MenuItem Command="{Binding OpenVersionWindowCommand}" Header="バージョン情報" />
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="3.5*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" >
+                
+            </Grid>
+            <GridSplitter ResizeDirection="Columns" Grid.Column="1" Width="2" HorizontalAlignment="Right" VerticalAlignment="Stretch"/>
+            <Grid Grid.Column="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="2" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <TabControl ContentTemplate="{StaticResource threadListView}" ItemsSource="{Binding ThreadListTabs.ThreadListChildrens}">
+                            <TabControl.ItemTemplate>
+                                <DataTemplate DataType="vm:ThreadListViewModel">
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
+                        </TabControl>
+                    </Grid>
+                    <GridSplitter Grid.Row="1"
+                                  Height="2"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch" />
+                    <Grid Grid.Row="2">
+                        <TabControl ContentTemplate="{StaticResource threadView}" ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}">
+                            <TabControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Title}" />
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
+                        </TabControl>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>
