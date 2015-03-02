@@ -44,15 +44,17 @@ namespace JagdPanther.ViewModel
 
         public void Initializer(string path)
         {
+
             var subs = RedditInfo.RedditAccess.GetSubreddit(path);
             subs.Subscribe();
             subs.Posts.Take(100)
                 .ToList().ForEach(x =>
                 {
-                    var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x};
+                    var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x };
                     ThreadList.Add(t);
                 });
             Name = subs.Name;
+
         }
 
         private Thread listViewSelectedItem;

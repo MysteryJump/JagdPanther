@@ -31,7 +31,7 @@ namespace JagdPanther.ViewModel
             ExitCommand = ReactiveCommand.CreateAsyncTask(ExitExcute);
             OpenLicenseWindowCommand = ReactiveCommand.CreateAsyncTask(OpenLicenseWindowExcute);
             OpenVersionWindowCommand = ReactiveCommand.CreateAsyncTask(OpenVersionWindowExcute);
-            Title = $"{ReadonlyVars.ProgramName} {ReadonlyVars.ProgramVer}";
+            Title = ReadonlyVars.ProgramName+" "+ReadonlyVars.ProgramVer;
         }
 
         private void ThreadListChildrens_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

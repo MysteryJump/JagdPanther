@@ -97,6 +97,9 @@
     <Compile Include="Dialogs\OneTextBoxWindow.xaml.cs">
       <DependentUpon>OneTextBoxWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\OpenWriteWindow.xaml.cs">
+      <DependentUpon>OpenWriteWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\VersionWindow.xaml.cs">
       <DependentUpon>VersionWindow.xaml</DependentUpon>
     </Compile>
@@ -124,6 +127,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\OneTextBoxWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\OpenWriteWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\VersionWindow.xaml">

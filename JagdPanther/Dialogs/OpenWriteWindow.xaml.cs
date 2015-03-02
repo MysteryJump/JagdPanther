@@ -15,15 +15,28 @@ using System.Windows.Shapes;
 namespace JagdPanther.Dialogs
 {
     /// <summary>
-    /// Interaction logic for Version.xaml
+    /// Interaction logic for OpenWriteWindow.xaml
     /// </summary>
-    public partial class VersionWindow : Window
+    public partial class OpenWriteWindow : Window
     {
-        public VersionWindow()
+        public OpenWriteWindow()
         {
             InitializeComponent();
-            this.textBlock.Text = "Now version is" + Model.ReadonlyVars.ProgramVer;
+        }
 
+        private void write_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+            this.IsClickWriteButton = true;
+        }
+        public string WriteCommentData
+        {
+            get { return this.data.Text; }
+        }
+
+        public bool IsClickWriteButton
+        {
+            get;set;
         }
     }
 }

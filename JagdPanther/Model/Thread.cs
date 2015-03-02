@@ -30,9 +30,11 @@ namespace JagdPanther.Model
                 ParentAnchor = null,
                 Body = PostThread.SelfText,
                 BodyHtml = PostThread.SelfTextHtml,
-                FlairText = PostThread.SelfText,
+                FlairText = PostThread.AuthorFlairText,
                 Children = new List<ViewComment>(),
-                Created = PostThread.Created
+                Created = PostThread.Created,
+                Source = PostThread.Url.ToString(),
+                ParentPost = PostThread
 
             };
             queue.Enqueue(host);

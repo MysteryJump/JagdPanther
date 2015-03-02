@@ -14,6 +14,7 @@
         <vm:MainViewModel />
     </Window.DataContext>
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
         <HierarchicalDataTemplate x:Key="boardListViewTemplate">
             <TextBlock Text="{Binding Path=Name}" />
         </HierarchicalDataTemplate>
@@ -44,25 +45,45 @@
         </DataTemplate>
         <DataTemplate x:Key="threadView">
             <ScrollViewer>
-            <ItemsControl BorderBrush="{x:Null}"
-                      BorderThickness="0"
-                      ItemsSource="{Binding SortedComments}"
-                      ScrollViewer.CanContentScroll="False"
-                     >
-                
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding CommentNumber}" />
-                            <TextBlock Text="{Binding AnchorText}" />
-                            <TextBlock Text="{Binding Body}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-                </ScrollViewer>
-        </DataTemplate>
+                <ItemsControl Background="Silver"
+                              BorderBrush="{x:Null}"
+                              BorderThickness="0"
+                              ItemsSource="{Binding SortedComments}"
+                              ScrollViewer.CanContentScroll="False">
 
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,5">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding CommentNumber}">
+                                        <TextBlock.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="返信する" Command="{Binding WriteCommentDialogOpenCommand}" CommandParameter="{Binding ThisObject}"/>
+                                            </ContextMenu>
+                                        </TextBlock.ContextMenu>
+                                    </TextBlock>
+                                    <TextBlock Text=":" />
+                                    <TextBlock Text="{Binding Author}" />
+                                    <TextBlock Text="[" />
+                                    <TextBlock Text="{Binding FlairText}" />
+                                    <TextBlock Text="]" />
+                                </StackPanel>
+                                <TextBlock x:Name="anc"
+                                           Text="{Binding AnchorText}"
+                                           Visibility="{Binding IsExistParentAnchor,
+                                                                Converter={StaticResource BoolToVisibility}}" />
+                                <TextBlock Text="{Binding Body}" Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />
+                                <TextBlock Visibility="{Binding IsGenerator, Converter={StaticResource BoolToVisibility}}">
+                                    <LineBreak />
+                                    <Run Text="ソース：" />
+                                    <Run Text="{Binding Source}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -81,13 +102,15 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="2" />
                 <ColumnDefinition Width="3.5*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" >
-                
-            </Grid>
-            <GridSplitter ResizeDirection="Columns" Grid.Column="1" Width="2" HorizontalAlignment="Right" VerticalAlignment="Stretch"/>
+            <Grid Grid.Column="0" />
+            <GridSplitter Grid.Column="1"
+                          Width="2"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Stretch"
+                          ResizeDirection="Columns" />
             <Grid Grid.Column="2">
                 <Grid>
                     <Grid.RowDefinitions>
