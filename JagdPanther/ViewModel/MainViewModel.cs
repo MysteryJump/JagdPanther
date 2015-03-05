@@ -34,10 +34,10 @@ namespace JagdPanther.ViewModel
             Title = ReadonlyVars.ProgramName+" "+ReadonlyVars.ProgramVer;
         }
 
-        private void ThreadListChildrens_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void ThreadListChildrens_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ((ThreadListViewModel)(e.NewItems[0])).RedditInfo = RedditInfo;
-            ((ThreadListViewModel)(e.NewItems[0])).Initializer("/r/newsokur");
+            await ((ThreadListViewModel)(e.NewItems[0])).Initializer("/r/newsokur");
         }
 
         public RedditData RedditInfo { get; set; }

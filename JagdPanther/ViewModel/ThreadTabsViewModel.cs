@@ -14,8 +14,13 @@ namespace JagdPanther.ViewModel
     {
         public ThreadTabsViewModel()
         {
+            MessageBus.Current.Listen<Thread>("RemoveTab")
+                .Subscribe(x => ThreadTabsChildren.Remove(x));
             ThreadTabsChildren = new ObservableCollection<Thread>();
         }
+
+
+
         public ObservableCollection<Thread> ThreadTabsChildren { get; set; }
 
     }

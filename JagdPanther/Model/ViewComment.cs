@@ -39,7 +39,8 @@ namespace JagdPanther.Model
                 Children = lvc,
                 Created = v.Created,
                 ParentPost = (Post)v.Parent,
-                BaseComment = v
+                BaseComment = v,
+                Votes = v.Upvotes - v.Downvotes
             };
             return vc;
         }
@@ -64,6 +65,7 @@ namespace JagdPanther.Model
         public Post ParentPost { get; set; }
 
         public IReactiveCommand<Unit> WriteCommentDialogOpenCommand { get; set; }
+        public int Votes { get; set; }
 
         public async Task OpenWriteCommentDialogExcute(object sender)
         {
@@ -87,7 +89,29 @@ namespace JagdPanther.Model
         public ViewComment()
         {
             WriteCommentDialogOpenCommand = ReactiveCommand.CreateAsyncTask(OpenWriteCommentDialogExcute);
+            VoteCommand = ReactiveCommand.CreateAsyncTask(VoteExcute);
+        }
 
+        public IReactiveCommand<Unit> VoteCommand { get; set; }
+        public async Task VoteExcute(object sender)
+        {
+            dynamic x;
+            if (BaseComment == null)
+            {
+                x = ParentPost;
+            }
+            else
+            {
+                x = BaseComment;
+            }
+            if (sender.ToString() == "UpVote")
+            {
+                x.Upvote();
+            }
+            else
+            {
+                x.Downvote();
+            }
         }
     }
 }

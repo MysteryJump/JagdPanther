@@ -15,33 +15,33 @@
     </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
-        <HierarchicalDataTemplate x:Key="boardListViewTemplate">
-            <TextBlock Text="{Binding Path=Name}" />
-        </HierarchicalDataTemplate>
 
-        <HierarchicalDataTemplate x:Key="boardListChildTemplate"
-                                  ItemTemplate="{StaticResource boardListViewTemplate}"
-                                  ItemsSource="{Binding Path=Boards}">
-            <TextBlock FontWeight="Bold" Text="{Binding Path=Name}" />
-        </HierarchicalDataTemplate>
-        <Style TargetType="TreeViewItem">
-            <Setter Property="IsExpanded" Value="True" />
-        </Style>
         <DataTemplate x:Key="threadListView" DataType="vm:ThreadListViewModel">
-            <ListView ItemsSource="{Binding ThreadList}" SelectedItem="{Binding ListViewSelectedItem}">
+            <Grid>
+                <Grid Height="20"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Top">
+                    <Menu Height="20">
+                        <MenuItem Command="{Binding RefreshCommand}" Header="更新" />
+                    </Menu>
+                </Grid>
+                <ListView Margin="0,20,0,0"
+                          ItemsSource="{Binding ThreadList}"
+                          SelectedItem="{Binding ListViewSelectedItem}">
 
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding SelectedCommand}" CommandParameter="{Binding ListViewSelectedItem}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="タイトル" />
-                        <GridViewColumn DisplayMemberBinding="{Binding CreatedTime}" Header="作成時刻" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectedCommand}" CommandParameter="{Binding ListViewSelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="タイトル" />
+                            <GridViewColumn DisplayMemberBinding="{Binding CreatedTime}" Header="作成時刻" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Key="threadView">
             <ScrollViewer>
@@ -58,7 +58,9 @@
                                     <TextBlock Text="{Binding CommentNumber}">
                                         <TextBlock.ContextMenu>
                                             <ContextMenu>
-                                                <MenuItem Header="返信する" Command="{Binding WriteCommentDialogOpenCommand}" CommandParameter="{Binding ThisObject}"/>
+                                                <MenuItem Command="{Binding WriteCommentDialogOpenCommand}"
+                                                          CommandParameter="{Binding ThisObject}"
+                                                          Header="返信する" />
                                             </ContextMenu>
                                         </TextBlock.ContextMenu>
                                     </TextBlock>
@@ -66,7 +68,24 @@
                                     <TextBlock Text="{Binding Author}" />
                                     <TextBlock Text="[" />
                                     <TextBlock Text="{Binding FlairText}" />
-                                    <TextBlock Text="]" />
+                                    <TextBlock Text="]  Vote:" />
+                                    <TextBlock Text="{Binding Votes}" />
+                                    <TextBlock>
+                                        <Run />
+                                        <Underline>
+                                            <Underline.InputBindings>
+                                                <MouseBinding Command="{Binding VoteCommand}" CommandParameter="UpVote" Gesture="LeftClick" />
+                                            </Underline.InputBindings>
+                                            UpVote
+                                        </Underline>
+                                        <Run />
+                                        <Underline>
+                                            <Underline.InputBindings>
+                                                <MouseBinding Command="{Binding VoteCommand}" CommandParameter="DownVote" Gesture="LeftClick" />
+                                            </Underline.InputBindings>
+                                            DownVote
+                                        </Underline>
+                                    </TextBlock>
                                 </StackPanel>
                                 <TextBlock x:Name="anc"
                                            Text="{Binding AnchorText}"
@@ -135,7 +154,11 @@
                         <TabControl ContentTemplate="{StaticResource threadView}" ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}">
                             <TabControl.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Title}" />
+                                    <TextBlock Text="{Binding Title}">
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding Command="{Binding RemoveTabCommand}" Gesture="MiddleClick" />
+                                        </TextBlock.InputBindings>
+                                    </TextBlock>
                                 </DataTemplate>
                             </TabControl.ItemTemplate>
                         </TabControl>

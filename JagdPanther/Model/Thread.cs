@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RedditSharp.Things;
+using ReactiveUI;
+using System.Reactive;
 
 namespace JagdPanther.Model
 {
-    public class Thread
+    public class Thread : ReactiveObject
     {
         public DateTime CreatedTime { get; set; }
         public Post PostThread { get; set; }
@@ -18,60 +20,96 @@ namespace JagdPanther.Model
         }
         public string Title { get; set; }
 
-        public List<ViewComment> SortedComments { get { return GetAndParseComments(); } }
+        private List<ViewComment> sortedComments;
 
-        private List<ViewComment> GetAndParseComments()
+        public List<ViewComment> SortedComments
         {
-            var coms = new List<ViewComment>();
-            var queue = new Queue<ViewComment>();
-            var host = new ViewComment()
+            get
             {
-                Author = PostThread.Author.FullName,
-                ParentAnchor = null,
-                Body = PostThread.SelfText,
-                BodyHtml = PostThread.SelfTextHtml,
-                FlairText = PostThread.AuthorFlairText,
-                Children = new List<ViewComment>(),
-                Created = PostThread.Created,
-                Source = PostThread.Url.ToString(),
-                ParentPost = PostThread
-
-            };
-            queue.Enqueue(host);
-            PostThread.Comments.ToList()
-                .ForEach(x =>
-                    {
-                        var vc = new ViewComment();
-                        vc = (ViewComment)x;
-                        queue.Enqueue(vc);
-                    });
-            int i = 1;
-            while (true)
+                if (sortedComments == null)
+                    Task.Factory.StartNew(SubscribeComments).Wait();
+                    return sortedComments;
+            }
+            private set
             {
-                if (queue.Count == 0)
-                {
-                    break;
-                }
-                var co = queue.Dequeue();
-
-                co.Children.ForEach(x =>
-                    {
-                        x.Parent = co;
-                        queue.Enqueue(x);
-                    });
-                coms.Add(co);
+                sortedComments = value;
             }
 
-            return coms.OrderBy(x => x.Created)
-                .Select(x =>
-                    {
-                        if (x.Parent != null)
-                            x.ParentAnchor = x.Parent.CommentNumber;
-                        x.CommentNumber = i;
-                        i++;
-                        return x;
-                    })
-                .ToList();
         }
+
+        public async Task SubscribeComments()
+        {
+            sortedComments = await GetAndParseComments();
+        }
+        public IReactiveCommand<Unit> RemoveTabCommand { get; set; }
+        private async Task<List<ViewComment>> GetAndParseComments()
+        {
+            return await Task.Run(() =>
+            {
+                var coms = new List<ViewComment>();
+                var queue = new Queue<ViewComment>();
+                var host = new ViewComment()
+                {
+                    Author = PostThread.Author.FullName,
+                    ParentAnchor = null,
+                    Body = PostThread.SelfText,
+                    BodyHtml = PostThread.SelfTextHtml,
+                    FlairText = PostThread.AuthorFlairText,
+                    Children = new List<ViewComment>(),
+                    Created = PostThread.Created,
+                    Source = PostThread.Url.ToString(),
+                    ParentPost = PostThread,
+                    Votes = PostThread.Upvotes - PostThread.Downvotes
+
+                };
+                queue.Enqueue(host);
+                PostThread.Comments.ToList()
+                    .ForEach(x =>
+                        {
+                            var vc = new ViewComment();
+                            vc = (ViewComment)x;
+                            queue.Enqueue(vc);
+                        });
+                int i = 1;
+                while (true)
+                {
+                    if (queue.Count == 0)
+                    {
+                        break;
+                    }
+                    var co = queue.Dequeue();
+
+                    co.Children.ForEach(x =>
+                        {
+                            x.Parent = co;
+                            queue.Enqueue(x);
+                        });
+                    coms.Add(co);
+                }
+
+                return coms.OrderBy(x => x.Created)
+                    .Select(x =>
+                        {
+                            if (x.Parent != null)
+                                x.ParentAnchor = x.Parent.CommentNumber;
+                            x.CommentNumber = i;
+                            i++;
+                            return x;
+                        })
+                    .ToList();
+            });
+        }
+
+        public Thread()
+        {
+            RemoveTabCommand = ReactiveCommand.CreateAsyncTask(RemoveTabExcute);
+        }
+
+        public async Task RemoveTabExcute(object sender)
+        {
+
+            MessageBus.Current.SendMessage(this, "RemoveTab");
+        }
+
     }
 }

@@ -16,6 +16,7 @@ namespace JagdPanther.ViewModel
         public ThreadListViewModel()
         {
             ThreadList = new ObservableCollection<Thread>();
+            RefreshCommand = ReactiveCommand.CreateAsyncTask(RefreshExcute);
             SelectedCommand = ReactiveCommand.CreateAsyncTask(SelectedExcute);
         }
 
@@ -27,34 +28,49 @@ namespace JagdPanther.ViewModel
 
         private string name;
 
+        private string path;
+
+        public string Path
+        {
+            get { return path; }
+            set { path = value; this.RaiseAndSetIfChanged(ref path, value); }
+        }
+
+
         public string Name
         {
             get { return name; }
             set { name = value; this.RaiseAndSetIfChanged(ref name, value); }
         }
 
-
+        public IReactiveCommand<Unit> RefreshCommand { get; set; }
         public IReactiveCommand<Unit> SelectedCommand { get; set; }
         public RedditData RedditInfo { get; internal set; }
 
         public async Task SelectedExcute(object sender)
         {
+            await ListViewSelectedItem.SubscribeComments();
             MessageBus.Current.SendMessage(ListViewSelectedItem, "OpenNewThreadTab");
         }
 
-        public void Initializer(string path)
+        public async Task Initializer(string path)
         {
-
+            Path = path;
             var subs = RedditInfo.RedditAccess.GetSubreddit(path);
+            var lists = new List<Thread>();
+
             subs.Subscribe();
-            subs.Posts.Take(100)
+
+            subs.Posts.Take(20)
                 .ToList().ForEach(x =>
                 {
+
                     var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x };
-                    ThreadList.Add(t);
+                    lists.Add(t);
                 });
             Name = subs.Name;
-
+            
+            lists.ForEach(ThreadList.Add);
         }
 
         private Thread listViewSelectedItem;
@@ -63,6 +79,19 @@ namespace JagdPanther.ViewModel
         {
             get { return listViewSelectedItem; }
             set { listViewSelectedItem = value; this.RaiseAndSetIfChanged(ref listViewSelectedItem, value); }
+        }
+
+        public async Task RefreshExcute(object sender)
+        {
+            var count = ThreadList.Count;
+            Enumerable.Range(0, count)
+                .Select(x => x = 0)
+                .ToList()
+                .ForEach((x) =>
+                {
+                    ThreadList.RemoveAt(x);
+                });
+            Initializer(Path);
         }
 
     }
