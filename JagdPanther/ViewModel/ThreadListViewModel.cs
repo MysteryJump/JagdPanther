@@ -1,5 +1,7 @@
-﻿using JagdPanther.Model;
+﻿using JagdPanther.Dialogs;
+using JagdPanther.Model;
 using ReactiveUI;
+using RedditSharp.Things;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,12 +20,13 @@ namespace JagdPanther.ViewModel
             ThreadList = new ObservableCollection<Thread>();
             RefreshCommand = ReactiveCommand.CreateAsyncTask(RefreshExcute);
             SelectedCommand = ReactiveCommand.CreateAsyncTask(SelectedExcute);
+            NewPostCommand = ReactiveCommand.CreateAsyncTask(NewPostExcute);
         }
 
         public ObservableCollection<Thread> ThreadList
         {
             get { return threads; }
-            set { threads = value; }
+            set { threads = value; this.RaiseAndSetIfChanged(ref threads, value); }
         }
 
         private string name;
@@ -50,22 +53,22 @@ namespace JagdPanther.ViewModel
         public async Task SelectedExcute(object sender)
         {
             await ListViewSelectedItem.SubscribeComments();
-            MessageBus.Current.SendMessage(ListViewSelectedItem, "OpenNewThreadTab");
+            if (ListViewSelectedItem.SortedComments != null)
+                MessageBus.Current.SendMessage(ListViewSelectedItem, "OpenNewThreadTab");
         }
-
+        public Subreddit OwnSubreddit { get; set; }
         public async Task Initializer(string path)
         {
             Path = path;
-            var subs = RedditInfo.RedditAccess.GetSubreddit(path);
+            var subs = OwnSubreddit = RedditInfo.RedditAccess.GetSubreddit(path);
             var lists = new List<Thread>();
 
+            
             subs.Subscribe();
-
-            subs.Posts.Take(20)
+            subs.Posts.Take(50)
                 .ToList().ForEach(x =>
                 {
-
-                    var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x };
+                    var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x,VoteCount = x.Upvotes - x.Downvotes };
                     lists.Add(t);
                 });
             Name = subs.Name;
@@ -94,5 +97,22 @@ namespace JagdPanther.ViewModel
             Initializer(Path);
         }
 
+        public IReactiveCommand<Unit> NewPostCommand { get; set; }
+        public async Task NewPostExcute(object sender)
+        {
+            var sub = new SubmitWindow();
+            sub.ShowDialog();
+            if (sub.IsOk)
+            {
+                if (sub.IsLinkPost)
+                {
+                    OwnSubreddit.SubmitPost(sub.Title, sub.PostString);
+                }
+                else
+                {
+                    OwnSubreddit.SubmitTextPost(sub.Title, sub.PostString);
+                }
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RedditSharp.Things;
 using RedditSharp;
+using System.Net;
 
 namespace JagdPanther.Model
 {
@@ -14,11 +15,19 @@ namespace JagdPanther.Model
         {
             if (Properties.Settings.Default.IsLoggedin)
             {
-                var red = new Reddit();
-                var log = new LoginInfo();
-                log.LoadData();
-                var user = red.LogIn(log.Name, log.Password);
-                return new RedditData { RedditAccess = red, RedditUser = user };
+                try
+                {
+                    var red = new Reddit();
+                    var log = new LoginInfo();
+                    log.LoadData();
+                    var user = red.LogIn(log.Name, log.Password);
+                    return new RedditData { RedditAccess = red, RedditUser = user };
+                }
+                catch (WebException e)
+                {
+                    System.Windows.MessageBox.Show("ログインできませんでした");
+                    return null;
+                }
             }
             else
             {

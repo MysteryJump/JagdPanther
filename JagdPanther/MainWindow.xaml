@@ -5,6 +5,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:JagdPanther"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sd="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:vm="clr-namespace:JagdPanther.ViewModel"
         Title="{Binding Title}"
         Width="525"
@@ -17,16 +18,23 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
 
         <DataTemplate x:Key="threadListView" DataType="vm:ThreadListViewModel">
+
             <Grid>
+                <Grid.Resources>
+                    <CollectionViewSource x:Key="items" Source="{Binding ThreadList}" />
+                </Grid.Resources>
                 <Grid Height="20"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Top">
                     <Menu Height="20">
-                        <MenuItem Command="{Binding RefreshCommand}" Header="更新" />
+                        <MenuItem Command="{Binding RefreshCommand}"
+                                  Header="更新"
+                                  IsEnabled="False" />
+                        <MenuItem Command="{Binding NewPostCommand}" Header="投稿する" />
                     </Menu>
                 </Grid>
                 <ListView Margin="0,20,0,0"
-                          ItemsSource="{Binding ThreadList}"
+                          ItemsSource="{Binding Source={StaticResource items}}"
                           SelectedItem="{Binding ListViewSelectedItem}">
 
                     <i:Interaction.Triggers>
@@ -36,78 +44,110 @@
                     </i:Interaction.Triggers>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="タイトル" />
-                            <GridViewColumn DisplayMemberBinding="{Binding CreatedTime}" Header="作成時刻" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Title}">
+                                <GridViewColumnHeader Content="タイトル" />
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding CreatedTimeString}">
+                                <GridViewColumnHeader Content="作成時刻" />
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding VoteCount}">
+                                <GridViewColumnHeader Content="Vote数" />
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="threadView">
-            <ScrollViewer>
-                <ItemsControl Background="Silver"
-                              BorderBrush="{x:Null}"
-                              BorderThickness="0"
-                              ItemsSource="{Binding SortedComments}"
-                              ScrollViewer.CanContentScroll="False">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="3" />
+                    <RowDefinition Height="2*" />
+                </Grid.RowDefinitions>
+                <ScrollViewer>
+                    <ItemsControl Background="Silver"
+                                  BorderBrush="{x:Null}"
+                                  BorderThickness="0"
+                                  ItemsSource="{Binding SortedComments}"
+                                  ScrollViewer.CanContentScroll="False">
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Margin="0,5">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CommentNumber}">
-                                        <TextBlock.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Command="{Binding WriteCommentDialogOpenCommand}"
-                                                          CommandParameter="{Binding ThisObject}"
-                                                          Header="返信する" />
-                                            </ContextMenu>
-                                        </TextBlock.ContextMenu>
-                                    </TextBlock>
-                                    <TextBlock Text=":" />
-                                    <TextBlock Text="{Binding Author}" />
-                                    <TextBlock Text="[" />
-                                    <TextBlock Text="{Binding FlairText}" />
-                                    <TextBlock Text="]  Vote:" />
-                                    <TextBlock Text="{Binding Votes}" />
-                                    <TextBlock>
-                                        <Run />
-                                        <Underline>
-                                            <Underline.InputBindings>
-                                                <MouseBinding Command="{Binding VoteCommand}" CommandParameter="UpVote" Gesture="LeftClick" />
-                                            </Underline.InputBindings>
-                                            UpVote
-                                        </Underline>
-                                        <Run />
-                                        <Underline>
-                                            <Underline.InputBindings>
-                                                <MouseBinding Command="{Binding VoteCommand}" CommandParameter="DownVote" Gesture="LeftClick" />
-                                            </Underline.InputBindings>
-                                            DownVote
-                                        </Underline>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,5">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding CommentNumber}">
+                                            <TextBlock.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Command="{Binding WriteCommentDialogOpenCommand}"
+                                                              CommandParameter="{Binding ThisObject}"
+                                                              Header="返信する" />
+                                                </ContextMenu>
+                                            </TextBlock.ContextMenu>
+                                        </TextBlock>
+                                        <TextBlock Text=":" />
+                                        <TextBlock Text="{Binding Author}" />
+                                        <TextBlock Text="[" />
+                                        <TextBlock Text="{Binding FlairText}" />
+                                        <TextBlock Text="]  Vote:" />
+                                        <TextBlock Text="{Binding Votes}" />
+                                        <TextBlock>
+                                            <Run />
+                                            <Underline>
+                                                <Underline.InputBindings>
+                                                    <MouseBinding Command="{Binding VoteCommand}"
+                                                                  CommandParameter="UpVote"
+                                                                  Gesture="LeftClick" />
+                                                </Underline.InputBindings>
+                                                UpVote
+                                            </Underline>
+                                            <Run />
+                                            <Underline>
+                                                <Underline.InputBindings>
+                                                    <MouseBinding Command="{Binding VoteCommand}"
+                                                                  CommandParameter="DownVote"
+                                                                  Gesture="LeftClick" />
+                                                </Underline.InputBindings>
+                                                DownVote
+                                            </Underline>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <TextBlock x:Name="anc"
+                                               Text="{Binding AnchorText}"
+                                               Visibility="{Binding IsExistParentAnchor,
+                                                                    Converter={StaticResource BoolToVisibility}}" />
+                                    <TextBlock Text="{Binding Body}" Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />
+                                    <TextBlock Visibility="{Binding IsGenerator, Converter={StaticResource BoolToVisibility}}">
+                                        <LineBreak />
+                                        <Run Text="ソース：" />
+                                        <Run Text="{Binding Source}" />
                                     </TextBlock>
                                 </StackPanel>
-                                <TextBlock x:Name="anc"
-                                           Text="{Binding AnchorText}"
-                                           Visibility="{Binding IsExistParentAnchor,
-                                                                Converter={StaticResource BoolToVisibility}}" />
-                                <TextBlock Text="{Binding Body}" Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />
-                                <TextBlock Visibility="{Binding IsGenerator, Converter={StaticResource BoolToVisibility}}">
-                                    <LineBreak />
-                                    <Run Text="ソース：" />
-                                    <Run Text="{Binding Source}" />
-                                </TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <GridSplitter Grid.Row="1"
+                              Height="2"
+                              HorizontalAlignment="Stretch"
+                              ShowsPreview="True" />
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="3*" />
+                    </Grid.RowDefinitions>
+                    <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
+                    <TextBox Grid.Row="1" Text="{Binding WriteText}" />
+                </Grid>
+            </Grid>
+
         </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="ファイル">
@@ -166,6 +206,11 @@
                 </Grid>
             </Grid>
         </Grid>
+        <Grid Grid.Row="2">
+            <StatusBar>
+                <StatusBarItem Width="200" Content="{Binding ErrorMessage}" />
 
+            </StatusBar>
+        </Grid>
     </Grid>
 </Window>

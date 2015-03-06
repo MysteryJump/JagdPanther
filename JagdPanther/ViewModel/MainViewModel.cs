@@ -15,7 +15,10 @@ namespace JagdPanther.ViewModel
         public MainViewModel()
         {
             RedditInfo = RedditControl.Login();
-            RegisterCommands();
+            if (RedditInfo == null)
+                App.Current.Shutdown();
+            else
+                RegisterCommands();
         }
 
         private void RegisterCommands()
@@ -27,6 +30,10 @@ namespace JagdPanther.ViewModel
             MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>
                 {
                     ThreadTabs.ThreadTabsChildren.Add(x);
+                });
+            MessageBus.Current.Listen<string>("ErrorMessage").Subscribe(x =>
+                {
+                    ErrorMessage = x;
                 });
             ExitCommand = ReactiveCommand.CreateAsyncTask(ExitExcute);
             OpenLicenseWindowCommand = ReactiveCommand.CreateAsyncTask(OpenLicenseWindowExcute);
@@ -47,7 +54,7 @@ namespace JagdPanther.ViewModel
         public string Title
         {
             get { return title; }
-            set { title = value; }
+            set { title = value; this.RaiseAndSetIfChanged(ref title, value); }
         }
         
         public IReactiveCommand<Unit> ExitCommand { get; set; }        
@@ -76,5 +83,14 @@ namespace JagdPanther.ViewModel
         public ThreadListTabsViewModel ThreadListTabs { get; set; }
 
         public ThreadTabsViewModel ThreadTabs { get; set; }
+
+        private string errorMessage;
+
+        public string ErrorMessage
+        {
+            get { return errorMessage; }
+            set { errorMessage = value; this.RaiseAndSetIfChanged(ref errorMessage, value); }
+        }
+
     }
 }

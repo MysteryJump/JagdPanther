@@ -100,6 +100,9 @@
     <Compile Include="Dialogs\OpenWriteWindow.xaml.cs">
       <DependentUpon>OpenWriteWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\SubmitWindow.xaml.cs">
+      <DependentUpon>SubmitWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\VersionWindow.xaml.cs">
       <DependentUpon>VersionWindow.xaml</DependentUpon>
     </Compile>
@@ -130,6 +133,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\OpenWriteWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SubmitWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\VersionWindow.xaml">
