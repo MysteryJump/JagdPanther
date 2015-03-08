@@ -52,6 +52,8 @@ namespace JagdPanther.ViewModel
 
         public async Task SelectedExcute(object sender)
         {
+			if (ListViewSelectedItem == null)
+				return;
             await ListViewSelectedItem.SubscribeComments();
             if (ListViewSelectedItem.SortedComments != null)
                 MessageBus.Current.SendMessage(ListViewSelectedItem, "OpenNewThreadTab");

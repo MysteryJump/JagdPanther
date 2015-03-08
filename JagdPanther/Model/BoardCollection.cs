@@ -1,53 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.Serialization;
-using System.IO;
-using System.Collections.ObjectModel;
 
 namespace JagdPanther.Model
 {
-    public class BoardCollection : ObservableCollection<Category>
-    {
+	[DataContract]
+	public class BoardCollection
+	{
+		[DataMember]
+		public ObservableCollection<Board> Children { get;set; }
 
-        public static BoardCollection LoadBoards(bool isRef)
-        {
-            if (!File.Exists(Folders.BoardTreeXml))
-                CreateBoardList();
-            var dtc = new DataContractSerializer(typeof(SerializableBoardCollection));
-			List<Category> bc = null;
-            try
-            {
-                using (var str = File.Open(Folders.BoardTreeXml, FileMode.Open))
-					bc = (dtc.ReadObject(str) as SerializableBoardCollection).Categories;
-				if (bc == null)
-					return new BoardCollection();
-            }
-            catch { throw new InvalidDataContractException("Invalid data"); }
-			return (new ObservableCollection<Category>(bc)) as BoardCollection;
-        }
-
-        private static void CreateBoardList()
-        {
-            SaveBoards(new BoardCollection());
-        }
-
-        public static void SaveBoards(BoardCollection bc)
-        {
-			var s = new SerializableBoardCollection();
-			s.Categories = bc.ToList();
-            var dtc = new DataContractSerializer(typeof(SerializableBoardCollection));
-            using (var str = File.Open(Folders.BoardTreeXml, FileMode.Create))
-				dtc.WriteObject(str, s);
-
-        }
-		[DataContract]
-		public class SerializableBoardCollection
+		public static BoardCollection LoadBoardCollection()
 		{
-			[DataMember]
-			public List<Category> Categories { get; set; }
+			var x = new DataContractSerializer(typeof(BoardCollection));
+			try
+			{
+				using (var y = File.Open(Folders.BoardTreeXml, FileMode.Open))
+				{
+					return x.ReadObject(y) as BoardCollection;
+				}
+			}
+			catch
+			{
+				return new BoardCollection() { Children = new ObservableCollection<Board>() };
+			}
+
 		}
-    }
+
+		public static void SaveBoardCollection(BoardCollection b)
+		{
+			var x = new DataContractSerializer(typeof(BoardCollection));
+			using (var y = File.Open(Folders.BoardTreeXml, FileMode.Create))
+			{
+				try
+				{
+					x.WriteObject(y, b);
+				}
+				catch (Exception e)
+				{ throw e; }
+			}
+		}
+
+
+	}
 }

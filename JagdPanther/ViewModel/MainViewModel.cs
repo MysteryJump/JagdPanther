@@ -24,8 +24,15 @@ namespace JagdPanther.ViewModel
         private void RegisterCommands()
         {
             ThreadListTabs = new ThreadListTabsViewModel();
-            ThreadListTabs.ThreadListChildrens.CollectionChanged += ThreadListChildrens_CollectionChanged;
-            ThreadListTabs.ThreadListChildrens.Add(new ThreadListViewModel());
+			SubredditList = new SubredditListViewModel();
+			MessageBus.Current.Listen<Board>("OpenNewSubreddit").Subscribe(async (x) =>
+			{
+				var v = new ThreadListViewModel();
+                v.RedditInfo = RedditInfo;
+				await v.Initializer(x.Path);
+                ThreadListTabs.ThreadListChildrens.Add(v);
+			});
+
             ThreadTabs = new ThreadTabsViewModel();
             MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>
                 {
@@ -36,16 +43,12 @@ namespace JagdPanther.ViewModel
                     ErrorMessage = x;
                 });
             ExitCommand = ReactiveCommand.CreateAsyncTask(ExitExcute);
+			AddNewSubredditCommand = ReactiveCommand.CreateAsyncTask(AddNewSubredditExcute);
             OpenLicenseWindowCommand = ReactiveCommand.CreateAsyncTask(OpenLicenseWindowExcute);
             OpenVersionWindowCommand = ReactiveCommand.CreateAsyncTask(OpenVersionWindowExcute);
             Title = ReadonlyVars.ProgramName+" "+ReadonlyVars.ProgramVer;
         }
 
-        private async void ThreadListChildrens_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            ((ThreadListViewModel)(e.NewItems[0])).RedditInfo = RedditInfo;
-            await ((ThreadListViewModel)(e.NewItems[0])).Initializer("/r/newsokur");
-        }
 
         public RedditData RedditInfo { get; set; }
 
@@ -60,6 +63,7 @@ namespace JagdPanther.ViewModel
         public IReactiveCommand<Unit> ExitCommand { get; set; }        
         public async Task ExitExcute(object o)
         {
+			BoardCollection.SaveBoardCollection(SubredditList.OwnBoardCollection);
             System.Windows.Application.Current.Shutdown();
         }
 
@@ -83,8 +87,9 @@ namespace JagdPanther.ViewModel
         public ThreadListTabsViewModel ThreadListTabs { get; set; }
 
         public ThreadTabsViewModel ThreadTabs { get; set; }
+		public SubredditListViewModel SubredditList { get; set; }
 
-        private string errorMessage;
+		private string errorMessage;
 
         public string ErrorMessage
         {
@@ -92,5 +97,23 @@ namespace JagdPanther.ViewModel
             set { errorMessage = value; this.RaiseAndSetIfChanged(ref errorMessage, value); }
         }
 
-    }
+		public IReactiveCommand<Unit> AddNewSubredditCommand { get;set; }
+
+		public async Task AddNewSubredditExcute(object sender)
+		{
+			var w = new NewBoardWindow();
+			w.ShowDialog();
+			if (w.IsOk)
+			{
+				var board = new Board()
+				{
+					BoardName = w.BoardNameText,
+					Path = w.UrlText,
+					BoardPlace = w.BoardType
+				};
+                this.SubredditList.OwnBoardCollection.Children.Add(board);
+			}
+		}
+
+	}
 }

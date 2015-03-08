@@ -146,7 +146,7 @@ namespace JagdPanther.Model
         public async Task WriteCommentExcute(object sender)
         {
             var reg = Regex.Match(writeText, @">>(\d+)");
-            var value = reg?.Groups[1].Value;
+            var value = reg.Groups[1].Value;
             if (value != "")
             {
                 var anc = int.Parse(value);

@@ -26,6 +26,7 @@ namespace JagdPanther.Dialogs
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
+			IsOk = true;
             this.Close();
         }
 
@@ -40,5 +41,8 @@ namespace JagdPanther.Dialogs
                 return (Model.BoardLocate)Enum.Parse(typeof(Model.BoardLocate),((this.comboBox.SelectedItem as ComboBoxItem).Name));
             }
         }
-    }
+
+		public bool IsOk { get; set; }
+
+	}
 }

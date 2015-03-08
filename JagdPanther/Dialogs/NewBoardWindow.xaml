@@ -10,11 +10,11 @@
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="10,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="272"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="板名" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_Copy" HorizontalAlignment="Left" Height="23" Margin="10,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="272"/>
-        <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="10,58,0,0" TextWrapping="Wrap" Text="URL" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="10,58,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="URL(Redditの場合は/r/***の形式で入力)"/></TextBlock>
         <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="10,126,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="Reddit" Name="Reddit"/>
-            <ComboBoxItem Content="2ch互換" Name="Twoch"/>
-            <ComboBoxItem Content="したらば" Name="Jbbs"/>
+            <ComboBoxItem Content="2ch互換" Name="Twoch" IsEnabled="False"/>
+            <ComboBoxItem Content="したらば" Name="Jbbs" IsEnabled="False"/>
         </ComboBox>
         <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="10,106,0,0" TextWrapping="Wrap" Text="板の種類" VerticalAlignment="Top"/>
         <Button x:Name="button" Content="OK" HorizontalAlignment="Left" Margin="207,128,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
