@@ -9,6 +9,7 @@ using System.Reactive;
 using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace JagdPanther.Model
 {
@@ -68,7 +69,7 @@ namespace JagdPanther.Model
                         FlairText = PostThread.AuthorFlairText,
                         Children = new List<ViewComment>(),
                         Created = PostThread.Created,
-                        Source = PostThread.Url.ToString(),
+						Source = PostThread.Url.ToString(),
                         ParentPost = PostThread,
                         Votes = PostThread.Upvotes - PostThread.Downvotes
 
@@ -123,13 +124,13 @@ namespace JagdPanther.Model
         {
             RemoveTabCommand = ReactiveCommand.CreateAsyncTask(RemoveTabExcute);
             WriteCommentCommand = ReactiveCommand.CreateAsyncTask(WriteCommentExcute);
+			RemoveAllTabCommand = ReactiveCommand.CreateAsyncTask(RemoveAllTabExcute);
+		}
 
-        }
-
-        public async Task RemoveTabExcute(object sender)
+		public async Task RemoveTabExcute(object sender)
         {
 
-            MessageBus.Current.SendMessage(this, "RemoveTab");
+            MessageBus.Current.SendMessage(this, "RemoveThreadTab");
         }
 
         public IReactiveCommand<Unit> WriteCommentCommand { get; set; }
@@ -158,5 +159,13 @@ namespace JagdPanther.Model
             }
         }
 
+		public Color BackgroundColor { get { return Properties.Settings.Default.ThreadViewBackgroundColor; } }
+
+		public ReactiveCommand<Unit> RemoveAllTabCommand { get; private set; }
+
+		public async Task RemoveAllTabExcute(object sender)
+		{
+			MessageBus.Current.SendMessage("", "RemoveAllThreadTab");
+		}
     }
 }

@@ -21,7 +21,9 @@ namespace JagdPanther.ViewModel
             RefreshCommand = ReactiveCommand.CreateAsyncTask(RefreshExcute);
             SelectedCommand = ReactiveCommand.CreateAsyncTask(SelectedExcute);
             NewPostCommand = ReactiveCommand.CreateAsyncTask(NewPostExcute);
-        }
+			RemoveTabCommand = ReactiveCommand.CreateAsyncTask(RemoveTabExcute);
+			RemoveAllTabCommand = ReactiveCommand.CreateAsyncTask(RemoveAllTabExcute);
+		}
 
         public ObservableCollection<Thread> ThreadList
         {
@@ -116,5 +118,19 @@ namespace JagdPanther.ViewModel
                 }
             }
         }
-    }
+
+		public IReactiveCommand<Unit> RemoveTabCommand { get;set; }
+		public ReactiveCommand<Unit> RemoveAllTabCommand { get; private set; }
+
+		public async Task RemoveTabExcute(object sender)
+		{
+			MessageBus.Current.SendMessage(this, "RemoveThreadListTab");
+		}
+
+		public async Task RemoveAllTabExcute(object sender)
+		{
+			MessageBus.Current.SendMessage("", "RemoveAllThreadListTab");
+
+		}
+	}
 }

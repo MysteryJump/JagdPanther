@@ -15,38 +15,54 @@ namespace JagdPanther.ViewModel
         public MainViewModel()
         {
             RedditInfo = RedditControl.Login();
-            if (RedditInfo == null)
-                App.Current.Shutdown();
-            else
-                RegisterCommands();
-        }
+			if (RedditInfo == null)
+				App.Current.Shutdown();
+			else
+			{
+				RegisterCommands();
+				InitilizeViewModels();
+				RegisterMessageListener();
+				Title = ReadonlyVars.ProgramName + " " + ReadonlyVars.ProgramVer;
+
+			}
+		}
+
+		private void InitilizeViewModels()
+		{
+			ThreadListTabs = new ThreadListTabsViewModel();
+			SubredditList = new SubredditListViewModel();
+			ThreadTabs = new ThreadTabsViewModel();
+		}
+
+		private void RegisterMessageListener()
+		{
+			MessageBus.Current.Listen<Board>("OpenNewSubreddit").Subscribe(async (x) =>
+			{
+				if (x == null)
+					return;
+				var v = new ThreadListViewModel();
+				v.RedditInfo = RedditInfo;
+				await v.Initializer(x.Path);
+				ThreadListTabs.ThreadListChildrens.Add(v);
+			});
+			MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>
+				{
+					ThreadTabs.ThreadTabsChildren.Add(x);
+				});
+			MessageBus.Current.Listen<string>("ErrorMessage").Subscribe(x =>
+				{
+					ErrorMessage = x;
+				});
+		}
 
         private void RegisterCommands()
         {
-            ThreadListTabs = new ThreadListTabsViewModel();
-			SubredditList = new SubredditListViewModel();
-			MessageBus.Current.Listen<Board>("OpenNewSubreddit").Subscribe(async (x) =>
-			{
-				var v = new ThreadListViewModel();
-                v.RedditInfo = RedditInfo;
-				await v.Initializer(x.Path);
-                ThreadListTabs.ThreadListChildrens.Add(v);
-			});
-
-            ThreadTabs = new ThreadTabsViewModel();
-            MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>
-                {
-                    ThreadTabs.ThreadTabsChildren.Add(x);
-                });
-            MessageBus.Current.Listen<string>("ErrorMessage").Subscribe(x =>
-                {
-                    ErrorMessage = x;
-                });
+			RemoveSubredditCommand = ReactiveCommand.CreateAsyncTask(RemoveSubredditExcute);
             ExitCommand = ReactiveCommand.CreateAsyncTask(ExitExcute);
+			OpenSettingWindowCommand = ReactiveCommand.CreateAsyncTask(OpenSettingWindowExcute);
 			AddNewSubredditCommand = ReactiveCommand.CreateAsyncTask(AddNewSubredditExcute);
             OpenLicenseWindowCommand = ReactiveCommand.CreateAsyncTask(OpenLicenseWindowExcute);
             OpenVersionWindowCommand = ReactiveCommand.CreateAsyncTask(OpenVersionWindowExcute);
-            Title = ReadonlyVars.ProgramName+" "+ReadonlyVars.ProgramVer;
         }
 
 
@@ -115,5 +131,18 @@ namespace JagdPanther.ViewModel
 			}
 		}
 
+		public IReactiveCommand<Unit> RemoveSubredditCommand { get;set; }
+		public async Task RemoveSubredditExcute(object sender)
+		{
+			SubredditList.OwnBoardCollection.Children.Remove(SubredditList.SelectedItem);
+		}
+
+		public IReactiveCommand<Unit> OpenSettingWindowCommand { get;set; }
+
+		public async Task OpenSettingWindowExcute(object sender)
+		{
+			var r = new SettingWindow();
+			r.ShowDialog();
+		}
 	}
 }

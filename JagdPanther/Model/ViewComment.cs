@@ -6,6 +6,8 @@ using System.Text;
 using ReactiveUI;
 using System.Threading.Tasks;
 using System.Reactive;
+using System.Windows;
+using System.Diagnostics;
 
 namespace JagdPanther.Model
 {
@@ -90,6 +92,8 @@ namespace JagdPanther.Model
         {
             WriteCommentDialogOpenCommand = ReactiveCommand.CreateAsyncTask(OpenWriteCommentDialogExcute);
             VoteCommand = ReactiveCommand.CreateAsyncTask(VoteExcute);
+			ReadSourceCommand = ReactiveCommand.CreateAsyncTask(ReadSourceExcute);
+			CopyCommentCommand = ReactiveCommand.CreateAsyncTask(CopyCommentExcute);
         }
 
         public IReactiveCommand<Unit> VoteCommand { get; set; }
@@ -113,5 +117,22 @@ namespace JagdPanther.Model
                 x.Downvote();
             }
         }
-    }
+
+		public async Task CopyCommentExcute(object sender)
+		{
+			var v = sender as ViewComment;
+			var com = v.Author + " [" + v.FlairText + "] " + "Vote:" + v.Votes + " " + v.Created + " \r\n"
+				 + v.Body;
+			Clipboard.SetText(com);
+		}
+		public IReactiveCommand<Unit> CopyCommentCommand { get;set; }
+
+		public IReactiveCommand<Unit> ReadSourceCommand { get;set; }
+
+		public async Task ReadSourceExcute(object sender)
+		{
+			Process.Start(Source);
+		}
+
+	}
 }

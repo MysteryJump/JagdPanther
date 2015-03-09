@@ -15,5 +15,15 @@ namespace JagdPanther.Model
         public static string LoginInfoXml
         { get; }
         = ReadonlyVars.CurrentFolder + "\\login.xml";
+
+		public static string PostListFolder
+		{ get; }
+		= ReadonlyVars.CurrentFolder + "\\logs\\posts";
+
+		public static string CommentListFolder
+		{ get; }
+		= ReadonlyVars.CurrentFolder + "\\logs\\comments";
+
+
     }
 }
