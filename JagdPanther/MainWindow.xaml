@@ -10,8 +10,7 @@
         Title="{Binding Title}"
         Width="525"
         Height="350"
-        mc:Ignorable="d"
-        >
+        mc:Ignorable="d">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
@@ -42,7 +41,12 @@
                 <ListView Margin="0,20,0,0"
                           ItemsSource="{Binding Source={StaticResource items}}"
                           SelectedItem="{Binding ListViewSelectedItem}">
-
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="UpVote" Command="{Binding VoteCommand}" CommandParameter="Up"/>
+                            <MenuItem Header="DownVote" Command="{Binding VoteCommand}" CommandParameter="Down"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding SelectedCommand}" CommandParameter="{Binding ListViewSelectedItem}" />
@@ -88,10 +92,14 @@
                                                     <MenuItem Command="{Binding WriteCommentDialogOpenCommand}"
                                                               CommandParameter="{Binding ThisObject}"
                                                               Header="返信する" />
-                                                    <Separator/>
+                                                    <MenuItem Command="{Binding SaveCommentCommand}"
+                                                              CommandParameter="{Binding ThisObject}"
+                                                              Header="{Binding SaveCommentHeader}"/>
+                                                    <MenuItem Header="編集する" IsEnabled="{Binding IsOwner}" Command="{Binding EditComment}"/>
+                                                    <Separator />
                                                     <MenuItem Command="{Binding CopyCommentCommand}"
                                                               CommandParameter="{Binding ThisObject}"
-                                                              Header="コメントをコピーする"/>
+                                                              Header="コメントをコピーする" />
                                                 </ContextMenu>
                                             </TextBlock.ContextMenu>
                                         </TextBlock>
@@ -131,11 +139,11 @@
                                         <LineBreak />
                                         <Run Text="ソース：" />
                                         <Underline Foreground="Blue">
-                                                <Run Text="{Binding Source}" >
-                                                    <Run.InputBindings>
-                                                        <MouseBinding Gesture="LeftClick" Command="{Binding ReadSourceCommand}"/>
-                                                    </Run.InputBindings>
-                                                </Run>
+                                            <Run Text="{Binding Source}">
+                                                <Run.InputBindings>
+                                                    <MouseBinding Command="{Binding ReadSourceCommand}" Gesture="LeftClick" />
+                                                </Run.InputBindings>
+                                            </Run>
                                         </Underline>
                                     </TextBlock>
                                 </StackPanel>
@@ -170,7 +178,7 @@
                 <MenuItem Command="{Binding ExitCommand}" Header="終了" />
             </MenuItem>
             <MenuItem Header="編集">
-                <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定"/>
+                <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" />
             </MenuItem>
             <MenuItem Header="ヘルプ">
                 <MenuItem Command="{Binding OpenLicenseWindowCommand}" Header="ライセンス情報" />
@@ -183,7 +191,7 @@
                 <ColumnDefinition Width="2" />
                 <ColumnDefinition Width="3.5*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" >
+            <Grid Grid.Column="0">
                 <ListView ItemsSource="{Binding SubredditList.OwnBoardCollection.Children}" SelectedItem="{Binding SubredditList.SelectedItem}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
@@ -192,15 +200,13 @@
                     </i:Interaction.Triggers>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding BoardName}">
-                                
-                            </TextBlock>
+                            <TextBlock Text="{Binding BoardName}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Subredditを追加する" Command="{Binding AddNewSubredditCommand}"/>
-                            <MenuItem Header="Subredditを削除する" Command="{Binding RemoveSubredditCommand}"/>
+                            <MenuItem Command="{Binding AddNewSubredditCommand}" Header="Subredditを追加する" />
+                            <MenuItem Command="{Binding RemoveSubredditCommand}" Header="Subredditを削除する" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>
@@ -208,8 +214,9 @@
             <GridSplitter Grid.Column="1"
                           Width="2"
                           HorizontalAlignment="Right"
-                          VerticalAlignment="Stretch" ShowsPreview="True"/>
-                          
+                          VerticalAlignment="Stretch"
+                          ShowsPreview="True" />
+
             <Grid Grid.Column="2">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -221,14 +228,14 @@
                         <TabControl ContentTemplate="{StaticResource threadListView}" ItemsSource="{Binding ThreadListTabs.ThreadListChildrens}">
                             <TabControl.ItemTemplate>
                                 <DataTemplate DataType="vm:ThreadListViewModel">
-                                    <TextBlock Text="{Binding Name}" >
+                                    <TextBlock Text="{Binding Name}">
                                         <TextBlock.InputBindings>
-                                            <MouseBinding Gesture="MiddleClick" Command="{Binding RemoveTabCommand}"/>
+                                            <MouseBinding Command="{Binding RemoveTabCommand}" Gesture="MiddleClick" />
                                         </TextBlock.InputBindings>
                                         <TextBlock.ContextMenu>
                                             <ContextMenu>
-                                                <MenuItem Header="タブを削除する" Command="{Binding RemoveTabCommand}"/>
-                                                <MenuItem Header="すべてのタブを削除する" Command="{Binding RemoveAllTabCommand}"/>
+                                                <MenuItem Command="{Binding RemoveTabCommand}" Header="タブを削除する" />
+                                                <MenuItem Command="{Binding RemoveAllTabCommand}" Header="すべてのタブを削除する" />
                                             </ContextMenu>
                                         </TextBlock.ContextMenu>
                                     </TextBlock>
@@ -250,8 +257,8 @@
                                         </TextBlock.InputBindings>
                                         <TextBlock.ContextMenu>
                                             <ContextMenu>
-                                                <MenuItem Header="タブを削除する" Command="{Binding RemoveTabCommand}"/>
-                                                <MenuItem Header="すべてのタブを削除する" Command="{Binding RemoveAllTabCommand}" />
+                                                <MenuItem Command="{Binding RemoveTabCommand}" Header="タブを削除する" />
+                                                <MenuItem Command="{Binding RemoveAllTabCommand}" Header="すべてのタブを削除する" />
                                             </ContextMenu>
                                         </TextBlock.ContextMenu>
                                     </TextBlock>

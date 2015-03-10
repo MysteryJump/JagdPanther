@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using RedditSharp;
 
 namespace JagdPanther.Dialogs
 {
@@ -22,10 +23,19 @@ namespace JagdPanther.Dialogs
         public SubmitWindow()
         {
             InitializeComponent();
-            
+			this.Loaded += Window_Loaded;    
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			flairs.Items.Add(new UserFlairTemplate() { Text = "<なし>", CssClass = null});
+			Flairs.ForEach(x =>
+			{
+				flairs.Items.Add(x);
+			});
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(text.Text) || !string.IsNullOrWhiteSpace(title.Text))
                 this.Close();
@@ -33,6 +43,8 @@ namespace JagdPanther.Dialogs
             PostString = text.Text;
             IsOk = true;
             Title = title.Text;
+			SelectedFlair = flairs.SelectedItem as UserFlairTemplate;
+			IsNsfw = nsfw.IsChecked == true;
             this.Close();
         }
 
@@ -52,5 +64,8 @@ namespace JagdPanther.Dialogs
         public string PostString { get; set; }
         public bool IsOk { get; set; }
         public string Title { get; set; }
-    }
+		public UserFlairTemplate SelectedFlair { get; set; }
+		public bool IsNsfw { get; set; }
+		public List<UserFlairTemplate> Flairs { get; internal set; }
+	}
 }

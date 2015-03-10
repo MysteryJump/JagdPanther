@@ -131,6 +131,7 @@
     <Compile Include="ViewModel\ThreadListTabsViewModel.cs" />
     <Compile Include="ViewModel\ThreadListViewModel.cs" />
     <Compile Include="ViewModel\ThreadTabsViewModel.cs" />
+    <Compile Include="View\ViewCommentConverter.cs" />
     <Page Include="Dialogs\LicenseInfo.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

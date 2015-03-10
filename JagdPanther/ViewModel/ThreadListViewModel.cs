@@ -90,15 +90,8 @@ namespace JagdPanther.ViewModel
 
         public async Task RefreshExcute(object sender)
         {
-            var count = ThreadList.Count;
-            Enumerable.Range(0, count)
-                .Select(x => x = 0)
-                .ToList()
-                .ForEach((x) =>
-                {
-                    ThreadList.RemoveAt(x);
-                });
-            Initializer(Path);
+			ThreadList.Clear();
+            await Initializer(Path);
         }
 
         public IReactiveCommand<Unit> NewPostCommand { get; set; }
@@ -106,17 +99,28 @@ namespace JagdPanther.ViewModel
         {
             var sub = new SubmitWindow();
             sub.ShowDialog();
+			Post p;
             if (sub.IsOk)
             {
                 if (sub.IsLinkPost)
                 {
-                    OwnSubreddit.SubmitPost(sub.Title, sub.PostString);
+                    p = OwnSubreddit.SubmitPost(sub.Title, sub.PostString);
+					if (sub.IsNsfw)
+						p.MarkNSFW();
+					//if (sub.SelectedFlair.CssClass != null)
+					//	p.SetFlair(sub.SelectedFlair.Text, sub.SelectedFlair.CssClass);
                 }
                 else
                 {
-                    OwnSubreddit.SubmitTextPost(sub.Title, sub.PostString);
-                }
-            }
+                    p = OwnSubreddit.SubmitTextPost(sub.Title, sub.PostString);
+					if (sub.IsNsfw)
+						p.MarkNSFW();
+					//if (sub.SelectedFlair.CssClass != null)
+					//	p.SetFlair(sub.SelectedFlair.Text, sub.SelectedFlair.CssClass);
+
+				}
+
+			}
         }
 
 		public IReactiveCommand<Unit> RemoveTabCommand { get;set; }
@@ -132,5 +136,21 @@ namespace JagdPanther.ViewModel
 			MessageBus.Current.SendMessage("", "RemoveAllThreadListTab");
 
 		}
-	}
+
+		public async Task VoteExcute(object sender)
+		{
+			var r = sender.ToString();
+			var p = ListViewSelectedItem;
+			if (p == null)
+				return;
+			if (r == "Up")
+			{
+				p.PostThread.Upvote();
+			}
+			else
+			{
+				p.PostThread.Downvote();
+			}
+		}
+    }
 }

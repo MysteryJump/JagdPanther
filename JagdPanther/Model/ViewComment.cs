@@ -134,5 +134,47 @@ namespace JagdPanther.Model
 			Process.Start(Source);
 		}
 
+		public IReactiveCommand<Unit> SaveCommentCommand { get; set; }
+
+		public async Task SaveCommentExcute(object sender)
+		{
+			if (isSavedComment)
+			{
+				if (IsGenerator)
+					ParentPost.Unsave();
+				else
+					BaseComment.Unsave();
+			}
+			else
+			{
+				if (IsGenerator)
+					BaseComment.Save();
+				else 
+					BaseComment.Unsave();
+			}
+		}
+
+		public bool isSavedComment;
+
+		public string SaveCommentHeader
+		{
+			get
+			{
+				if (!IsGenerator)
+				{
+					isSavedComment = BaseComment.Saved;
+				}
+				else
+				{
+					isSavedComment = ParentPost.Saved;
+				}
+				if (isSavedComment)
+					return "保存を解除する";
+				else
+					return "保存する";
+			}
+		}
+
+
 	}
 }
