@@ -117,6 +117,7 @@
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\Folders.cs" />
     <Compile Include="Model\LoginInfo.cs" />
+    <Compile Include="Model\PostingBeforeProcessor.cs" />
     <Compile Include="Model\ReadonlyVars.cs" />
     <Compile Include="Model\RedditControl.cs" />
     <Compile Include="Model\Thread.cs" />

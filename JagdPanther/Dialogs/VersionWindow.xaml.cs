@@ -22,7 +22,7 @@ namespace JagdPanther.Dialogs
         public VersionWindow()
         {
             InitializeComponent();
-            this.textBlock.Text = "Now version is" + Model.ReadonlyVars.ProgramVer;
+            this.textBlock.Text = "Now version is " + Model.ReadonlyVars.ProgramVer;
 
         }
     }

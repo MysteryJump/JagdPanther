@@ -23,5 +23,12 @@ namespace JagdPanther
 		{
 			InitializeComponent();
 		}
+
+        public void SelectedItem(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as ViewModel.EditConfigurationViewModel)
+                .SelectTreeViewItemCommand
+                .Execute((sender as TreeViewItem).Tag);
+        }
 	}
 }

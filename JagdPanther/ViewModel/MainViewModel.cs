@@ -144,5 +144,21 @@ namespace JagdPanther.ViewModel
 			var r = new SettingWindow();
 			r.ShowDialog();
 		}
-	}
+
+        private int windowHeight;
+
+        public int WindowHeight
+        {
+            get { return windowHeight; }
+            set { windowHeight = value; this.RaiseAndSetIfChanged(ref windowHeight, value); Properties.Settings.Default.WindowHeight = value; }
+        }
+
+        private int windowWidth;
+
+        public int WindowWidth
+        {
+            get { return windowWidth; }
+            set { windowWidth = value; this.RaiseAndSetIfChanged(ref windowWidth, value); Properties.Settings.Default.WindowWidth = value; }
+        }
+    }
 }

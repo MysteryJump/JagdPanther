@@ -63,6 +63,9 @@
                             <GridViewColumn DisplayMemberBinding="{Binding VoteCount}">
                                 <GridViewColumnHeader Content="Vote数" />
                             </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding CommentCount}">
+                                <GridViewColumnHeader Content="コメント数" />
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>

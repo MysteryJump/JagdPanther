@@ -9,6 +9,11 @@
     <Window.DataContext>
         <vm:EditConfigurationViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="TreeViewItem">
+            <EventSetter Event="Selected" Handler="SelectedItem"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -29,11 +34,11 @@
                           VerticalAlignment="Bottom"
                           DockPanel.Dock="Bottom">
 
-                    <TreeViewItem Header="環境" />
+                    <TreeViewItem Header="環境"/>
                     <TreeViewItem Header="Subredditリスト" />
                     <TreeViewItem Header="スレッドリスト" />
                     <TreeViewItem Header="スレッド">
-                        <TreeViewItem Header="デザイン" />
+                        <TreeViewItem Header="デザイン"/>
                     </TreeViewItem>
                     <TreeViewItem Header="書き込み" />
                     <TreeViewItem Header="読み込み" />

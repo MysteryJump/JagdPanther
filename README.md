@@ -17,4 +17,5 @@ VS 2015 CTPでもいけるけどGo-liveじゃない点に注意
 
 ## その他
 ライセンスはMIT(X 11)  
-開発言語はC#/WPF/.NET 4.6 (Roslyn)
+開発言語はC#/WPF/.NET 4.6 (Roslyn)  
+あと似非MVVMでやってる  

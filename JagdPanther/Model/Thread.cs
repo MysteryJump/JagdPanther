@@ -146,7 +146,10 @@ namespace JagdPanther.Model
 
         public async Task WriteCommentExcute(object sender)
         {
-            var reg = Regex.Match(writeText, @">>(\d+)");
+            var pos = new PostingBeforeProcessor(writeText);
+            pos.ReplaceEndOfLine();
+
+            var reg = Regex.Match(pos.ProcessedText, @">>(\d+)");
             var value = reg.Groups[1].Value;
             if (value != "")
             {
@@ -167,5 +170,15 @@ namespace JagdPanther.Model
 		{
 			MessageBus.Current.SendMessage("", "RemoveAllThreadTab");
 		}
+
+        private int writingBoxHeight;
+
+        public int WritingBoxHeight
+        {
+            get { return writingBoxHeight; }
+            set { writingBoxHeight = value; this.RaiseAndSetIfChanged(ref writingBoxHeight, value); Properties.Settings.Default.WritingPlaceHeight = value; }
+        }
+
+        public int CommentCount { get; internal set; }
     }
 }

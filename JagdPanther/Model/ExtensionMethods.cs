@@ -12,9 +12,11 @@ namespace JagdPanther
 
 		public static void CheckApi(this object obj)
 		{
-			if (DateTimeOffset.Now.ToUnixTimeSeconds() - new DateTimeOffset(LastTime).ToUnixTimeSeconds() >= 2)
-				return;
-			else
+            if (DateTimeOffset.Now.ToUnixTimeSeconds() - new DateTimeOffset(LastTime).ToUnixTimeSeconds() >= 2)
+            {
+                LastTime = DateTime.Now;
+            }
+            else
 				throw new InvalidOperationException();
 		}
 	}
