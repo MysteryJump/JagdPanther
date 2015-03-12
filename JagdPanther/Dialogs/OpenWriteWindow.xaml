@@ -12,8 +12,8 @@
             <RowDefinition Height="8*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <TextBox Name="data"/>
-        <Button Name="write" IsCancel="False" Grid.Row="1" Content="書き込む" Click="write_Click" IsDefault="True"/>
+        <TextBox Name="data" Margin="4" AcceptsReturn="True"/>
+        <Button Name="write" IsCancel="False" Grid.Row="1" Content="書き込む" Click="write_Click" IsDefault="True" Margin="4"/>
     </Grid>
 
 </Window>

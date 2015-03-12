@@ -10,32 +10,40 @@ using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
+using System.Runtime.Serialization;
 
 namespace JagdPanther.Model
 {
+    [DataContract]
     public class Thread : ReactiveObject
     {
+        [DataMember]
         public DateTime CreatedTime { get; set; }
+        [IgnoreDataMember]
         public string CreatedTimeString
         {
             get { return CreatedTime.ToString(CultureInfo.GetCultureInfo("ja-JP")); }
         }
-
+        [IgnoreDataMember]
         public Post PostThread { get; set; }
-
+        [IgnoreDataMember]
         public List<Comment> RawComments
         {
             get { return PostThread.Comments.ToList(); }
         }
+        [DataMember]
         public string Title { get; set; }
+        [DataMember]
         public int VoteCount { get; set; }
-
+        [IgnoreDataMember]
         private List<ViewComment> sortedComments;
-
+        [DataMember]
         public List<ViewComment> SortedComments
         {
             get
             {
+                if (CommentCount == -1)
+                    return null;
                 if (sortedComments == null)
                     Task.Factory.StartNew(SubscribeComments).Wait();
                 return sortedComments;
@@ -51,6 +59,7 @@ namespace JagdPanther.Model
         {
             sortedComments = await GetAndParseComments();
         }
+        [IgnoreDataMember]
         public IReactiveCommand<Unit> RemoveTabCommand { get; set; }
         private async Task<List<ViewComment>> GetAndParseComments()
         {
@@ -60,9 +69,11 @@ namespace JagdPanther.Model
                 {
                     var coms = new List<ViewComment>();
                     var queue = new Queue<ViewComment>();
+                    var a = PostThread.Author.FullName;
                     var host = new ViewComment()
                     {
-                        Author = PostThread.Author.FullName,
+                        Author = a,
+                        BasePostAuthor = a,
                         ParentAnchor = null,
                         Body = PostThread.SelfText,
                         BodyHtml = PostThread.SelfTextHtml,
@@ -81,6 +92,7 @@ namespace JagdPanther.Model
                             {
                                 var vc = new ViewComment();
                                 vc = (ViewComment)x;
+                                vc.BasePostAuthor = a;
                                 queue.Enqueue(vc);
                             });
                     var i = 1;
@@ -132,11 +144,11 @@ namespace JagdPanther.Model
 
             MessageBus.Current.SendMessage(this, "RemoveThreadTab");
         }
-
+        [IgnoreDataMember]
         public IReactiveCommand<Unit> WriteCommentCommand { get; set; }
-
+        [IgnoreDataMember]
         private string writeText;
-
+        [IgnoreDataMember]
         public string WriteText
         {
             get { return writeText; }
@@ -161,24 +173,24 @@ namespace JagdPanther.Model
                 PostThread.Comment(writeText);
             }
         }
-
+        [IgnoreDataMember]
 		public Color BackgroundColor { get { return Properties.Settings.Default.ThreadViewBackgroundColor; } }
-
+        [IgnoreDataMember]
 		public ReactiveCommand<Unit> RemoveAllTabCommand { get; private set; }
 
 		public async Task RemoveAllTabExcute(object sender)
 		{
 			MessageBus.Current.SendMessage("", "RemoveAllThreadTab");
 		}
-
+        [IgnoreDataMember]
         private int writingBoxHeight;
-
+        [IgnoreDataMember]
         public int WritingBoxHeight
         {
             get { return writingBoxHeight; }
             set { writingBoxHeight = value; this.RaiseAndSetIfChanged(ref writingBoxHeight, value); Properties.Settings.Default.WritingPlaceHeight = value; }
         }
-
+        [DataMember]
         public int CommentCount { get; internal set; }
     }
 }

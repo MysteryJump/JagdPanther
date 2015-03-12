@@ -107,11 +107,14 @@
                                             </TextBlock.ContextMenu>
                                         </TextBlock>
                                         <TextBlock Text=":" />
+                                        <TextBlock Text="S" Foreground="Red" Visibility="{Binding IsGenerator, Converter={StaticResource BoolToVisibility}}"/>
                                         <TextBlock Text="{Binding Author}" />
                                         <TextBlock Text="[" />
                                         <TextBlock Text="{Binding FlairText}" />
                                         <TextBlock Text="]  Vote:" />
                                         <TextBlock Text="{Binding Votes}" />
+                                        <TextBlock Text=" 日付:"/>
+                                        <TextBlock Text="{Binding CreatedString}" />
                                         <TextBlock>
                                             <Run />
                                             <Underline>
@@ -164,7 +167,7 @@
                         <RowDefinition Height="3*" />
                     </Grid.RowDefinitions>
                     <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
-                    <TextBox Grid.Row="1" Text="{Binding WriteText}" />
+                    <TextBox Grid.Row="1" Text="{Binding WriteText}" AcceptsReturn="True"/>
                 </Grid>
             </Grid>
 

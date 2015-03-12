@@ -8,22 +8,39 @@ using System.Threading.Tasks;
 using System.Reactive;
 using System.Windows;
 using System.Diagnostics;
+using System.Runtime.Serialization;
+using System.Globalization;
 
 namespace JagdPanther.Model
 {
+    [DataContract]
     public class ViewComment
     {
+        [IgnoreDataMember]
+        public string BasePostAuthor { get; set; }
+        [IgnoreDataMember]
         public ViewComment ThisObject { get { return this; } }
+        [DataMember]
         public int CommentNumber { get; set; }
+        [DataMember]
         public string Body { get; set; }
+        [DataMember]
         public int? ParentAnchor { get; set; }
+        [DataMember]
         public string FlairText { get; set; }
+        [DataMember]
         public string Author { get; set; }
+        [IgnoreDataMember]
         public string BodyHtml { get; set; }
+        [IgnoreDataMember]
         public List<ViewComment> Children { get; set; }
+        [DataMember]
         public DateTime Created { get; set; }
+        [DataMember]
         public string Source { get; set; }
-        public bool IsGenerator { get { return CommentNumber == 1; } }
+        [DataMember]
+        public bool IsGenerator { get { return BasePostAuthor == Author; } }
+        [IgnoreDataMember]
         public bool HasBody { get { return (Body != null || Body != String.Empty); } }
         public static explicit operator ViewComment(Comment v)
         {
@@ -46,7 +63,7 @@ namespace JagdPanther.Model
             };
             return vc;
         }
-
+        [IgnoreDataMember]
         public string AnchorText
         {
             get
@@ -57,16 +74,20 @@ namespace JagdPanther.Model
                 else return null;
             }
         }
-
+        [IgnoreDataMember]
         public bool IsExistParentAnchor
         {
             get { return ParentAnchor.HasValue; }
         }
+        [IgnoreDataMember]
         public Comment BaseComment { get; set; }
+        [IgnoreDataMember]
         public ViewComment Parent { get; internal set; }
+        [IgnoreDataMember]
         public Post ParentPost { get; set; }
-
+        [IgnoreDataMember]
         public IReactiveCommand<Unit> WriteCommentDialogOpenCommand { get; set; }
+        [DataMember]
         public int Votes { get; set; }
 
         public async Task OpenWriteCommentDialogExcute(object sender)
@@ -95,7 +116,7 @@ namespace JagdPanther.Model
 			ReadSourceCommand = ReactiveCommand.CreateAsyncTask(ReadSourceExcute);
 			CopyCommentCommand = ReactiveCommand.CreateAsyncTask(CopyCommentExcute);
         }
-
+        [IgnoreDataMember]
         public IReactiveCommand<Unit> VoteCommand { get; set; }
         public async Task VoteExcute(object sender)
         {
@@ -117,7 +138,7 @@ namespace JagdPanther.Model
                 x.Downvote();
             }
         }
-
+        
 		public async Task CopyCommentExcute(object sender)
 		{
 			var v = sender as ViewComment;
@@ -125,16 +146,17 @@ namespace JagdPanther.Model
 				 + v.Body;
 			Clipboard.SetText(com);
 		}
-		public IReactiveCommand<Unit> CopyCommentCommand { get;set; }
-
-		public IReactiveCommand<Unit> ReadSourceCommand { get;set; }
+        [IgnoreDataMember]
+        public IReactiveCommand<Unit> CopyCommentCommand { get;set; }
+        [IgnoreDataMember]
+        public IReactiveCommand<Unit> ReadSourceCommand { get;set; }
 
 		public async Task ReadSourceExcute(object sender)
 		{
 			Process.Start(Source);
 		}
-
-		public IReactiveCommand<Unit> SaveCommentCommand { get; set; }
+        [IgnoreDataMember]
+        public IReactiveCommand<Unit> SaveCommentCommand { get; set; }
 
 		public async Task SaveCommentExcute(object sender)
 		{
@@ -153,10 +175,10 @@ namespace JagdPanther.Model
 					BaseComment.Unsave();
 			}
 		}
-
-		public bool isSavedComment;
-
-		public string SaveCommentHeader
+        [IgnoreDataMember]
+        public bool isSavedComment;
+        [IgnoreDataMember]
+        public string SaveCommentHeader
 		{
 			get
 			{
@@ -174,7 +196,11 @@ namespace JagdPanther.Model
 					return "保存する";
 			}
 		}
+        [IgnoreDataMember]
+        public string CreatedString
+        {
+            get { return Created.ToString(CultureInfo.GetCultureInfo("ja-JP")); }
+        }
 
-
-	}
+    }
 }

@@ -15,6 +15,7 @@ namespace JagdPanther.ViewModel
     public class ThreadListViewModel : ReactiveObject
     {
         private ObservableCollection<Thread> threads;
+        private int pageCount;
         public ThreadListViewModel()
         {
             ThreadList = new ObservableCollection<Thread>();
@@ -56,6 +57,29 @@ namespace JagdPanther.ViewModel
         {
 			if (ListViewSelectedItem == null)
 				return;
+            if (ListViewSelectedItem.CommentCount == -1)
+            {
+
+                var l = await Task.Factory.StartNew(() =>
+                {
+                    var list = new List<Thread>();
+
+                    OwnSubreddit.Posts.Skip(pageCount * 20)
+                        .Take(++pageCount * 20)
+                        .ToList()
+                        .ForEach(x =>
+                        {
+                            var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x, VoteCount = x.Upvotes - x.Downvotes, CommentCount = x.CommentCount };
+                            list.Add(t);
+                        });
+                    return list;
+                });
+                l.ForEach(ThreadList.Add);
+                ThreadList.Remove(ListViewSelectedItem);
+                ThreadList.Add(new Thread { Title = "次の20件を読み込む...", CommentCount = -1 });
+
+                return;
+            }
             await ListViewSelectedItem.SubscribeComments();
             if (ListViewSelectedItem.SortedComments != null)
                 MessageBus.Current.SendMessage(ListViewSelectedItem, "OpenNewThreadTab");
@@ -63,21 +87,27 @@ namespace JagdPanther.ViewModel
         public Subreddit OwnSubreddit { get; set; }
         public async Task Initializer(string path)
         {
-            Path = path;
             var subs = OwnSubreddit = RedditInfo.RedditAccess.GetSubreddit(path);
-            var lists = new List<Thread>();
+            Path = path;
 
-            
-            subs.Subscribe();
-            subs.Posts.Take(50)
-                .ToList().ForEach(x =>
-                {
-                    var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x,VoteCount = x.Upvotes - x.Downvotes, CommentCount = x.CommentCount };
-                    lists.Add(t);
-                });
+            var l = await Task.Factory.StartNew(() =>
+            {
+                var lists = new List<Thread>();
+                subs.Subscribe();
+
+                pageCount = 1;
+                subs.Posts.Take(20)
+                    .ToList().ForEach(x =>
+                    {
+                        var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x, VoteCount = x.Upvotes - x.Downvotes, CommentCount = x.CommentCount };
+                        lists.Add(t);
+                    });
+                return lists;
+            });
             Name = subs.Name;
             
-            lists.ForEach(ThreadList.Add);
+            l.ForEach(ThreadList.Add);
+            ThreadList.Add(new Thread { Title = "次の20件を読み込む...", CommentCount = -1 });
         }
 
         private Thread listViewSelectedItem;
