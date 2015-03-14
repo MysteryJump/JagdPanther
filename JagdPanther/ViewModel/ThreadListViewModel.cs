@@ -85,15 +85,16 @@ namespace JagdPanther.ViewModel
                 MessageBus.Current.SendMessage(ListViewSelectedItem, "OpenNewThreadTab");
         }
         public Subreddit OwnSubreddit { get; set; }
-        public async Task Initializer(string path)
+		public async Task Initializer(string path)
         {
-            var subs = OwnSubreddit = RedditInfo.RedditAccess.GetSubreddit(path);
-            Path = path;
+			
+			
+			var	subs = OwnSubreddit = RedditInfo.RedditAccess.GetSubreddit(path);
+			Path = path;
 
             var l = await Task.Factory.StartNew(() =>
             {
                 var lists = new List<Thread>();
-                subs.Subscribe();
 
                 pageCount = 1;
                 subs.Posts.Take(20)
@@ -104,11 +105,12 @@ namespace JagdPanther.ViewModel
                     });
                 return lists;
             });
-            Name = subs.Name;
+            Name = subs.Title;
             
             l.ForEach(ThreadList.Add);
             ThreadList.Add(new Thread { Title = "次の20件を読み込む...", CommentCount = -1 });
         }
+		
 
         private Thread listViewSelectedItem;
 
@@ -134,7 +136,9 @@ namespace JagdPanther.ViewModel
             {
                 if (sub.IsLinkPost)
                 {
-                    p = OwnSubreddit.SubmitPost(sub.Title, sub.PostString);
+					var pos = new PostingBeforeProcessor(sub.PostString);
+					pos.ReplaceEndOfLine();
+					p = OwnSubreddit.SubmitPost(sub.Title, pos.ProcessedText);
 					if (sub.IsNsfw)
 						p.MarkNSFW();
 					//if (sub.SelectedFlair.CssClass != null)

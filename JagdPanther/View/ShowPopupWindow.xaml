@@ -1,0 +1,107 @@
+﻿<Window x:Class="JagdPanther.View.ShowPopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        Title="ShowPopupWindow"
+        Width="450"
+        Height="100"
+        WindowStyle="None"
+        MouseLeave="Window_MouseLeave"
+        AllowsTransparency="True">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </Window.Resources>
+    <Grid>
+        <ScrollViewer>
+            <ItemsControl Name="ddds"
+                          BorderBrush="{x:Null}"
+                          BorderThickness="0"
+                          ScrollViewer.CanContentScroll="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding CommentNumber}">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding WriteCommentDialogOpenCommand}"
+                                                      CommandParameter="{Binding ThisObject}"
+                                                      Header="返信する" />
+                                            <MenuItem Command="{Binding SaveCommentCommand}"
+                                                      CommandParameter="{Binding ThisObject}"
+                                                      Header="{Binding SaveCommentHeader}" />
+                                            <MenuItem Command="{Binding EditComment}"
+                                                      Header="編集する"
+                                                      IsEnabled="{Binding IsOwner}" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding CopyCommentCommand}"
+                                                      CommandParameter="{Binding ThisObject}"
+                                                      Header="コメントをコピーする" />
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+                                <TextBlock Text=":" />
+                                <TextBlock Foreground="Red"
+                                           Text="(S)"
+                                           Visibility="{Binding IsGenerator,
+                                                                Converter={StaticResource BoolToVisibility}}" />
+                                <TextBlock Text="{Binding Author}" />
+                                <TextBlock Text="[" />
+                                <TextBlock Text="{Binding FlairText}" />
+                                <TextBlock Text="]  Vote:" />
+                                <TextBlock Text="{Binding Votes}" />
+                                <TextBlock Text=" 日付:" />
+                                <TextBlock Text="{Binding CreatedString}" />
+                                <TextBlock>
+                                    <Run />
+                                    <Underline>
+                                        <Underline.InputBindings>
+                                            <MouseBinding Command="{Binding VoteCommand}"
+                                                          CommandParameter="UpVote"
+                                                          Gesture="LeftClick" />
+                                        </Underline.InputBindings>
+                                        UpVote
+                                    </Underline>
+                                    <Run />
+                                    <Underline>
+                                        <Underline.InputBindings>
+                                            <MouseBinding Command="{Binding VoteCommand}"
+                                                          CommandParameter="DownVote"
+                                                          Gesture="LeftClick" />
+                                        </Underline.InputBindings>
+                                        DownVote
+                                    </Underline>
+                                </TextBlock>
+                            </StackPanel>
+                            <TextBlock x:Name="anc"
+                                       Width="50"
+                                       HorizontalAlignment="Left"
+                                       Text="{Binding AnchorText}"
+                                       Visibility="{Binding IsExistParentAnchor,
+                                                            Converter={StaticResource BoolToVisibility}}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseEnter">
+                                        <i:InvokeCommandAction Command="{Binding ShowParentCommentCommand}" CommandParameter="{Binding ElementName=anc}" />
+                                    </i:EventTrigger>
+
+                                </i:Interaction.Triggers>
+                            </TextBlock>
+                            <TextBlock Text="{Binding Body}" Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />
+                            <TextBlock Visibility="{Binding IsFirst, Converter={StaticResource BoolToVisibility}}">
+                                <LineBreak />
+                                <Run Text="ソース：" />
+                                <Underline Foreground="Blue">
+                                    <Run Text="{Binding Source}">
+                                        <Run.InputBindings>
+                                            <MouseBinding Command="{Binding ReadSourceCommand}" Gesture="LeftClick" />
+                                        </Run.InputBindings>
+                                    </Run>
+                                </Underline>
+                            </TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>

@@ -14,16 +14,27 @@ namespace JagdPanther.ViewModel
     {
         public MainViewModel()
         {
-            RedditInfo = RedditControl.Login();
+			RedditInfo = RedditControl.Login();
 			if (RedditInfo == null)
+			{
 				App.Current.Shutdown();
+			}
 			else
 			{
 				RegisterCommands();
 				InitilizeViewModels();
 				RegisterMessageListener();
 				Title = ReadonlyVars.ProgramName + " " + ReadonlyVars.ProgramVer;
-
+				//Account a = null;
+				//AccountList.Accounts.ToList().ForEach(x =>
+				//{
+				//	if (x.IsLogged == true)
+				//		a = x;
+				//});
+				//if (a != null)
+				//{
+				//	RedditInfo = RedditControl.Login(a);
+				//}
 			}
 		}
 
@@ -32,18 +43,35 @@ namespace JagdPanther.ViewModel
 			ThreadListTabs = new ThreadListTabsViewModel();
 			SubredditList = new SubredditListViewModel();
 			ThreadTabs = new ThreadTabsViewModel();
+			//AccountList = new AccountListViewModel();
 		}
 
 		private void RegisterMessageListener()
 		{
 			MessageBus.Current.Listen<Board>("OpenNewSubreddit").Subscribe(async (x) =>
 			{
+				
 				if (x == null)
 					return;
-				var v = new ThreadListViewModel();
-				v.RedditInfo = RedditInfo;
-				await v.Initializer(x.Path);
-				ThreadListTabs.ThreadListChildrens.Add(v);
+				if (x.BoardPlace == BoardLocate.Reddit)
+				{
+					var v = new ThreadListViewModel();
+					v.RedditInfo = RedditInfo;
+					await v.Initializer(x.Path);
+					ThreadListTabs.ThreadListChildrens.Add(v);
+
+				}
+				else if (x.BoardPlace == BoardLocate.MReddit)
+				{
+					var v = new MultiSubredditViewModel();
+					var path = x.Path;
+					if (path.StartsWith("/"))
+						path = path.Remove(0, 1);
+                    v.RedditInfo = RedditInfo;
+					
+					await v.Initializer(x.Path);
+					ThreadListTabs.ThreadListChildrens.Add(v);
+				}
 			});
 			MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>
 				{
@@ -53,6 +81,16 @@ namespace JagdPanther.ViewModel
 				{
 					ErrorMessage = x;
 				});
+			MessageBus.Current.Listen<Account>("ChangeAccount").Subscribe((x) =>
+			{
+				RedditInfo = RedditControl.Login(x);
+				AccountList.Accounts.Where(y => y.IsLogged == true).FirstOrDefault().IsLogged = false;
+				AccountList.Accounts.Where(y => y == x).FirstOrDefault().IsLogged = true;
+            });
+			MessageBus.Current.Listen<Account>("AddAccount").Subscribe((x) =>
+			{
+				AccountList.Accounts.Add(x);
+			});
 		}
 
         private void RegisterCommands()
@@ -160,5 +198,7 @@ namespace JagdPanther.ViewModel
             get { return windowWidth; }
             set { windowWidth = value; this.RaiseAndSetIfChanged(ref windowWidth, value); Properties.Settings.Default.WindowWidth = value; }
         }
-    }
+
+		public AccountListViewModel AccountList { get; private set; }
+	}
 }

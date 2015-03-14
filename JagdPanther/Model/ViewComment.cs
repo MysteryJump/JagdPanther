@@ -10,12 +10,16 @@ using System.Windows;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Globalization;
+using System.Windows.Controls;
+using JagdPanther.View;
 
 namespace JagdPanther.Model
 {
     [DataContract]
-    public class ViewComment
+	public class ViewComment : ReactiveObject
     {
+		[IgnoreDataMember]
+		public bool IsFirst { get;set; }
         [IgnoreDataMember]
         public string BasePostAuthor { get; set; }
         [IgnoreDataMember]
@@ -49,17 +53,19 @@ namespace JagdPanther.Model
                 {
                     lvc.Add((ViewComment)x);
                 });
-            var vc = new ViewComment()
-            {
-                FlairText = v.AuthorFlairText,
-                Body = v.Body,
-                Author = v.Author,
-                BodyHtml = v.BodyHtml,
-                Children = lvc,
-                Created = v.Created,
-                ParentPost = (Post)v.Parent,
-                BaseComment = v,
-                Votes = v.Upvotes - v.Downvotes
+			var vc = new ViewComment()
+			{
+				FlairText = v.AuthorFlairText,
+				Body = v.Body,
+				Author = v.Author,
+				BodyHtml = v.BodyHtml,
+				Children = lvc,
+				Created = v.Created,
+				ParentPost = (Post)v.Parent,
+				BaseComment = v,
+				Votes = v.Upvotes - v.Downvotes,
+				IsFirst = false,
+				Id = v.Id
             };
             return vc;
         }
@@ -93,29 +99,33 @@ namespace JagdPanther.Model
         public async Task OpenWriteCommentDialogExcute(object sender)
         {
             var vc = sender as ViewComment;
-            if (vc.BaseComment == null)
-            {
-                var dia = new Dialogs.OpenWriteWindow();
+			var dia = new Dialogs.OpenWriteWindow();
+			dia.ShowDialog();
+			var data = dia.WriteCommentData;
+			var pos = new PostingBeforeProcessor(data);
+			pos.ReplaceEndOfLine();
 
-                dia.ShowDialog();
-                if (dia.IsClickWriteButton == true)
-                    vc.ParentPost.Comment(dia.WriteCommentData);
-            }
+			if (vc.BaseComment == null)
+			{
+				if (dia.IsClickWriteButton == true)
+					vc.ParentPost.Comment(pos.ProcessedText);
+			}
             else
             {
-                var dia = new Dialogs.OpenWriteWindow();
-
-                if (dia.ShowDialog() == true)
-                    vc.BaseComment.Reply(dia.WriteCommentData);
+				if (dia.IsClickWriteButton == true)
+					vc.BaseComment.Reply(pos.ProcessedText);
             }
         }
         public ViewComment()
         {
-            WriteCommentDialogOpenCommand = ReactiveCommand.CreateAsyncTask(OpenWriteCommentDialogExcute);
+			ShowParentCommentCommand = ReactiveCommand.CreateAsyncTask(ShowParentCommentExcute);
+			WriteCommentDialogOpenCommand = ReactiveCommand.CreateAsyncTask(OpenWriteCommentDialogExcute);
             VoteCommand = ReactiveCommand.CreateAsyncTask(VoteExcute);
 			ReadSourceCommand = ReactiveCommand.CreateAsyncTask(ReadSourceExcute);
 			CopyCommentCommand = ReactiveCommand.CreateAsyncTask(CopyCommentExcute);
-        }
+			EditCommand = ReactiveCommand.CreateAsyncTask(EditExcute);
+			ShowIdCommentCommand = ReactiveCommand.CreateAsyncTask(ShowIdCommentExcute);
+		}
         [IgnoreDataMember]
         public IReactiveCommand<Unit> VoteCommand { get; set; }
         public async Task VoteExcute(object sender)
@@ -132,10 +142,12 @@ namespace JagdPanther.Model
             if (sender.ToString() == "UpVote")
             {
                 x.Upvote();
+				Votes++;
             }
             else
             {
                 x.Downvote();
+				Votes--;
             }
         }
         
@@ -196,11 +208,46 @@ namespace JagdPanther.Model
 					return "保存する";
 			}
 		}
+		[IgnoreDataMember]
+		public IReactiveCommand<Unit> EditCommand { get; set; }
+
+		public async Task EditExcute(object sender)
+		{
+			var c = new Dialogs.EditTextWindow();
+			c.TextBoxText = Body;
+			c.ShowDialog();
+			try
+			{
+				var pos = new PostingBeforeProcessor(c.TextBoxText);
+				pos.ReplaceEndOfLine();
+				BaseComment.EditText(pos.ProcessedText);
+			}
+			catch (Exception)
+			{ 
+				MessageBox.Show("編集できませんでした");
+			}
+		}
+
         [IgnoreDataMember]
         public string CreatedString
         {
             get { return Created.ToString(CultureInfo.GetCultureInfo("ja-JP")); }
         }
+		[IgnoreDataMember]
+		public IReactiveCommand<Unit> ShowParentCommentCommand { get;set; }
 
+		public async Task ShowParentCommentExcute(object sender)
+		{
+			ResponsePopup.ShowParentPopup(sender as TextBlock);
+		}
+
+		[DataMember]
+		public string Id { get; internal set; }
+
+		public IReactiveCommand<Unit> ShowIdCommentCommand { get;set; }
+		public async Task ShowIdCommentExcute(object sender)
+		{
+			ResponsePopup.ShowIdPopup(sender as TextBlock);
+		}
     }
 }

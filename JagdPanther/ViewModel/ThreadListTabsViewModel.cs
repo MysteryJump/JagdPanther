@@ -9,13 +9,22 @@ namespace JagdPanther.ViewModel
     {
 		public ThreadListTabsViewModel()
 		{
-			MessageBus.Current.Listen<ThreadListViewModel>("RemoveThreadListTab")
+			MessageBus.Current.Listen<object>("RemoveThreadListTab")
 				.Subscribe(x => ThreadListChildrens.Remove(x));
 			MessageBus.Current.Listen<string>("RemoveAllThreadListTab")
 				.Subscribe(_ => ThreadListChildrens.Clear());
-			ThreadListChildrens = new ObservableCollection<ThreadListViewModel>();
+			ThreadListChildrens = new ObservableCollection<object>();
         }
 
-        public ObservableCollection<ThreadListViewModel> ThreadListChildrens { get; set; }
-    }
+		public ObservableCollection<object> ThreadListChildrens { get; set; }
+
+		private object selectedTab;
+
+		public object SelectedTab
+		{
+			get { return selectedTab; }
+			set { selectedTab = value; this.RaiseAndSetIfChanged(ref selectedTab, value); }
+		}
+
+	}
 }

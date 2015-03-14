@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JagdPanther.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +20,6 @@ namespace JagdPanther
             else
 				throw new InvalidOperationException();
 		}
+
 	}
 }

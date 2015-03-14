@@ -82,7 +82,9 @@ namespace JagdPanther.Model
                         Created = PostThread.Created,
 						Source = PostThread.Url.ToString(),
                         ParentPost = PostThread,
-                        Votes = PostThread.Upvotes - PostThread.Downvotes
+                        Votes = PostThread.Upvotes - PostThread.Downvotes,
+						IsFirst = true,
+						Id = PostThread.Id
 
                     };
                     queue.Enqueue(host);
@@ -112,7 +114,8 @@ namespace JagdPanther.Model
                         coms.Add(co);
                     }
 
-                    return coms.OrderBy(x => x.Created)
+					return coms.OrderByDescending(x => x.IsFirst)
+						.ThenBy(x => x.Created)
                         .Select(x =>
                             {
                                 if (x.Parent != null)
@@ -121,6 +124,7 @@ namespace JagdPanther.Model
                                 i++;
                                 return x;
                             })
+						.Where(x => x.Created != new DateTime() && x.ParentAnchor != 0)
                         .ToList();
                 }
                 catch (WebException w)

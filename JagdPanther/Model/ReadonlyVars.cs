@@ -23,5 +23,12 @@ namespace JagdPanther.Model
             .GetExecutingAssembly()
             .GetName().Name;
 
+		public static string UserName
+		{ get; }
+		= Environment.UserName;
+
+		public static string MachineName
+		{ get; }
+		= Environment.MachineName;
     }
 }

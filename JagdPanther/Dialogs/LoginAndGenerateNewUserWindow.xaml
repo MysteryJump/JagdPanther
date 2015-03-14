@@ -15,67 +15,127 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid>
-            <TextBox Height="20" Margin="10,55,10,194" Name="create_user"/>
-            <TextBox Height="20" Margin="10,100,10,149" Name="create_password"/>
-            <Button Width="65"
-                    Height="20"
-                    Margin="170,239,10,10"
-                    Content="登録する" Click="Button_Click" />
-            <TextBlock x:Name="textBlock"
-                       Margin="10,10,0,0"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       FontSize="16"
-                       Text="アカウントを作る"
-                       TextWrapping="Wrap" />
-            <TextBlock x:Name="textBlock1"
-                       Margin="10,35,0,0"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       Text="ユーザー名"
-                       TextWrapping="Wrap" />
-            <TextBlock x:Name="textBlock2"
-                       Height="15"
-                       Margin="10,80,0,0"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       TextWrapping="Wrap"><Run Text="パスワード" />
-                <LineBreak /><Run />
-            </TextBlock>
-            <TextBlock x:Name="textBlock3"
-                       Margin="10,125,0,0"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       TextWrapping="Wrap"><Run Text="パスワード（" /><Run Text="再確認" /><Run Text="）" />
-            </TextBlock>
-            <TextBox Height="20" Margin="10,145,10,104" Name="password_validation" />
-            <TextBlock x:Name="textBlock4"
-            	Margin="10,170,0,0"
-            	HorizontalAlignment="Left"
-            	VerticalAlignment="Top"
-            	TextWrapping="Wrap"><Run Text="メールアドレス"/><Run Text="（"/><Run Text="オプション"/><Run Text="）"/></TextBlock>
-            <TextBox Height="20" Margin="10,190,10,59" Name="mail"/>
-            <TextBlock x:Name="textBlock5" HorizontalAlignment="Left" Margin="20,239,0,0" TextWrapping="Wrap" Text="UserAgreement" VerticalAlignment="Top" MouseDown="textBlock5_MouseDown"/>
-            <TextBlock x:Name="textBlock6" HorizontalAlignment="Left" Margin="20,224,0,0" TextWrapping="Wrap" Text="Privacy Policy" VerticalAlignment="Top" MouseDown="textBlock6_MouseDown"/>
+            <StackPanel>
 
+
+                <TextBlock x:Name="textBlock"
+                           Margin="5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           FontSize="16"
+                           Text="アカウントを作る"
+                           TextWrapping="Wrap" />
+
+                <TextBlock x:Name="textBlock1"
+                           Margin="5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Text="ユーザー名"
+                           TextWrapping="Wrap" />
+                <TextBox Name="create_user"
+                         Height="20"
+                         Margin="5,0" />
+
+                <TextBlock x:Name="textBlock2"
+                           Height="15"
+                           Margin="5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           TextWrapping="Wrap"><Run Text="パスワード" />
+                    <LineBreak /><Run />
+                </TextBlock>
+                <TextBox Name="create_password"
+                         Height="20"
+                         Margin="5,0" />
+                <TextBlock x:Name="textBlock3"
+                           Margin="5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           TextWrapping="Wrap"><Run Text="パスワード（" /><Run Text="再確認" /><Run Text="）" />
+                </TextBlock>
+                <TextBox Name="password_validation"
+                         Height="20"
+                         Margin="5,0" />
+                <TextBlock x:Name="textBlock4"
+                           Margin="5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           TextWrapping="Wrap"><Run Text="メールアドレス" /><Run Text="（" /><Run Text="オプション" /><Run Text="）" />
+                </TextBlock>
+                <TextBox Name="mail"
+                         Height="20"
+                         Margin="5,0" />
+                <TextBlock x:Name="textBlock5"
+                           Margin="5,2"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           MouseDown="textBlock5_MouseDown"
+                           Text="UserAgreement"
+                           TextWrapping="Wrap" />
+                <TextBlock x:Name="textBlock6"
+                           Margin="5,2"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           MouseDown="textBlock6_MouseDown"
+                           Text="Privacy Policy"
+                           TextWrapping="Wrap" />
+                <Button Width="65"
+                        Height="20"
+                        Margin="10"
+                        HorizontalAlignment="Right"
+                        Click="Button_Click"
+                        Content="登録する" />
+            </StackPanel>
         </Grid>
         <Border Grid.Column="1"
                 Width="1"
                 Margin="0,15"
                 Background="Black" />
         <Grid Grid.Column="2">
-            <TextBlock x:Name="textBlock23"
-                       Margin="10,10,0,0"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       FontSize="16"
-                       Text="ログイン"
-                       TextWrapping="Wrap" />
-            <Button x:Name="button" Content="ログイン" HorizontalAlignment="Left" Margin="161,244,0,0" VerticalAlignment="Top" Width="75" Click="button_Click_1"/>
-            <TextBlock x:Name="textBlock7" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="ユーザー名" VerticalAlignment="Top"/>
-            <TextBox Height="20" Margin="10,55,10,194" Name="log_user"/>
-            <TextBlock x:Name="textBlock8" HorizontalAlignment="Left" Margin="10,80,0,0" TextWrapping="Wrap" Text="パスワード" VerticalAlignment="Top"/>
-            <TextBox Height="20" Margin="10,100,10,149" Name="log_pass"/>
+            <StackPanel>
+                <TextBlock x:Name="textBlock23"
+                           Margin="10"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           FontSize="16"
+                           Text="ログイン"
+                           TextWrapping="Wrap" />
+                <TextBlock x:Name="textBlock7"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Text="ユーザー名"
+                           Margin="5"
+                           TextWrapping="Wrap" />
+                <TextBox Name="log_user"
+                         Height="20"
+                         Margin="5,0"
+                          />
+                <TextBlock x:Name="textBlock8"
+                           
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Text="パスワード"
+                           Margin="5"
+                           TextWrapping="Wrap" />
+                <TextBox Name="log_pass"
+                         Height="20"
+                         Margin="5,0"
+                         />
+                <Button x:Name="button"
+                        Width="75"
+                        Margin="5"
+                        
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Click="button_Click_1"
+                        Content="ログイン" />
+            </StackPanel>
+
+
+
+
+
+
         </Grid>
     </Grid>
 </Window>

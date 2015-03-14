@@ -17,15 +17,17 @@ namespace JagdPanther
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (!File.Exists(Folders.LoginInfoXml))
-            {
-                new Dialogs.LoginAndGenerateNewUserWindow().ShowDialog();
-                JagdPanther.Properties.Settings.Default["IsLoggedin"] = true;
-            }
-            else
-            {
-                JagdPanther.Properties.Settings.Default["IsLoggedin"] = true;
-            }
-        }
+			if (!File.Exists(Folders.LoginInfoXml))
+			{
+				var s = new Dialogs.LoginAndGenerateNewUserWindow();
+				s.ShowDialog();
+				new LoginInfo() { Name = s.Data.UserName, Password = s.Data.Password }.SaveData();
+				JagdPanther.Properties.Settings.Default["IsLoggedin"] = true;
+			}
+			else
+			{
+				JagdPanther.Properties.Settings.Default["IsLoggedin"] = true;
+			}
+		}
     }
 }

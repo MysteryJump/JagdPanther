@@ -47,10 +47,10 @@ namespace JagdPanther.Dialogs
                     r.RegisterAccount(this.create_user.Text, this.create_password.Text, this.mail.Text);
                 }
 
-                var re = new LoginInfo();
-                re.Name = this.create_user.Text;
+				var re = new Account();
+				re.UserName = this.create_user.Text;
                 re.Password = this.create_password.Text;
-                re.SaveData();
+				Data = re;
             }
             this.Close();
 
@@ -58,11 +58,14 @@ namespace JagdPanther.Dialogs
 
         private void button_Click_1(object sender, RoutedEventArgs e)
         {
-            var r = new LoginInfo();
-            r.Name = this.log_user.Text;
+            var r = new Account();
+			r.UserName = this.log_user.Text;
             r.Password = this.log_pass.Text;
-            r.SaveData();
+			Data = r;
             this.Close();
         }
-    }
+
+		public Account Data { get; set; }
+
+	}
 }

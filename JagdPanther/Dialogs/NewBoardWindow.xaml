@@ -13,6 +13,7 @@
         <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="10,58,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="URL(Redditの場合は/r/***の形式で入力)"/></TextBlock>
         <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="10,126,0,0" VerticalAlignment="Top" Width="120">
             <ComboBoxItem Content="Reddit" Name="Reddit"/>
+            <ComboBoxItem Content="MultiReddit" Name="MReddit"/>
             <ComboBoxItem Content="2ch互換" Name="Twoch" IsEnabled="False"/>
             <ComboBoxItem Content="したらば" Name="Jbbs" IsEnabled="False"/>
         </ComboBox>

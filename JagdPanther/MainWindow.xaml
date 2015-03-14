@@ -43,8 +43,12 @@
                           SelectedItem="{Binding ListViewSelectedItem}">
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="UpVote" Command="{Binding VoteCommand}" CommandParameter="Up"/>
-                            <MenuItem Header="DownVote" Command="{Binding VoteCommand}" CommandParameter="Down"/>
+                            <MenuItem Command="{Binding VoteCommand}"
+                                      CommandParameter="Up"
+                                      Header="UpVote" />
+                            <MenuItem Command="{Binding VoteCommand}"
+                                      CommandParameter="Down"
+                                      Header="DownVote" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                     <i:Interaction.Triggers>
@@ -52,19 +56,24 @@
                             <i:InvokeCommandAction Command="{Binding SelectedCommand}" CommandParameter="{Binding ListViewSelectedItem}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <EventSetter Event="Click" Handler="ThreadListColumnClicked" />
+                        </Style>
+                    </ListView.Resources>
                     <ListView.View>
                         <GridView>
                             <GridViewColumn DisplayMemberBinding="{Binding Title}">
-                                <GridViewColumnHeader Content="タイトル" />
+                                <GridViewColumnHeader Content="タイトル" Tag="Title" />
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding CreatedTimeString}">
-                                <GridViewColumnHeader Content="作成時刻" />
+                                <GridViewColumnHeader Content="作成時刻" Tag="CreatedTime" />
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding VoteCount}">
-                                <GridViewColumnHeader Content="Vote数" />
+                                <GridViewColumnHeader Content="Vote数" Tag="VoteCount" />
                             </GridViewColumn>
                             <GridViewColumn DisplayMemberBinding="{Binding CommentCount}">
-                                <GridViewColumnHeader Content="コメント数" />
+                                <GridViewColumnHeader Content="コメント数" Tag="CommentCount" />
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
@@ -88,6 +97,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,5">
+
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding CommentNumber}">
                                             <TextBlock.ContextMenu>
@@ -97,8 +107,10 @@
                                                               Header="返信する" />
                                                     <MenuItem Command="{Binding SaveCommentCommand}"
                                                               CommandParameter="{Binding ThisObject}"
-                                                              Header="{Binding SaveCommentHeader}"/>
-                                                    <MenuItem Header="編集する" IsEnabled="{Binding IsOwner}" Command="{Binding EditComment}"/>
+                                                              Header="{Binding SaveCommentHeader}" />
+                                                    <MenuItem Command="{Binding EditComment}"
+                                                              Header="編集する"
+                                                              IsEnabled="{Binding IsOwner}" />
                                                     <Separator />
                                                     <MenuItem Command="{Binding CopyCommentCommand}"
                                                               CommandParameter="{Binding ThisObject}"
@@ -107,14 +119,25 @@
                                             </TextBlock.ContextMenu>
                                         </TextBlock>
                                         <TextBlock Text=":" />
-                                        <TextBlock Text="S" Foreground="Red" Visibility="{Binding IsGenerator, Converter={StaticResource BoolToVisibility}}"/>
-                                        <TextBlock Text="{Binding Author}" />
-                                        <TextBlock Text="[" />
+                                        <TextBlock Foreground="Red"
+                                                   Text="(S)"
+                                                   Visibility="{Binding IsGenerator,
+                                                                        Converter={StaticResource BoolToVisibility}}" />
+                                        <TextBlock Text="No Name" />
+                                        <TextBlock Text=" [" />
                                         <TextBlock Text="{Binding FlairText}" />
                                         <TextBlock Text="]  Vote:" />
                                         <TextBlock Text="{Binding Votes}" />
-                                        <TextBlock Text=" 日付:"/>
+                                        <TextBlock Text=" 日付:" />
                                         <TextBlock Text="{Binding CreatedString}" />
+                                        <TextBlock Text=" Author:" />
+                                        <TextBlock Text="{Binding Author}" x:Name="ss">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseEnter">
+                                                    <i:InvokeCommandAction Command="{Binding ShowIdCommentCommand}" CommandParameter="{Binding ElementName=ss}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBlock>
                                         <TextBlock>
                                             <Run />
                                             <Underline>
@@ -137,11 +160,20 @@
                                         </TextBlock>
                                     </StackPanel>
                                     <TextBlock x:Name="anc"
+                                               Width="50"
+                                               HorizontalAlignment="Left"
                                                Text="{Binding AnchorText}"
                                                Visibility="{Binding IsExistParentAnchor,
-                                                                    Converter={StaticResource BoolToVisibility}}" />
+                                                                    Converter={StaticResource BoolToVisibility}}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseEnter">
+                                                <i:InvokeCommandAction Command="{Binding ShowParentCommentCommand}" CommandParameter="{Binding ElementName=anc}" />
+                                            </i:EventTrigger>
+
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
                                     <TextBlock Text="{Binding Body}" Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />
-                                    <TextBlock Visibility="{Binding IsGenerator, Converter={StaticResource BoolToVisibility}}">
+                                    <TextBlock Visibility="{Binding IsFirst, Converter={StaticResource BoolToVisibility}}">
                                         <LineBreak />
                                         <Run Text="ソース：" />
                                         <Underline Foreground="Blue">
@@ -167,7 +199,9 @@
                         <RowDefinition Height="3*" />
                     </Grid.RowDefinitions>
                     <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
-                    <TextBox Grid.Row="1" Text="{Binding WriteText}" AcceptsReturn="True"/>
+                    <TextBox Grid.Row="1"
+                             AcceptsReturn="True"
+                             Text="{Binding WriteText}" />
                 </Grid>
             </Grid>
 
@@ -190,6 +224,17 @@
                 <MenuItem Command="{Binding OpenLicenseWindowCommand}" Header="ライセンス情報" />
                 <MenuItem Command="{Binding OpenVersionWindowCommand}" Header="バージョン情報" />
             </MenuItem>
+            <!--
+            <MenuItem Header="アカウントの切り替え" ItemsSource="{Binding AccountList.Accounts}">
+                <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                        <MenuItem IsCheckable="True"
+                                  Command="{Binding ChangeAccountCommand}"
+                                  IsChecked="{Binding IsLogged}"
+                                  Header="{Binding Header}"/>
+                    </DataTemplate>
+                </MenuItem.ItemTemplate>
+            </MenuItem>-->
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -231,7 +276,9 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
-                        <TabControl ContentTemplate="{StaticResource threadListView}" ItemsSource="{Binding ThreadListTabs.ThreadListChildrens}">
+                        <TabControl ContentTemplate="{StaticResource threadListView}"
+                                    ItemsSource="{Binding ThreadListTabs.ThreadListChildrens}"
+                                    SelectedItem="{Binding ThreadListTabs.SelectedTab}">
                             <TabControl.ItemTemplate>
                                 <DataTemplate DataType="vm:ThreadListViewModel">
                                     <TextBlock Text="{Binding Name}">

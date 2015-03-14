@@ -10,6 +10,8 @@ namespace JagdPanther.Model
 		[EnumMember]
         Jbbs,
 		[EnumMember]
-        Reddit
+        Reddit,
+		[EnumMember]
+		MReddit
     }
 }
