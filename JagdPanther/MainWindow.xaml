@@ -75,6 +75,9 @@
                             <GridViewColumn DisplayMemberBinding="{Binding CommentCount}">
                                 <GridViewColumnHeader Content="コメント数" Tag="CommentCount" />
                             </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Speed}">
+                                <GridViewColumnHeader Content="勢い" Tag="Speed"/>
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>

@@ -24,6 +24,19 @@ namespace JagdPanther.Model
         {
             get { return CreatedTime.ToString(CultureInfo.GetCultureInfo("ja-JP")); }
         }
+		[IgnoreDataMember]
+		public double Speed
+		{
+			get
+			{
+				if (CreatedTime == DateTime.MinValue)
+					return 0;
+				var now = DateTimeOffset.Now.AddHours(9).ToUnixTimeSeconds();
+				var created = new DateTimeOffset(CreatedTime).ToUnixTimeSeconds();
+				return Math.Truncate(86400.0 * CommentCount / (now - created)*10) / 10;
+			}
+		}
+
         [IgnoreDataMember]
         public Post PostThread { get; set; }
         [IgnoreDataMember]

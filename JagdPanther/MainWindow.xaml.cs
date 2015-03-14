@@ -60,6 +60,9 @@ namespace JagdPanther
 					case "CommentCount":
 						data = new List<Thread>(obj.ThreadList).OrderBy(z => z.CommentCount).ToList();
 						break;
+					case "Speed":
+						data = new List<Thread>(obj.ThreadList).OrderBy(z => z.Speed).ToList();
+						break;
 					default:
 						return;
 				}
@@ -79,6 +82,9 @@ namespace JagdPanther
 						break;
 					case "CommentCount":
 						data = new List<Thread>(obj.ThreadList).OrderByDescending(z => z.CommentCount).ToList();
+						break;
+					case "Speed":
+						data = new List<Thread>(obj.ThreadList).OrderByDescending(z => z.Speed).ToList();
 						break;
 					default:
 						return;
