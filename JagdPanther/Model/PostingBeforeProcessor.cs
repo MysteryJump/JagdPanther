@@ -17,7 +17,7 @@ namespace JagdPanther.Model
 
         public void ReplaceEndOfLine()
         {
-            ProcessedText = BaseText.Replace("\r\n", "\r\n  ");
+            ProcessedText = BaseText.Replace("\r\n", "  \r\n");
         }
     }
 }

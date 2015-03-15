@@ -18,6 +18,7 @@ namespace JagdPanther.Model
     [DataContract]
 	public class ViewComment : ReactiveObject
     {
+
 		[IgnoreDataMember]
 		public bool IsFirst { get;set; }
         [IgnoreDataMember]
@@ -42,8 +43,8 @@ namespace JagdPanther.Model
         public DateTime Created { get; set; }
         [DataMember]
         public string Source { get; set; }
-        [DataMember]
-        public bool IsGenerator { get { return BasePostAuthor == Author; } }
+		[IgnoreDataMember]
+		public bool IsGenerator { get { return BasePostAuthor == Author; } }
         [IgnoreDataMember]
         public bool HasBody { get { return (Body != null || Body != String.Empty); } }
         public static explicit operator ViewComment(Comment v)

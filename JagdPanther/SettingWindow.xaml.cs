@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,14 +23,23 @@ namespace JagdPanther
 		public SettingWindow()
 		{
 			InitializeComponent();
+			MessageBus.Current.Listen<string>("CloseSettingWindow").Subscribe(_ => this.Close());
+			RegisterTags();
 		}
 
-        public void SelectedItem(object sender, RoutedEventArgs e)
-        {
-			return;
-            (this.DataContext as ViewModel.EditConfigurationViewModel)
-                .SelectTreeViewItemCommand
-                .Execute((sender as TreeViewItem).Tag);
-        }
+		private void RegisterTags()
+		{
+			enviroment.Tag = new View.EnviromentSetting();
+		}
+
+		public void SelectedItem(object sender, RoutedEventArgs e)
+		{
+			if (!string.IsNullOrWhiteSpace((sender as TreeViewItem).Name))
+			{
+				var data = ((sender as TreeViewItem).Tag as UIElement);
+				d.Content = data;
+			}
+			
+		}
 	}
 }

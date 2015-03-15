@@ -11,23 +11,25 @@ namespace JagdPanther.ViewModel
 	public class EditConfigurationViewModel : ReactiveObject
 	{
 		public IReactiveCommand<Unit> OkCommand { get; set; }
-		public IReactiveCommand<Unit> CancelCommand { get; set; }
 		public IReactiveCommand<Unit> SelectTreeViewItemCommand { get; set; }
 
 
 		public async Task OkExcute(object sender)
 		{
-
+			Properties.Settings.Default.Save();
+			MessageBus.Current.SendMessage("", "CloseSettingWindow");
 		}
 
-		public async Task CancelExcute(object sender)
-		{
-
-		}
 
 		public async Task SelectTreeViewItemExcute(object sender)
 		{
 
+		}
+
+		public EditConfigurationViewModel()
+		{
+			OkCommand = ReactiveCommand.CreateAsyncTask(OkExcute);
+			SelectTreeViewItemCommand = ReactiveCommand.CreateAsyncTask(SelectTreeViewItemExcute);
 		}
 	}
 }

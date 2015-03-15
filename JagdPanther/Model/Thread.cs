@@ -11,12 +11,14 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
 using System.Runtime.Serialization;
+using System.IO;
 
 namespace JagdPanther.Model
 {
     [DataContract]
     public class Thread : ReactiveObject
     {
+
         [DataMember]
         public DateTime CreatedTime { get; set; }
         [IgnoreDataMember]
@@ -42,8 +44,15 @@ namespace JagdPanther.Model
         [IgnoreDataMember]
         public List<Comment> RawComments
         {
-            get { return PostThread.Comments.ToList(); }
+            get
+			{
+				//if (rawComments == null)
+				return PostThread.Comments.ToList();
+				//return rawComments;
+			}
         }
+		[IgnoreDataMember]
+		private List<Comment> rawComments;
         [DataMember]
         public string Title { get; set; }
         [DataMember]
@@ -57,7 +66,7 @@ namespace JagdPanther.Model
             {
                 if (CommentCount == -1)
                     return null;
-                if (sortedComments == null)
+				if (sortedComments == null)
                     Task.Factory.StartNew(SubscribeComments).Wait();
                 return sortedComments;
             }
@@ -102,7 +111,7 @@ namespace JagdPanther.Model
                     };
                     queue.Enqueue(host);
 
-                    PostThread.Comments.ToList()
+					RawComments.ToList()
                         .ForEach(x =>
                             {
                                 var vc = new ViewComment();
@@ -127,9 +136,13 @@ namespace JagdPanther.Model
                         coms.Add(co);
                     }
 
+					var dcs = new DataContractSerializer(typeof(Thread));
+					using (var fs = File.Open(Folders.CommentListFolder + "\\" + PostThread.Id + "-" + PostThread.Subreddit + ".xml", FileMode.Create))
+						dcs.WriteObject(fs, this);
 					return coms.OrderByDescending(x => x.IsFirst)
 						.ThenBy(x => x.Created)
-                        .Select(x =>
+						.Where(x => x.Created != new DateTime() || x.ParentAnchor == 0)
+						.Select(x =>
                             {
                                 if (x.Parent != null)
                                     x.ParentAnchor = x.Parent.CommentNumber;
@@ -137,7 +150,6 @@ namespace JagdPanther.Model
                                 i++;
                                 return x;
                             })
-						.Where(x => x.Created != new DateTime() && x.ParentAnchor != 0)
                         .ToList();
                 }
                 catch (WebException w)
@@ -175,7 +187,7 @@ namespace JagdPanther.Model
 
         public async Task WriteCommentExcute(object sender)
         {
-            var pos = new PostingBeforeProcessor(writeText);
+			var pos = new PostingBeforeProcessor(WriteText);
             pos.ReplaceEndOfLine();
 
             var reg = Regex.Match(pos.ProcessedText, @">>(\d+)");
@@ -189,6 +201,7 @@ namespace JagdPanther.Model
             {
                 PostThread.Comment(writeText);
             }
+			WriteText = "";
         }
         [IgnoreDataMember]
 		public Color BackgroundColor { get { return Properties.Settings.Default.ThreadViewBackgroundColor; } }

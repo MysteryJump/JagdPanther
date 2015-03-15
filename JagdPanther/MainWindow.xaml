@@ -21,7 +21,6 @@
     </i:Interaction.Triggers>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
-
         <DataTemplate x:Key="threadListView" DataType="vm:ThreadListViewModel">
 
             <Grid>
@@ -95,11 +94,14 @@
                                   BorderBrush="{x:Null}"
                                   BorderThickness="0"
                                   ItemsSource="{Binding SortedComments}"
-                                  ScrollViewer.CanContentScroll="False">
+                                  ScrollViewer.CanContentScroll="False"
+                                  VirtualizingPanel.IsVirtualizing="True"
+                                  VirtualizingPanel.ScrollUnit="Pixel"
+                                  VirtualizingPanel.VirtualizationMode="Recycling">
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Margin="0,5">
+                                <VirtualizingStackPanel Margin="0,5">
 
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding CommentNumber}">
@@ -162,9 +164,9 @@
                                             </Underline>
                                         </TextBlock>
                                     </StackPanel>
-                                    <TextBlock x:Name="anc"
-                                               Width="50"
-                                               HorizontalAlignment="Left"
+                                    <Grid HorizontalAlignment="Left">
+                                        <TextBlock x:Name="anc"
+                                               HorizontalAlignment="Stretch"
                                                Text="{Binding AnchorText}"
                                                Visibility="{Binding IsExistParentAnchor,
                                                                     Converter={StaticResource BoolToVisibility}}">
@@ -172,9 +174,9 @@
                                             <i:EventTrigger EventName="MouseEnter">
                                                 <i:InvokeCommandAction Command="{Binding ShowParentCommentCommand}" CommandParameter="{Binding ElementName=anc}" />
                                             </i:EventTrigger>
-
                                         </i:Interaction.Triggers>
-                                    </TextBlock>
+                                        </TextBlock>
+                                    </Grid>
                                     <TextBlock Text="{Binding Body}" Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />
                                     <TextBlock Visibility="{Binding IsFirst, Converter={StaticResource BoolToVisibility}}">
                                         <LineBreak />
@@ -187,7 +189,7 @@
                                             </Run>
                                         </Underline>
                                     </TextBlock>
-                                </StackPanel>
+                                </VirtualizingStackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -209,6 +211,7 @@
             </Grid>
 
         </DataTemplate>
+        
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -221,7 +224,7 @@
                 <MenuItem Command="{Binding ExitCommand}" Header="終了" />
             </MenuItem>
             <MenuItem Header="編集">
-                <!--<MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" />-->
+                <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" />
             </MenuItem>
             <MenuItem Header="ヘルプ">
                 <MenuItem Command="{Binding OpenLicenseWindowCommand}" Header="ライセンス情報" />

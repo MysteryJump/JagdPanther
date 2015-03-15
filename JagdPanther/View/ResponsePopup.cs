@@ -16,7 +16,7 @@ namespace JagdPanther.View
 	{
 		internal static void ShowParentPopup(TextBlock comment)
 		{
-			Point swp = new Point(System.Windows.Forms.Cursor.Position.X -5,System.Windows.Forms.Cursor.Position.Y-5);
+			Point swp = new Point(System.Windows.Forms.Cursor.Position.X,System.Windows.Forms.Cursor.Position.Y);
 			var w = new ShowPopupWindow();
 			w.Background = new SolidColorBrush(Properties.Settings.Default.ThreadViewBackgroundColor);
 			w.SetItem((comment.DataContext as ViewComment).Parent);	
@@ -29,7 +29,7 @@ namespace JagdPanther.View
 
 		internal static void ShowIdPopup(TextBlock comment)
 		{
-			Point swp = new Point(System.Windows.Forms.Cursor.Position.X - 5, System.Windows.Forms.Cursor.Position.Y - 5);
+			Point swp = new Point(System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y);
 			var w = new ShowPopupWindow();
 			var v = (comment.DataContext as ViewComment);
             w.Background = new SolidColorBrush(Properties.Settings.Default.ThreadViewBackgroundColor);

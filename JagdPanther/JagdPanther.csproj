@@ -54,6 +54,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Markdown.Xaml">
+      <HintPath>..\Markdown.Xaml.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -143,6 +146,7 @@
     <Compile Include="Model\LoginInfo.cs" />
     <Compile Include="Model\OAuthLoginInfo.cs" />
     <Compile Include="Model\PostingBeforeProcessor.cs" />
+    <Compile Include="Model\ProgramInitializer.cs" />
     <Compile Include="Model\ReadonlyVars.cs" />
     <Compile Include="Model\RedditControl.cs" />
     <Compile Include="Model\Thread.cs" />
@@ -159,6 +163,9 @@
     <Compile Include="ViewModel\ThreadListTabsViewModel.cs" />
     <Compile Include="ViewModel\ThreadListViewModel.cs" />
     <Compile Include="ViewModel\ThreadTabsViewModel.cs" />
+    <Compile Include="View\EnviromentSetting.xaml.cs">
+      <DependentUpon>EnviromentSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ResponsePopup.cs" />
     <Compile Include="View\ShowPopupWindow.xaml.cs">
       <DependentUpon>ShowPopupWindow.xaml</DependentUpon>
@@ -206,6 +213,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EnviromentSetting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

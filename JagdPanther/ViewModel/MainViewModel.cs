@@ -18,7 +18,8 @@ namespace JagdPanther.ViewModel
 			RedditInfo = RedditControl.Login();
 			var t = new Timer();
 			t.Interval = 1800 * 1000;
-			t.Elapsed += (sender, e) =>
+			ProgramInitializer.CheckFolders();
+            t.Elapsed += (sender, e) =>
 			{
 				RedditInfo = RedditControl.Login();
 			};
