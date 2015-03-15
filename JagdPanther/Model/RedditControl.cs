@@ -16,11 +16,12 @@ namespace JagdPanther.Model
             if (Properties.Settings.Default.IsLoggedin)
             {
                 try
-                {
-                    var red = new Reddit();
-                    var log = new LoginInfo();
-                    log.LoadData();
-                    var user = red.LogIn(log.Name, log.Password);
+				{
+					var log = new OAuthLoginInfo();
+					log.LoadData();
+					var ac = log.GetNewAccessToken();
+					var red = new Reddit(ac);
+					var user = red.User;
                     return new RedditData { RedditAccess = red, RedditUser = user };
                 }
                 catch (WebException e)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace JagdPanther.ViewModel
 {
@@ -15,6 +16,12 @@ namespace JagdPanther.ViewModel
         public MainViewModel()
         {
 			RedditInfo = RedditControl.Login();
+			var t = new Timer();
+			t.Interval = 1800 * 1000;
+			t.Elapsed += (sender, e) =>
+			{
+				RedditInfo = RedditControl.Login();
+			};
 			if (RedditInfo == null)
 			{
 				App.Current.Shutdown();
@@ -50,27 +57,33 @@ namespace JagdPanther.ViewModel
 		{
 			MessageBus.Current.Listen<Board>("OpenNewSubreddit").Subscribe(async (x) =>
 			{
-				
-				if (x == null)
-					return;
-				if (x.BoardPlace == BoardLocate.Reddit)
+				try
 				{
-					var v = new ThreadListViewModel();
-					v.RedditInfo = RedditInfo;
-					await v.Initializer(x.Path);
-					ThreadListTabs.ThreadListChildrens.Add(v);
+					if (x == null)
+						return;
+					if (x.BoardPlace == BoardLocate.Reddit)
+					{
+						var v = new ThreadListViewModel();
+						v.RedditInfo = RedditInfo;
+						await v.Initializer(x.Path);
+						ThreadListTabs.ThreadListChildrens.Add(v);
 
+					}
+					else if (x.BoardPlace == BoardLocate.MReddit)
+					{
+						var v = new MultiSubredditViewModel();
+						var path = x.Path;
+						if (path.StartsWith("/"))
+							path = path.Remove(0, 1);
+						v.RedditInfo = RedditInfo;
+
+						await v.Initializer(x.Path);
+						ThreadListTabs.ThreadListChildrens.Add(v);
+					}
 				}
-				else if (x.BoardPlace == BoardLocate.MReddit)
+				catch
 				{
-					var v = new MultiSubredditViewModel();
-					var path = x.Path;
-					if (path.StartsWith("/"))
-						path = path.Remove(0, 1);
-                    v.RedditInfo = RedditInfo;
-					
-					await v.Initializer(x.Path);
-					ThreadListTabs.ThreadListChildrens.Add(v);
+					System.Windows.MessageBox.Show("板のURLが間違っている可能性があります");
 				}
 			});
 			MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>

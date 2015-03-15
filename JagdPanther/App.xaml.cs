@@ -19,11 +19,14 @@ namespace JagdPanther
         {
 			if (!File.Exists(Folders.LoginInfoXml))
 			{
-				var s = new Dialogs.LoginAndGenerateNewUserWindow();
+				var s = new Dialogs.OAuthLoginWindow();
 				s.ShowDialog();
-				new LoginInfo() { Name = s.Data.UserName, Password = s.Data.Password }.SaveData();
-				Application.Current.Shutdown();
-				System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				new OAuthLoginInfo() { RefreshToken = s.RefreshToken }.SaveData();
+				//var s = new Dialogs.LoginAndGenerateNewUserWindow();
+				//s.ShowDialog();
+				//new LoginInfo() { Name = s.Data.UserName, Password = s.Data.Password }.SaveData();
+				//Application.Current.Shutdown();
+				//System.Diagnostics.Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
 				JagdPanther.Properties.Settings.Default["IsLoggedin"] = true;
 			}
 			else

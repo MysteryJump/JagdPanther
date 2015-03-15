@@ -118,6 +118,9 @@
     <Compile Include="Dialogs\NewBoardWindow.xaml.cs">
       <DependentUpon>NewBoardWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\OAuthLoginWindow.xaml.cs">
+      <DependentUpon>OAuthLoginWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\OneTextBoxWindow.xaml.cs">
       <DependentUpon>OneTextBoxWindow.xaml</DependentUpon>
     </Compile>
@@ -138,6 +141,7 @@
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\Folders.cs" />
     <Compile Include="Model\LoginInfo.cs" />
+    <Compile Include="Model\OAuthLoginInfo.cs" />
     <Compile Include="Model\PostingBeforeProcessor.cs" />
     <Compile Include="Model\ReadonlyVars.cs" />
     <Compile Include="Model\RedditControl.cs" />
@@ -171,6 +175,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\NewBoardWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\OAuthLoginWindow.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\OneTextBoxWindow.xaml">

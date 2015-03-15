@@ -28,11 +28,11 @@ namespace JagdPanther.Dialogs
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			flairs.Items.Add(new UserFlairTemplate() { Text = "<なし>", CssClass = null});
-			Flairs.ForEach(x =>
-			{
-				flairs.Items.Add(x);
-			});
+			//flairs.Items.Add(new UserFlairTemplate() { Text = "<なし>", CssClass = null});
+			//Flairs.ForEach(x =>
+			//{
+			//	flairs.Items.Add(x);
+			//});
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)

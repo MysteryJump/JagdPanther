@@ -26,6 +26,7 @@ namespace JagdPanther
 
         public void SelectedItem(object sender, RoutedEventArgs e)
         {
+			return;
             (this.DataContext as ViewModel.EditConfigurationViewModel)
                 .SelectTreeViewItemCommand
                 .Execute((sender as TreeViewItem).Tag);

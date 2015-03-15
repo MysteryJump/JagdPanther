@@ -221,7 +221,7 @@
                 <MenuItem Command="{Binding ExitCommand}" Header="終了" />
             </MenuItem>
             <MenuItem Header="編集">
-                <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" />
+                <!--<MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" />-->
             </MenuItem>
             <MenuItem Header="ヘルプ">
                 <MenuItem Command="{Binding OpenLicenseWindowCommand}" Header="ライセンス情報" />
