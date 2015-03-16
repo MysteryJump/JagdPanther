@@ -1,5 +1,6 @@
 ﻿using JagdPanther.Model;
 using JagdPanther.ViewModel;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,9 @@ namespace JagdPanther
         public MainWindow()
         {
             InitializeComponent();
+			MessageBus.Current.Listen<Orientation>("ChangeViewState").Subscribe(x => {
+				two.Oriented = x;
+			});
         }
 
 		public void ThreadListColumnClicked(object sender, RoutedEventArgs e)

@@ -170,6 +170,7 @@
     <Compile Include="View\ShowPopupWindow.xaml.cs">
       <DependentUpon>ShowPopupWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TwoSplitItemsControl.cs" />
     <Compile Include="View\ViewCommentConverter.cs" />
     <Page Include="Dialogs\EditTextWindow.xaml">
       <SubType>Designer</SubType>

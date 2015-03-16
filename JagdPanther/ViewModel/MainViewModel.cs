@@ -8,6 +8,7 @@ using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Controls;
 
 namespace JagdPanther.ViewModel
 {
@@ -33,16 +34,6 @@ namespace JagdPanther.ViewModel
 				InitilizeViewModels();
 				RegisterMessageListener();
 				Title = ReadonlyVars.ProgramName + " " + ReadonlyVars.ProgramVer;
-				//Account a = null;
-				//AccountList.Accounts.ToList().ForEach(x =>
-				//{
-				//	if (x.IsLogged == true)
-				//		a = x;
-				//});
-				//if (a != null)
-				//{
-				//	RedditInfo = RedditControl.Login(a);
-				//}
 			}
 		}
 
@@ -60,27 +51,32 @@ namespace JagdPanther.ViewModel
 			{
 				try
 				{
-					if (x == null)
-						return;
-					if (x.BoardPlace == BoardLocate.Reddit)
-					{
-						var v = new ThreadListViewModel();
-						v.RedditInfo = RedditInfo;
-						await v.Initializer(x.Path);
-						ThreadListTabs.ThreadListChildrens.Add(v);
+                   //await Task.Factory.StartNew(async() =>
+                   //{
+                       if (x == null)
+                           return;
+                       if (x.BoardPlace == BoardLocate.Reddit)
+                       {
+                           var v = new ThreadListViewModel();
+                           v.RedditInfo = RedditInfo;
+                           await v.Initializer(x.Path);
+                           ThreadListTabs.ThreadListChildrens.Add(v);
+                           ThreadListTabs.SelectedTab = v;
+                       }
+                       else if (x.BoardPlace == BoardLocate.MReddit)
+                       {
+                           var v = new MultiSubredditViewModel();
+                           var path = x.Path;
+                           if (path.StartsWith("/"))
+                               path = path.Remove(0, 1);
+                           v.RedditInfo = RedditInfo;
 
-					}
-					else if (x.BoardPlace == BoardLocate.MReddit)
-					{
-						var v = new MultiSubredditViewModel();
-						var path = x.Path;
-						if (path.StartsWith("/"))
-							path = path.Remove(0, 1);
-						v.RedditInfo = RedditInfo;
+                           await v.Initializer(x.Path);
+                           ThreadListTabs.ThreadListChildrens.Add(v);
+                           ThreadListTabs.SelectedTab = v;
 
-						await v.Initializer(x.Path);
-						ThreadListTabs.ThreadListChildrens.Add(v);
-					}
+                       }
+                   //});
 				}
 				catch
 				{
@@ -115,7 +111,8 @@ namespace JagdPanther.ViewModel
 			AddNewSubredditCommand = ReactiveCommand.CreateAsyncTask(AddNewSubredditExcute);
             OpenLicenseWindowCommand = ReactiveCommand.CreateAsyncTask(OpenLicenseWindowExcute);
             OpenVersionWindowCommand = ReactiveCommand.CreateAsyncTask(OpenVersionWindowExcute);
-        }
+			ChangeViewStateCommand = ReactiveCommand.CreateAsyncTask(ChangeViewStateExcute);
+		}
 
 
         public RedditData RedditInfo { get; set; }
@@ -214,5 +211,32 @@ namespace JagdPanther.ViewModel
         }
 
 		public AccountListViewModel AccountList { get; private set; }
+
+		public Orientation RightColumnOriented
+		{
+			get { return rightColumnOriented; }
+			set { rightColumnOriented = value; this.RaiseAndSetIfChanged(ref rightColumnOriented, value); }
+		}
+
+		private Orientation rightColumnOriented;
+
+
+		public string ViewStateText
+		{
+			get
+			{
+				return "見た目を変える";
+			}
+		}
+
+		public IReactiveCommand<Unit> ChangeViewStateCommand { get; set; }
+
+		public async Task ChangeViewStateExcute(object sender)
+		{
+			RightColumnOriented = RightColumnOriented == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal;
+			MessageBus.Current.SendMessage(RightColumnOriented, "ChangeViewState");
+		}
+
+
 	}
 }

@@ -7,6 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sd="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:vm="clr-namespace:JagdPanther.ViewModel"
+        xmlns:v="clr-namespace:JagdPanther.View"
         Title="{Binding Title}"
         Width="525"
         Height="350"
@@ -192,6 +193,11 @@
                                 </VirtualizingStackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
                     </ItemsControl>
                 </ScrollViewer>
                 <GridSplitter Grid.Row="1"
@@ -224,23 +230,13 @@
                 <MenuItem Command="{Binding ExitCommand}" Header="終了" />
             </MenuItem>
             <MenuItem Header="編集">
-                <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" />
+                <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" IsEnabled="False" />
+                <MenuItem Command="{Binding ChangeViewStateCommand}" Header="{Binding ViewStateText}"/>
             </MenuItem>
             <MenuItem Header="ヘルプ">
                 <MenuItem Command="{Binding OpenLicenseWindowCommand}" Header="ライセンス情報" />
                 <MenuItem Command="{Binding OpenVersionWindowCommand}" Header="バージョン情報" />
             </MenuItem>
-            <!--
-            <MenuItem Header="アカウントの切り替え" ItemsSource="{Binding AccountList.Accounts}">
-                <MenuItem.ItemTemplate>
-                    <DataTemplate>
-                        <MenuItem IsCheckable="True"
-                                  Command="{Binding ChangeAccountCommand}"
-                                  IsChecked="{Binding IsLogged}"
-                                  Header="{Binding Header}"/>
-                    </DataTemplate>
-                </MenuItem.ItemTemplate>
-            </MenuItem>-->
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -270,62 +266,59 @@
             </Grid>
             <GridSplitter Grid.Column="1"
                           Width="2"
-                          HorizontalAlignment="Right"
+                          HorizontalAlignment="Center"
                           VerticalAlignment="Stretch"
                           ShowsPreview="True" />
 
             <Grid Grid.Column="2">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="2" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <TabControl ContentTemplate="{StaticResource threadListView}"
+                <v:TwoSplitItemsControl x:Name="two">
+                    <v:TwoSplitItemsControl.FirstItem>
+                        <Grid Grid.Row="0">
+                            <TabControl ContentTemplate="{StaticResource threadListView}"
                                     ItemsSource="{Binding ThreadListTabs.ThreadListChildrens}"
-                                    SelectedItem="{Binding ThreadListTabs.SelectedTab}">
-                            <TabControl.ItemTemplate>
-                                <DataTemplate DataType="vm:ThreadListViewModel">
-                                    <TextBlock Text="{Binding Name}">
-                                        <TextBlock.InputBindings>
-                                            <MouseBinding Command="{Binding RemoveTabCommand}" Gesture="MiddleClick" />
-                                        </TextBlock.InputBindings>
-                                        <TextBlock.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Command="{Binding RemoveTabCommand}" Header="タブを削除する" />
-                                                <MenuItem Command="{Binding RemoveAllTabCommand}" Header="すべてのタブを削除する" />
-                                            </ContextMenu>
-                                        </TextBlock.ContextMenu>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </TabControl.ItemTemplate>
-                        </TabControl>
-                    </Grid>
-                    <GridSplitter Grid.Row="1"
-                                  Height="1.5"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch" />
-                    <Grid Grid.Row="2">
-                        <TabControl ContentTemplate="{StaticResource threadView}" ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}">
-                            <TabControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Title}">
-                                        <TextBlock.InputBindings>
-                                            <MouseBinding Command="{Binding RemoveTabCommand}" Gesture="MiddleClick" />
-                                        </TextBlock.InputBindings>
-                                        <TextBlock.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Command="{Binding RemoveTabCommand}" Header="タブを削除する" />
-                                                <MenuItem Command="{Binding RemoveAllTabCommand}" Header="すべてのタブを削除する" />
-                                            </ContextMenu>
-                                        </TextBlock.ContextMenu>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </TabControl.ItemTemplate>
-                        </TabControl>
-                    </Grid>
-                </Grid>
+                                    SelectedItem="{Binding ThreadListTabs.SelectedTab}"
+                                    SelectedIndex="1">
+                                <TabControl.ItemTemplate>
+                                    <DataTemplate DataType="vm:ThreadListViewModel">
+                                        <TextBlock Text="{Binding Name}">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding Command="{Binding RemoveTabCommand}" Gesture="MiddleClick" />
+                                            </TextBlock.InputBindings>
+                                            <TextBlock.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Command="{Binding RemoveTabCommand}" Header="タブを削除する" />
+                                                    <MenuItem Command="{Binding RemoveAllTabCommand}" Header="すべてのタブを削除する" />
+                                                </ContextMenu>
+                                            </TextBlock.ContextMenu>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </TabControl.ItemTemplate>
+                            </TabControl>
+                        </Grid>
+                    </v:TwoSplitItemsControl.FirstItem>
+                    <v:TwoSplitItemsControl.SecondItem>
+                        <Grid Grid.Row="2">
+                            <TabControl ContentTemplate="{StaticResource threadView}" ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}">
+                                <TabControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Title}">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding Command="{Binding RemoveTabCommand}" Gesture="MiddleClick" />
+                                            </TextBlock.InputBindings>
+                                            <TextBlock.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Command="{Binding RemoveTabCommand}" Header="タブを削除する" />
+                                                    <MenuItem Command="{Binding RemoveAllTabCommand}" Header="すべてのタブを削除する" />
+                                                </ContextMenu>
+                                            </TextBlock.ContextMenu>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </TabControl.ItemTemplate>
+                            </TabControl>
+                        </Grid>
+
+                    </v:TwoSplitItemsControl.SecondItem>
+                </v:TwoSplitItemsControl>
             </Grid>
         </Grid>
         <Grid Grid.Row="2">
