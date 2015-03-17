@@ -33,6 +33,7 @@ namespace JagdPanther.ViewModel
 				RegisterCommands();
 				InitilizeViewModels();
 				RegisterMessageListener();
+				
 				Title = ReadonlyVars.ProgramName + " " + ReadonlyVars.ProgramVer;
 			}
 		}
@@ -42,7 +43,8 @@ namespace JagdPanther.ViewModel
 			ThreadListTabs = new ThreadListTabsViewModel();
 			SubredditList = new SubredditListViewModel();
 			ThreadTabs = new ThreadTabsViewModel();
-			//AccountList = new AccountListViewModel();
+			SubscribedSubredditList = new SubscribedSubredditListViewModel(RedditInfo);
+			SearchSubredditList = new SearchSubredditListViewModel(RedditInfo);
 		}
 
 		private void RegisterMessageListener()
@@ -51,32 +53,31 @@ namespace JagdPanther.ViewModel
 			{
 				try
 				{
-                   //await Task.Factory.StartNew(async() =>
-                   //{
-                       if (x == null)
-                           return;
-                       if (x.BoardPlace == BoardLocate.Reddit)
-                       {
-                           var v = new ThreadListViewModel();
-                           v.RedditInfo = RedditInfo;
-                           await v.Initializer(x.Path);
-                           ThreadListTabs.ThreadListChildrens.Add(v);
-                           ThreadListTabs.SelectedTab = v;
-                       }
-                       else if (x.BoardPlace == BoardLocate.MReddit)
-                       {
-                           var v = new MultiSubredditViewModel();
-                           var path = x.Path;
-                           if (path.StartsWith("/"))
-                               path = path.Remove(0, 1);
-                           v.RedditInfo = RedditInfo;
+					IThreadListViewer v;
+					if (x == null)
+						return;
+					if (x.BoardPlace == BoardLocate.Reddit)
+					{
+						v = new ThreadListViewModel();
+						v.RedditInfo = RedditInfo;
+						await v.Initializer(x.Path);
+						ThreadListTabs.ThreadListChildrens.Add(v);
+						ThreadListTabs.SelectedTab = v;
+					}
+					else if (x.BoardPlace == BoardLocate.MReddit)
+					{
+						v = new MultiSubredditViewModel();
+						var path = x.Path;
+						if (path.StartsWith("/"))
+							path = path.Remove(0, 1);
+						v.RedditInfo = RedditInfo;
 
-                           await v.Initializer(x.Path);
-                           ThreadListTabs.ThreadListChildrens.Add(v);
-                           ThreadListTabs.SelectedTab = v;
+						await v.Initializer(path);
+						ThreadListTabs.ThreadListChildrens.Add(v);
+						ThreadListTabs.SelectedTab = v;
 
-                       }
-                   //});
+					}
+
 				}
 				catch
 				{
@@ -112,7 +113,8 @@ namespace JagdPanther.ViewModel
             OpenLicenseWindowCommand = ReactiveCommand.CreateAsyncTask(OpenLicenseWindowExcute);
             OpenVersionWindowCommand = ReactiveCommand.CreateAsyncTask(OpenVersionWindowExcute);
 			ChangeViewStateCommand = ReactiveCommand.CreateAsyncTask(ChangeViewStateExcute);
-		}
+			OpenCommand = ReactiveCommand.CreateAsyncTask(OpenExcute);
+        }
 
 
         public RedditData RedditInfo { get; set; }
@@ -230,11 +232,19 @@ namespace JagdPanther.ViewModel
 		}
 
 		public IReactiveCommand<Unit> ChangeViewStateCommand { get; set; }
+		public SubscribedSubredditListViewModel SubscribedSubredditList { get; private set; }
+		public IReactiveCommand<Unit> OpenCommand { get; private set; }
+		public SearchSubredditListViewModel SearchSubredditList { get; private set; }
 
 		public async Task ChangeViewStateExcute(object sender)
 		{
 			RightColumnOriented = RightColumnOriented == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal;
 			MessageBus.Current.SendMessage(RightColumnOriented, "ChangeViewState");
+		}
+
+		public async Task OpenExcute(object sender)
+		{
+			await SubscribedSubredditList.Initialize();
 		}
 
 

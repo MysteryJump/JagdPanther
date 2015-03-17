@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace JagdPanther.ViewModel
 {
-    public class ThreadListViewModel : ReactiveObject
+	public class ThreadListViewModel : ReactiveObject, IThreadListViewer
     {
         private ObservableCollection<Thread> threads;
         private int pageCount;
@@ -51,7 +51,7 @@ namespace JagdPanther.ViewModel
 
         public IReactiveCommand<Unit> RefreshCommand { get; set; }
         public IReactiveCommand<Unit> SelectedCommand { get; set; }
-        public RedditData RedditInfo { get; internal set; }
+        public RedditData RedditInfo { get; set; }
 
         public async Task SelectedExcute(object sender)
         {

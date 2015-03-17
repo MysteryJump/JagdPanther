@@ -16,14 +16,14 @@ namespace JagdPanther.ViewModel
 
 			MessageBus.Current.Listen<string>("RemoveAllThreadListTab")
 				.Subscribe(_ => ThreadListChildrens.Clear());
-			ThreadListChildrens = new ObservableCollection<object>();
+			ThreadListChildrens = new ObservableCollection<IThreadListViewer>();
         }
 
-		public ObservableCollection<object> ThreadListChildrens { get; set; }
+		public ObservableCollection<IThreadListViewer> ThreadListChildrens { get; set; }
 
-		private object selectedTab;
+		private IThreadListViewer selectedTab;
 
-		public object SelectedTab
+		public IThreadListViewer SelectedTab
 		{
 			get { return selectedTab; }
 			set { selectedTab = value; this.RaiseAndSetIfChanged(ref selectedTab, value); }

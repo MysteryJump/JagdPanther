@@ -38,34 +38,25 @@ namespace JagdPanther
 			var y = (sender as GridViewColumnHeader).Tag.ToString();
 
 			var x = ((MainViewModel)(this.DataContext)).ThreadListTabs.SelectedTab;
-			dynamic obj = null;
-			if (x.GetType() == typeof(ThreadListViewModel))
-			{
-				obj = x as ThreadListViewModel;
-			}
-			else if (x.GetType() == typeof(MultiSubredditViewModel))
-			{
-				obj  = x as MultiSubredditViewModel;
-			}
 			List<Thread> data;
 			if (!isdes)
 			{
 				switch (y)
 				{
 					case "Title":
-						data = new List<Thread>(obj.ThreadList).OrderBy(z => z.Title).ToList();
+						data = new List<Thread>(x.ThreadList).OrderBy(z => z.Title).ToList();
 						break;
 					case "CreatedTime":
-						data = new List<Thread>(obj.ThreadList).OrderBy(z => z.CreatedTime).ToList();
+						data = new List<Thread>(x.ThreadList).OrderBy(z => z.CreatedTime).ToList();
 						break;
 					case "VoteCount":
-						data = new List<Thread>(obj.ThreadList).OrderBy(z => z.VoteCount).ToList();
+						data = new List<Thread>(x.ThreadList).OrderBy(z => z.VoteCount).ToList();
 						break;
 					case "CommentCount":
-						data = new List<Thread>(obj.ThreadList).OrderBy(z => z.CommentCount).ToList();
+						data = new List<Thread>(x.ThreadList).OrderBy(z => z.CommentCount).ToList();
 						break;
 					case "Speed":
-						data = new List<Thread>(obj.ThreadList).OrderBy(z => z.Speed).ToList();
+						data = new List<Thread>(x.ThreadList).OrderBy(z => z.Speed).ToList();
 						break;
 					default:
 						return;
@@ -76,27 +67,27 @@ namespace JagdPanther
 				switch (y)
 				{
 					case "Title":
-						data = new List<Thread>(obj.ThreadList).OrderByDescending(z => z.Title).ToList();
+						data = new List<Thread>(x.ThreadList).OrderByDescending(z => z.Title).ToList();
 						break;
 					case "CreatedTime":
-						data = new List<Thread>(obj.ThreadList).OrderByDescending(z => z.CreatedTime).ToList();
+						data = new List<Thread>(x.ThreadList).OrderByDescending(z => z.CreatedTime).ToList();
 						break;
 					case "VoteCount":
-						data = new List<Thread>(obj.ThreadList).OrderByDescending(z => z.VoteCount).ToList();
+						data = new List<Thread>(x.ThreadList).OrderByDescending(z => z.VoteCount).ToList();
 						break;
 					case "CommentCount":
-						data = new List<Thread>(obj.ThreadList).OrderByDescending(z => z.CommentCount).ToList();
+						data = new List<Thread>(x.ThreadList).OrderByDescending(z => z.CommentCount).ToList();
 						break;
 					case "Speed":
-						data = new List<Thread>(obj.ThreadList).OrderByDescending(z => z.Speed).ToList();
+						data = new List<Thread>(x.ThreadList).OrderByDescending(z => z.Speed).ToList();
 						break;
 					default:
 						return;
 				}
 			}
-			obj.ThreadList.Clear();
+			x.ThreadList.Clear();
 			isdes = !isdes;
-			data.ForEach(p => obj.ThreadList.Add(p));
+			data.ForEach(p => x.ThreadList.Add(p));
 		}
     }
 }

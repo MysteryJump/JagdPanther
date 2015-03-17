@@ -149,6 +149,7 @@
     <Compile Include="Model\ProgramInitializer.cs" />
     <Compile Include="Model\ReadonlyVars.cs" />
     <Compile Include="Model\RedditControl.cs" />
+    <Compile Include="Model\SubredditSearcher.cs" />
     <Compile Include="Model\Thread.cs" />
     <Compile Include="Model\ViewComment.cs" />
     <Compile Include="Settings.cs" />
@@ -157,9 +158,12 @@
     </Compile>
     <Compile Include="ViewModel\AccountListViewModel.cs" />
     <Compile Include="ViewModel\EditConfigurationViewModel.cs" />
+    <Compile Include="ViewModel\IThreadListViewer.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MultiSubredditViewModel.cs" />
+    <Compile Include="ViewModel\SearchSubredditListViewModel.cs" />
     <Compile Include="ViewModel\SubredditListViewModel.cs" />
+    <Compile Include="ViewModel\SubscribedSubredditListViewModel.cs" />
     <Compile Include="ViewModel\ThreadListTabsViewModel.cs" />
     <Compile Include="ViewModel\ThreadListViewModel.cs" />
     <Compile Include="ViewModel\ThreadTabsViewModel.cs" />

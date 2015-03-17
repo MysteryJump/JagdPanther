@@ -11,13 +11,16 @@
         Title="{Binding Title}"
         Width="525"
         Height="350"
-        mc:Ignorable="d">
+        mc:Ignorable="d" >
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding ExitCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OpenCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>
@@ -245,24 +248,59 @@
                 <ColumnDefinition Width="3.5*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
-                <ListView ItemsSource="{Binding SubredditList.OwnBoardCollection.Children}" SelectedItem="{Binding SubredditList.SelectedItem}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding SubredditList.OpenSubredditCommand}" CommandParameter="{Binding SubredditList.SelectedItem}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding BoardName}" />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding AddNewSubredditCommand}" Header="Subredditを追加する" />
-                            <MenuItem Command="{Binding RemoveSubredditCommand}" Header="Subredditを削除する" />
-                        </ContextMenu>
-                    </ListView.ContextMenu>
-                </ListView>
+                <TabControl>
+                    <TabItem Header="ローカル">
+                        <ListView ItemsSource="{Binding SubredditList.OwnBoardCollection.Children}" SelectedItem="{Binding SubredditList.SelectedItem}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SubredditList.OpenSubredditCommand}" CommandParameter="{Binding SubredditList.SelectedItem}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding BoardName}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding AddNewSubredditCommand}" Header="Subredditを追加する" />
+                                <MenuItem Command="{Binding RemoveSubredditCommand}" Header="Subredditを削除する" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
+                    </TabItem>
+                    <TabItem Header="購読済み">
+                        <ListView ItemsSource="{Binding SubscribedSubredditList.Subreddits}" SelectedItem="{Binding SubscribedSubredditList.SelectedItem}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SubscribedSubredditList.SelectedSubredditCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListView>
+                    </TabItem>
+                    <TabItem Header="検索する">
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Top" Height="23" Text="{Binding SearchSubredditList.SearchText, Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}" />
+                            <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SearchSubredditList.Subreddits}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding SearchSubredditList.SelectedSubredditCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ListView>
+                        </DockPanel>
+                    </TabItem>
+                </TabControl>
             </Grid>
             <GridSplitter Grid.Column="1"
                           Width="2"

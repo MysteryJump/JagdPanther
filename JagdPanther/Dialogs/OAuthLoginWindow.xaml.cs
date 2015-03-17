@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace JagdPanther.Dialogs
 {
@@ -48,6 +49,11 @@ namespace JagdPanther.Dialogs
 				{
 					return x.Split('=')[1].Replace("&","");
 				});
+				if (dic.ContainsKey("error"))
+				{
+					Application.Current.Shutdown();
+					Thread.Sleep(5000);
+				}
 				var code = dic["code"];
 
 				var wec = new WebClient();
