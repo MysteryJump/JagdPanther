@@ -222,5 +222,15 @@ namespace JagdPanther.Model
         }
         [DataMember]
         public int CommentCount { get; internal set; }
+
+
+		public static Thread LoadLog(string path)
+		{
+			var dcs = new DataContractSerializer(typeof(Thread));
+			Thread th = null;
+			using (var f = File.Open(Folders.CommentListFolder + "\\" + path + ".xml", FileMode.Open))
+				th = (Thread)dcs.ReadObject(f);
+			return th;
+		}
     }
 }

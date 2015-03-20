@@ -171,6 +171,7 @@
       <DependentUpon>EnviromentSetting.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ResponsePopup.cs" />
+    <Compile Include="View\SettingControl.cs" />
     <Compile Include="View\ShowPopupWindow.xaml.cs">
       <DependentUpon>ShowPopupWindow.xaml</DependentUpon>
     </Compile>

@@ -15,20 +15,26 @@ namespace JagdPanther.Model
         {
             if (Properties.Settings.Default.IsLoggedin)
             {
-                try
+				while (true)
 				{
-					var log = new OAuthLoginInfo();
-					log.LoadData();
-					var ac = log.GetNewAccessToken();
-					var red = new Reddit(ac);
-					var user = red.User;
-                    return new RedditData { RedditAccess = red, RedditUser = user };
-                }
-                catch (WebException e)
-                {
-                    System.Windows.MessageBox.Show("ログインできませんでした");
-                    return null;
-                }
+					try
+					{
+						var log = new OAuthLoginInfo();
+						log.LoadData();
+						var ac = log.GetNewAccessToken();
+						var red = new Reddit(ac);
+						var user = red.User;
+						return new RedditData { RedditAccess = red, RedditUser = user };
+					}
+					catch (WebException e)
+					{
+						var s = System.Windows.MessageBox.Show("ログインできませんでした\r\n再試行しますか？", "ログイン", System.Windows.MessageBoxButton.YesNo);
+						if (s == System.Windows.MessageBoxResult.No)
+						{
+							return null;
+						}
+					}
+				}
             }
             else
             {

@@ -14,28 +14,26 @@ namespace JagdPanther.ViewModel
 {
     public class MainViewModel : ReactiveObject
     {
-        public MainViewModel()
-        {
+		public MainViewModel()
+		{
 			RedditInfo = RedditControl.Login();
 			var t = new Timer();
-			t.Interval = 1800 * 1000;
+			t.Interval = 2400 * 1000;
 			ProgramInitializer.CheckFolders();
-            t.Elapsed += (sender, e) =>
+			t.Elapsed += (sender, e) =>
 			{
-				RedditInfo = RedditControl.Login();
+				if (IsOffline != true)
+					RedditInfo = RedditControl.Login();
 			};
 			if (RedditInfo == null)
-			{
-				App.Current.Shutdown();
-			}
-			else
-			{
-				RegisterCommands();
-				InitilizeViewModels();
-				RegisterMessageListener();
-				
-				Title = ReadonlyVars.ProgramName + " " + ReadonlyVars.ProgramVer;
-			}
+				IsOffline = true;
+
+			RegisterCommands();
+			InitilizeViewModels();
+			RegisterMessageListener();
+
+			Title = ReadonlyVars.ProgramName + " " + ReadonlyVars.ProgramVer;
+
 		}
 
 		private void InitilizeViewModels()
@@ -56,23 +54,28 @@ namespace JagdPanther.ViewModel
 					IThreadListViewer v;
 					if (x == null)
 						return;
+
 					if (x.BoardPlace == BoardLocate.Reddit)
 					{
 						v = new ThreadListViewModel();
 						v.RedditInfo = RedditInfo;
+						
 						await v.Initializer(x.Path);
 						ThreadListTabs.ThreadListChildrens.Add(v);
 						ThreadListTabs.SelectedTab = v;
 					}
 					else if (x.BoardPlace == BoardLocate.MReddit)
 					{
-						v = new MultiSubredditViewModel();
 						var path = x.Path;
 						if (path.StartsWith("/"))
 							path = path.Remove(0, 1);
+						v = new MultiSubredditViewModel();
+						
 						v.RedditInfo = RedditInfo;
 
 						await v.Initializer(path);
+						if (v.ThreadList.Count == 0)
+							return;
 						ThreadListTabs.ThreadListChildrens.Add(v);
 						ThreadListTabs.SelectedTab = v;
 
@@ -87,10 +90,6 @@ namespace JagdPanther.ViewModel
 			MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>
 				{
 					ThreadTabs.ThreadTabsChildren.Add(x);
-				});
-			MessageBus.Current.Listen<string>("ErrorMessage").Subscribe(x =>
-				{
-					ErrorMessage = x;
 				});
 			MessageBus.Current.Listen<Account>("ChangeAccount").Subscribe((x) =>
 			{
@@ -246,6 +245,8 @@ namespace JagdPanther.ViewModel
 		{
 			await SubscribedSubredditList.Initialize();
 		}
+
+		public static bool IsOffline { get; set; }
 
 
 	}

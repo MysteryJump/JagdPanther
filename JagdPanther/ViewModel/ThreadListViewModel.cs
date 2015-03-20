@@ -5,8 +5,10 @@ using RedditSharp.Things;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +26,7 @@ namespace JagdPanther.ViewModel
             NewPostCommand = ReactiveCommand.CreateAsyncTask(NewPostExcute);
 			RemoveTabCommand = ReactiveCommand.CreateAsyncTask(RemoveTabExcute);
 			RemoveAllTabCommand = ReactiveCommand.CreateAsyncTask(RemoveAllTabExcute);
+			SubscribeCommand = ReactiveCommand.CreateAsyncTask(SubscribeExcute);
 		}
 
         public ObservableCollection<Thread> ThreadList
@@ -106,7 +109,11 @@ namespace JagdPanther.ViewModel
                 return lists;
             });
             Name = subs.Title;
-            
+			//using (var f = File.Open(Folders.PostListFolder + "\\" + path + ".xml", FileMode.Create))
+			//{
+			//	var dcs = new DataContractSerializer(typeof(ThreadListViewModel));
+			//	dcs.WriteObject(f, l);
+			//}
             l.ForEach(ThreadList.Add);
             ThreadList.Add(new Thread { Title = "次の20件を読み込む...", CommentCount = -1 });
         }
@@ -141,24 +148,23 @@ namespace JagdPanther.ViewModel
 					p = OwnSubreddit.SubmitPost(sub.Title, pos.ProcessedText);
 					if (sub.IsNsfw)
 						p.MarkNSFW();
-					//if (sub.SelectedFlair.CssClass != null)
-					//	p.SetFlair(sub.SelectedFlair.Text, sub.SelectedFlair.CssClass);
-                }
+					if (string.IsNullOrWhiteSpace(sub.Flair))
+						p.SetFlair(sub.Flair, "");
+				}
                 else
                 {
                     p = OwnSubreddit.SubmitTextPost(sub.Title, sub.PostString);
 					if (sub.IsNsfw)
 						p.MarkNSFW();
-					//if (sub.SelectedFlair.CssClass != null)
-					//	p.SetFlair(sub.SelectedFlair.Text, sub.SelectedFlair.CssClass);
-
+					if (string.IsNullOrWhiteSpace(sub.Flair))
+						p.SetFlair(sub.Flair, "");
 				}
 
 			}
         }
 
 		public IReactiveCommand<Unit> RemoveTabCommand { get;set; }
-		public ReactiveCommand<Unit> RemoveAllTabCommand { get; private set; }
+		public IReactiveCommand<Unit> RemoveAllTabCommand { get; private set; }
 
 		public async Task RemoveTabExcute(object sender)
 		{
@@ -186,5 +192,14 @@ namespace JagdPanther.ViewModel
 				p.PostThread.Downvote();
 			}
 		}
-    }
+
+		public IReactiveCommand<Unit> SubscribeCommand { get; set; }
+
+		public async Task SubscribeExcute(object sender)
+		{
+			OwnSubreddit.Subscribe();
+		}
+
+		public bool IsSubscribed { get { return false; } }
+	}
 }

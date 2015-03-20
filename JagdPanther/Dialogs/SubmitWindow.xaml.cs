@@ -23,17 +23,8 @@ namespace JagdPanther.Dialogs
         public SubmitWindow()
         {
             InitializeComponent();
-			this.Loaded += Window_Loaded;    
         }
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
-		{
-			//flairs.Items.Add(new UserFlairTemplate() { Text = "<なし>", CssClass = null});
-			//Flairs.ForEach(x =>
-			//{
-			//	flairs.Items.Add(x);
-			//});
-		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -43,7 +34,7 @@ namespace JagdPanther.Dialogs
             PostString = text.Text;
             IsOk = true;
             Title = title.Text;
-			SelectedFlair = flairs.SelectedItem as UserFlairTemplate;
+			Flair = flairs.Text;
 			IsNsfw = nsfw.IsChecked == true;
             this.Close();
         }
@@ -64,8 +55,21 @@ namespace JagdPanther.Dialogs
         public string PostString { get; set; }
         public bool IsOk { get; set; }
         public string Title { get; set; }
-		public UserFlairTemplate SelectedFlair { get; set; }
 		public bool IsNsfw { get; set; }
-		public List<UserFlairTemplate> Flairs { get; internal set; }
+		public string Flair { get; set; }
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			var te = text.Text;
+			var pos = new Model.PostingBeforeProcessor(te);
+			pos.ReplaceEndOfLine();
+			te = pos.ProcessedText;
+			var w = new Window();
+			w.Resources = new ResourceDictionary();
+			var f = new FlowDocumentReader();
+			f.Document = (FlowDocument)new Markdown.Xaml.TextToFlowDocumentConverter().Convert(te, typeof(FlowDocument), null, null);
+			w.Content = f;
+			w.ShowDialog();
+		}
 	}
 }

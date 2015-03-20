@@ -25,6 +25,8 @@ namespace JagdPanther.ViewModel
 
 		public async Task Initialize()
 		{
+			if (MainViewModel.IsOffline)
+				return;
 			var lists = await Task.Factory.StartNew(() =>
 			{
 				return RedditInfo.RedditUser.SubscribedSubreddits.ToList();

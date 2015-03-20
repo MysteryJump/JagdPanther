@@ -8,15 +8,69 @@ using System.Windows.Controls;
 
 namespace JagdPanther.View
 {
+	// See also https://gist.github.com/MysteryJump/fae95f07652b99459fa4
 	public class TwoSplitItemsControl : Grid
 	{
 		private Orientation oriented;
 		private GridSplitter splitter;
-
 		public Orientation Oriented
 		{
-			get { return (Orientation)GetValue(OrientedProperty); }
-			set { SetValue(OrientedProperty, value); }
+			get { return oriented; }
+			set
+			{
+				if (value == oriented)
+					return;
+				switch (value)
+				{
+					case Orientation.Horizontal:
+						{
+							if (splitter != null)
+								Children.Remove(splitter);
+							ColumnDefinitions.Clear();
+							RowDefinitions.Add(new RowDefinition());
+							RowDefinitions.Add(new RowDefinition() { Height = new GridLength(2) });
+							RowDefinitions.Add(new RowDefinition());
+
+							var gs = splitter = GenerateGridSplitter(Orientation.Horizontal);
+							Children.Add(gs);
+							gs.SetValue(RowProperty, 1);
+						}
+						break;
+					case Orientation.Vertical:
+						{
+							if (splitter != null)
+								Children.Remove(splitter);
+							RowDefinitions.Clear();
+							ColumnDefinitions.Add(new ColumnDefinition());
+							ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(2) });
+							ColumnDefinitions.Add(new ColumnDefinition());
+
+							var gs = splitter = GenerateGridSplitter(Orientation.Vertical);
+							Children.Add(gs);
+							gs.SetValue(ColumnProperty, 1);
+						}
+						break;
+				}
+				if (firstItem != null && secondItem != null)
+				{
+					switch (value)
+					{
+						case Orientation.Horizontal:
+							{
+								firstItem.SetValue(RowProperty, 0);
+								secondItem.SetValue(RowProperty, 2);
+							}
+							break;
+						case Orientation.Vertical:
+							{
+								firstItem.SetValue(ColumnProperty, 0);
+								secondItem.SetValue(ColumnProperty, 2);
+							}
+							break;
+					}
+				}
+				oriented = value;
+			}
 		}
 
 		private GridSplitter GenerateGridSplitter(Orientation orient)
@@ -78,67 +132,6 @@ namespace JagdPanther.View
 		}
 		private UIElement secondItem;
 
-		public static readonly DependencyProperty OrientedProperty =
-		DependencyProperty.Register("Oriented",
-									typeof(Orientation),
-									typeof(TwoSplitItemsControl),
-									new FrameworkPropertyMetadata(Orientation.Vertical, new PropertyChangedCallback(OnOrientedChanged)));
 
-		private static void OnOrientedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			TwoSplitItemsControl t = d as TwoSplitItemsControl;
-			if (t != null)
-			{
-				switch (t.Oriented)
-				{
-					case Orientation.Horizontal:
-						{
-							if (t.splitter != null)
-								t.Children.Remove(t.splitter);
-							t.ColumnDefinitions.Clear();
-							t.RowDefinitions.Add(new RowDefinition());
-							t.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(2) });
-							t.RowDefinitions.Add(new RowDefinition());
-
-							var gs = t.splitter = t.GenerateGridSplitter(Orientation.Vertical);
-							t.Children.Add(gs);
-							gs.SetValue(RowProperty, 1);
-						}
-						break;
-					case Orientation.Vertical:
-						{
-							if (t.splitter != null)
-								t.Children.Remove(t.splitter);
-							t.RowDefinitions.Clear();
-							t.ColumnDefinitions.Add(new ColumnDefinition());
-							t.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(2) });
-							t.ColumnDefinitions.Add(new ColumnDefinition());
-
-							var gs = t.splitter = t.GenerateGridSplitter(Orientation.Vertical);
-							t.Children.Add(gs);
-							gs.SetValue(ColumnProperty, 1);
-						}
-						break;
-				}
-				if (t.firstItem != null && t.secondItem != null)
-				{
-					switch (t.Oriented)
-					{
-						case Orientation.Horizontal:
-							{
-								t.firstItem.SetValue(RowProperty, 0);
-								t.secondItem.SetValue(RowProperty, 2);
-							}
-							break;
-						case Orientation.Vertical:
-							{
-								t.firstItem.SetValue(ColumnProperty, 0);
-								t.secondItem.SetValue(ColumnProperty, 2);
-							}
-							break;
-					}
-				}
-			}
-		}
 	}
 }

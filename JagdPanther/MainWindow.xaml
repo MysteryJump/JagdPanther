@@ -8,6 +8,7 @@
         xmlns:sd="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:vm="clr-namespace:JagdPanther.ViewModel"
         xmlns:v="clr-namespace:JagdPanther.View"
+        xmlns:mk="clr-namespace:Markdown.Xaml;assembly=Markdown.Xaml"
         Title="{Binding Title}"
         Width="525"
         Height="350"
@@ -24,6 +25,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>
+        <mk:TextToFlowDocumentConverter x:Key="TextToFlowDocument"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
         <DataTemplate x:Key="threadListView" DataType="vm:ThreadListViewModel">
 
@@ -38,6 +40,7 @@
                         <MenuItem Command="{Binding RefreshCommand}"
                                   Header="更新"
                                   IsEnabled="False" />
+                        <MenuItem Command="{Binding SubscribeCommand}" Visibility="{Binding IsSubscribed, Converter={StaticResource BoolToVisibility}}"/>
                         <MenuItem Command="{Binding NewPostCommand}" Header="投稿する" />
                     </Menu>
                 </Grid>
@@ -87,7 +90,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="threadView">
-            <Grid>
+            <Grid DockPanel.Dock="Bottom">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="5*" />
                     <RowDefinition Height="3" />
@@ -98,16 +101,16 @@
                                   BorderBrush="{x:Null}"
                                   BorderThickness="0"
                                   ItemsSource="{Binding SortedComments}"
-                                  ScrollViewer.CanContentScroll="False"
                                   VirtualizingPanel.IsVirtualizing="True"
                                   VirtualizingPanel.ScrollUnit="Pixel"
-                                  VirtualizingPanel.VirtualizationMode="Recycling">
+                                  ScrollViewer.CanContentScroll="True"
+                                  VirtualizingPanel.VirtualizationMode="Standard">
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <VirtualizingStackPanel Margin="0,5">
 
-                                    <StackPanel Orientation="Horizontal">
+                                    <VirtualizingStackPanel Orientation="Horizontal" >
                                         <TextBlock Text="{Binding CommentNumber}">
                                             <TextBlock.ContextMenu>
                                                 <ContextMenu>
@@ -132,8 +135,7 @@
                                                    Text="(S)"
                                                    Visibility="{Binding IsGenerator,
                                                                         Converter={StaticResource BoolToVisibility}}" />
-                                        <TextBlock Text="No Name" />
-                                        <TextBlock Text=" [" />
+                                        <TextBlock Text="No Name [" />
                                         <TextBlock Text="{Binding FlairText}" />
                                         <TextBlock Text="]  Vote:" />
                                         <TextBlock Text="{Binding Votes}" />
@@ -167,7 +169,7 @@
                                                 DownVote
                                             </Underline>
                                         </TextBlock>
-                                    </StackPanel>
+                                    </VirtualizingStackPanel>
                                     <Grid HorizontalAlignment="Left">
                                         <TextBlock x:Name="anc"
                                                HorizontalAlignment="Stretch"
@@ -198,7 +200,7 @@
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <VirtualizingStackPanel/>
+                                <VirtualizingStackPanel />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
@@ -233,7 +235,7 @@
                 <MenuItem Command="{Binding ExitCommand}" Header="終了" />
             </MenuItem>
             <MenuItem Header="編集">
-                <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" IsEnabled="False" />
+                <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" />
                 <MenuItem Command="{Binding ChangeViewStateCommand}" Header="{Binding ViewStateText}"/>
             </MenuItem>
             <MenuItem Header="ヘルプ">
@@ -286,7 +288,7 @@
                     <TabItem Header="検索する">
                         <DockPanel>
                             <TextBox DockPanel.Dock="Top" Height="23" Text="{Binding SearchSubredditList.SearchText, Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}" />
-                            <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SearchSubredditList.Subreddits}">
+                            <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SearchSubredditList.Subreddits}" SelectedItem="{Binding SearchSubredditList.SelectedItem}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}"/>
@@ -361,8 +363,7 @@
         </Grid>
         <Grid Grid.Row="2">
             <StatusBar>
-                <StatusBarItem Width="200" Content="{Binding ErrorMessage}" />
-
+                <StatusBarItem Width="auto" x:Name="ssss" HorizontalAlignment="Right" />
             </StatusBar>
         </Grid>
     </Grid>

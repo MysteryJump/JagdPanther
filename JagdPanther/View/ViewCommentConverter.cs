@@ -8,48 +8,24 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace JagdPanther.View
 {
-	[ValueConversion(typeof(ViewComment), typeof(StackPanel))]
+	[ValueConversion(typeof(string), typeof(TextBlock))]
 	public class ViewCommentConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var vc = (ViewComment)value;
-            var sp = new StackPanel();
-            sp.Margin = new Thickness(0, 5, 0, 5);
+			throw new NotImplementedException();
 
-            var tx1 = new TextBlock();
-            tx1.Text = vc.CommentNumber.ToString();
+			var v = value.ToString();
+			var lines = v.Split('\n');
+			foreach (var item in lines)
+			{
 
-            var tx2 = new TextBlock();
-            tx2.Text = ":";
-
-            var tx3 = new TextBlock();
-            tx3.Text = vc.Author;
-
-            var tx4 = new TextBlock();
-            tx4.Text = "[";
-
-            var tx5 = new TextBlock();
-            tx5.Text = vc.FlairText;
-
-            var tx6 = new TextBlock();
-            tx6.Text = "]  Vote:";
-
-            var tx7 = new TextBlock();
-            tx7.Text = vc.Votes.ToString();
-
-            var tx8 = GenerateVoteCommandsText(vc);
-
-            return new StackPanel();
+			}
 		}
-
-        private object GenerateVoteCommandsText(ViewComment vc)
-        {
-            return null;
-        }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{

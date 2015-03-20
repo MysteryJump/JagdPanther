@@ -11,6 +11,8 @@ namespace JagdPanther.ViewModel
 	public class EditConfigurationViewModel : ReactiveObject
 	{
 		public IReactiveCommand<Unit> OkCommand { get; set; }
+		public IReactiveCommand<Unit> CancelCommand { get; set; }
+
 		public IReactiveCommand<Unit> SelectTreeViewItemCommand { get; set; }
 
 
@@ -20,6 +22,10 @@ namespace JagdPanther.ViewModel
 			MessageBus.Current.SendMessage("", "CloseSettingWindow");
 		}
 
+		public async Task CancelExcute(object sender)
+		{
+			Properties.Settings.Default.Reload();
+		}
 
 		public async Task SelectTreeViewItemExcute(object sender)
 		{

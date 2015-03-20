@@ -18,11 +18,20 @@ namespace JagdPanther.View
 	/// <summary>
 	/// EnviromentSetting.xaml の相互作用ロジック
 	/// </summary>
-	public partial class EnviromentSetting : UserControl
+	public partial class EnviromentSetting : UserControl, ISettingControl
 	{
 		public EnviromentSetting()
 		{
 			InitializeComponent();
 		}
+
+		public void Save()
+		{
+		}
+
+		public void Load()
+		{
+		}
+
 	}
 }

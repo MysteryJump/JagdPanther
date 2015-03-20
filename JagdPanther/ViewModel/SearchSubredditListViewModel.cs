@@ -30,7 +30,7 @@ namespace JagdPanther.ViewModel
 
 		private void SearchSubreddits(string value)
 		{
-			
+
 			lock (this)
 			{
 				Subreddits.Clear();
@@ -50,6 +50,7 @@ namespace JagdPanther.ViewModel
 		public SearchSubredditListViewModel(RedditData info)
 		{
 			Subreddits = new ObservableCollection<string>();
+			SelectedSubredditCommand = ReactiveCommand.CreateAsyncTask(SelectedSubredditExcute);
 			this.info = info;
 		}
 
@@ -57,7 +58,11 @@ namespace JagdPanther.ViewModel
 
 		public async Task SelectedSubredditExcute(object sender)
 		{
-			MessageBus.Current.SendMessage(new Board { BoardPlace = BoardLocate.Reddit, Path = SelectedItem }, "OpenNewSubreddit");
+			if (string.IsNullOrWhiteSpace(SelectedItem))
+				return;
+			var path = SelectedItem;
+			path = path.Remove(path.Length - 1, 1);
+			MessageBus.Current.SendMessage(new Board { BoardPlace = BoardLocate.Reddit, Path = path }, "OpenNewSubreddit");
 		}
 
 		private string selectedItem;
@@ -67,10 +72,6 @@ namespace JagdPanther.ViewModel
 			get { return selectedItem; }
 			set { selectedItem = value; this.RaiseAndSetIfChanged(ref selectedItem, value); }
 		}
-
-		public SearchSubredditListViewModel()
-		{
-			SelectedSubredditCommand = ReactiveCommand.CreateAsyncTask(SelectedSubredditExcute);
-		}
+		
 	}
 }

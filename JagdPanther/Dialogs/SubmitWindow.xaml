@@ -50,19 +50,14 @@
                    Margin="75,4,0,7"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Center"
-                   Text="Flair" Visibility="Hidden"/>
-        <ComboBox Grid.Row="2"
+                   Text="Flair" />
+        <TextBox Grid.Row="2"
                   Width="100"
                   Margin="110,4,0,7"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Center"
-                  Name="flairs"
-                  Visibility="Hidden">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Text}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+                  Name="flairs"/>
+        <Button Grid.Row="2" Content="プレビュー" Height="24" Width="70"
+                 HorizontalAlignment="Right" VerticalAlignment="Center" Margin="90,0" Click="Button_Click_1"/>
     </Grid>
 </Window>

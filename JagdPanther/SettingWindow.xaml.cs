@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using JagdPanther.View;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,10 @@ namespace JagdPanther
 		public SettingWindow()
 		{
 			InitializeComponent();
-			MessageBus.Current.Listen<string>("CloseSettingWindow").Subscribe(_ => this.Close());
+			MessageBus.Current.Listen<string>("CloseSettingWindow").Subscribe(_ =>
+			{
+				Close();
+			});
 			RegisterTags();
 		}
 
@@ -34,12 +38,17 @@ namespace JagdPanther
 
 		public void SelectedItem(object sender, RoutedEventArgs e)
 		{
-			if (!string.IsNullOrWhiteSpace((sender as TreeViewItem).Name))
+			if (beforeData != null)
+				beforeData.Save();
+			var tree = (sender as TreeViewItem).Tag;
+            if (!string.IsNullOrWhiteSpace((sender as TreeViewItem).Name))
 			{
-				var data = ((sender as TreeViewItem).Tag as UIElement);
+				var data = (tree as UserControl);
 				d.Content = data;
 			}
-			
+			beforeData = tree as ISettingControl;
 		}
+
+		private ISettingControl beforeData;
 	}
 }
