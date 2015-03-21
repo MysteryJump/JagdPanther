@@ -19,12 +19,13 @@ namespace JagdPanther.ViewModel
 			SelectedSubredditCommand = ReactiveCommand.CreateAsyncTask(SelectedSubredditExcute);
 		}
 
-		public RedditData RedditInfo { get; private set; }
+		public RedditData RedditInfo { get; set; }
 
 		public ObservableCollection<string> Subreddits { get;set; }
 
 		public async Task Initialize()
 		{
+			Subreddits.Clear();
 			if (MainViewModel.IsOffline)
 				return;
 			var lists = await Task.Factory.StartNew(() =>

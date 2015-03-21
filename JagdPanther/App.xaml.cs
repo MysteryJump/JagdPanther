@@ -21,7 +21,15 @@ namespace JagdPanther
 			{
 				var s = new Dialogs.OAuthLoginWindow();
 				s.ShowDialog();
-				new OAuthLoginInfo() { RefreshToken = s.RefreshToken }.SaveData();
+				var ac = new AccountList()
+				{
+					Accounts = new List<Account>()
+				};
+				var a = new Account() { RefreshToken = s.RefreshToken };
+				a.GetUserName();
+                ac.Accounts.Add(a);
+				ac.LoggedAccount = a;
+				ac.Save();
 				JagdPanther.Properties.Settings.Default["IsLoggedin"] = true;
 			}
 			else

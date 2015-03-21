@@ -16,14 +16,18 @@ namespace JagdPanther.ViewModel
     {
 		public MainViewModel()
 		{
-			RedditInfo = RedditControl.Login();
+			AccountList = new AccountListViewModel();
+			var a = AccountList.LoggedAccount;
+			RedditInfo = RedditControl.Login(a.RefreshToken);
+			a.UserName = RedditInfo.RedditUser.Name;
+
 			var t = new Timer();
 			t.Interval = 2400 * 1000;
 			ProgramInitializer.CheckFolders();
 			t.Elapsed += (sender, e) =>
 			{
 				if (IsOffline != true)
-					RedditInfo = RedditControl.Login();
+					RedditInfo = RedditControl.Login(AccountList.LoggedAccount.RefreshToken);
 			};
 			if (RedditInfo == null)
 				IsOffline = true;
@@ -94,6 +98,10 @@ namespace JagdPanther.ViewModel
 					MessageBus.Current.SendMessage(x, "ThreadSelectTab");
 				});
 
+			MessageBus.Current.Listen<Account>("ChangeAccount").Subscribe(x =>
+			{
+				RedditInfo = RedditControl.Login(x.RefreshToken);
+			});
 		}
 
         private void RegisterCommands()
@@ -109,8 +117,21 @@ namespace JagdPanther.ViewModel
 			ChangeBoardTreeVisibilityCommand = ReactiveCommand.CreateAsyncTask(ChangeBoardTreeVisibilityExcute);
         }
 
+		
+        public RedditData RedditInfo
+		{
+			get { return redditInfo; }
+			set
+			{
+				if (redditInfo != null)
+				{
+					SubscribedSubredditList.Initialize();
+				}
+				redditInfo = value;
+			}
+		}
 
-        public RedditData RedditInfo { get; set; }
+		private RedditData redditInfo;
 
         private string title;
 

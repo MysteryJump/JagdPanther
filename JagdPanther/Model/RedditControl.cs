@@ -13,15 +13,20 @@ namespace JagdPanther.Model
     {
         public static RedditData Login()
         {
-            if (Properties.Settings.Default.IsLoggedin)
-            {
+			var log = new OAuthLoginInfo();
+			log.LoadData();
+			return Login(log.RefreshToken);
+        }
+
+		public static RedditData Login(string refreshToken)
+		{
+			if (Properties.Settings.Default.IsLoggedin)
+			{
 				while (true)
 				{
 					try
 					{
-						var log = new OAuthLoginInfo();
-						log.LoadData();
-						var ac = log.GetNewAccessToken();
+						var ac = OAuthLoginInfo.GetNewAccessToken(refreshToken);
 						var red = new Reddit(ac);
 						var user = red.User;
 						return new RedditData { RedditAccess = red, RedditUser = user };
@@ -35,14 +40,12 @@ namespace JagdPanther.Model
 						}
 					}
 				}
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-        }
-
-
+			}
+			else
+			{
+				throw new InvalidOperationException();
+			}
+		}
 	}
 
     public class RedditData

@@ -26,7 +26,7 @@ namespace JagdPanther.Model
 		public void Save()
 		{
 			var dcs = new DataContractSerializer(typeof(AccountList));
-			using (var fs = File.Open(Folders.LoginInfoXml, FileMode.Open))
+			using (var fs = File.Open(Folders.LoginInfoXml, FileMode.Create))
 			{
 				dcs.WriteObject(fs, this);
 			}

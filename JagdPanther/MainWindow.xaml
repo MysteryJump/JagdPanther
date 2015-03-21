@@ -114,6 +114,20 @@
                 <MenuItem Command="{Binding OpenLicenseWindowCommand}" Header="ライセンス情報" />
                 <MenuItem Command="{Binding OpenVersionWindowCommand}" Header="バージョン情報" />
             </MenuItem>
+            <MenuItem Header="アカウント" HorizontalAlignment="Right">
+                <MenuItem Header="アカウントを切り替える" ItemsSource="{Binding AccountList.AccountList}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding UserName}"/>
+                            <Setter Property="Command" Value="{Binding ChangeAccountCommand}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Header="アカウントを追加する" Command="{Binding AccountList.AddAccountCommand}" />
+                <Separator/>
+                <MenuItem IsEnabled="False" Header="ログイン中のアカウント"/>
+                <MenuItem Header="{Binding AccountList.LoggedAccount.UserName}" Name="logged" />
+            </MenuItem>
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

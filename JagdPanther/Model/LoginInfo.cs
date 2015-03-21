@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace JagdPanther.Model
 {
+	[Obsolete("Use OAuthLoginInfo insted of this class")]
     [DataContract]
     public class LoginInfo
     {

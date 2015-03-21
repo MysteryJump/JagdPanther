@@ -18,5 +18,26 @@ namespace JagdPanther.Model
 
 		[DataMember]
 		public string RefreshToken { get; set; }
-    }
+
+		[IgnoreDataMember]
+		public IReactiveCommand<Unit> ChangeAccountCommand
+		{
+			get
+			{
+				return ReactiveCommand.CreateAsyncTask(ChangeAccountExcute);
+			}
+		}
+
+		public void GetUserName()
+		{
+			var rd = RedditControl.Login(RefreshToken);
+			UserName = rd.RedditUser.Name;
+		}
+
+		public async Task ChangeAccountExcute(object sender)
+		{
+			MessageBus.Current.SendMessage(this, "ChangeAccount");
+		}
+
+	}
 }

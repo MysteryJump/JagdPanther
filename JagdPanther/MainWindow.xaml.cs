@@ -48,6 +48,9 @@ namespace JagdPanther
 				.Subscribe(x => threadListTab.SelectedItem = x);
 			MessageBus.Current.Listen<Thread>("ThreadSelectTab")
 				.Subscribe(x => threadTab.SelectedItem = x);
+			MessageBus.Current.Listen<Account>("ChangeLoggedUser")
+				.Subscribe(x => logged.Header = x.UserName);
+
 			LoadWindowState();
 		}
 

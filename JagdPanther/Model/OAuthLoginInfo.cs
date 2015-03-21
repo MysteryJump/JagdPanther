@@ -14,6 +14,7 @@ namespace JagdPanther.Model
 	[DataContract]
 	public class OAuthLoginInfo
 	{
+		[Obsolete("don't use this property")]
 		[DataMember]
 		public string RefreshToken { get; set; }
 
@@ -23,16 +24,21 @@ namespace JagdPanther.Model
 			using (var str = File.Open(Folders.LoginInfoXml, FileMode.Create))
 				dcs.WriteObject(str, this);
 		}
+		[Obsolete("Use GetNewAccessToken(string refreshToken) instead of this method")]
+		public string GetNewAccessToken()
+		{
+			return GetNewAccessToken(RefreshToken);
+		}
 
-		internal string GetNewAccessToken()
+		public static string GetNewAccessToken(string refreshToken)
 		{
 			var wec = new WebClient();
-			wec.Credentials = new NetworkCredential("gpnimOQbPLFmiw" ,"");
+			wec.Credentials = new NetworkCredential("gpnimOQbPLFmiw", "");
 			var n = new NameValueCollection()
 			{
 				$grant_type = "refresh_token",
-				$refresh_token = RefreshToken
-            };
+				$refresh_token = refreshToken
+			};
 			var x = wec.UploadValues("https://www.reddit.com/api/v1/access_token", n);
 			return JToken.Parse(Encoding.UTF8.GetString(x))["access_token"].ToString();
 		}
