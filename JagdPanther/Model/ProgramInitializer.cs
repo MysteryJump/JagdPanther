@@ -13,6 +13,8 @@ namespace JagdPanther.Model
 		{
 			if (!File.Exists(Folders.CommentListFolder))
 				Directory.CreateDirectory(Folders.CommentListFolder);
+			if (!File.Exists(Folders.PostListFolder))
+				Directory.CreateDirectory(Folders.PostListFolder);
 		}
 	}
 }

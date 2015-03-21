@@ -16,6 +16,7 @@ namespace JagdPanther.ViewModel
 		RedditData RedditInfo { get; set; }
 		Thread ListViewSelectedItem { get; set; }
 		Task Initializer(string path);
+		Task Initializer(string path,bool isOffline);
 		Task SelectedExcute(object sender);
     }
 }

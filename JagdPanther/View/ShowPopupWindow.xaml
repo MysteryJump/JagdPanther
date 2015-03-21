@@ -10,7 +10,7 @@
         ShowInTaskbar="False"
         AllowsTransparency="True">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <ResourceDictionary Source="ThreadViewResourceDictionary.xaml" />
     </Window.Resources>
     <Grid>
         <ScrollViewer>

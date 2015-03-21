@@ -59,8 +59,8 @@ namespace JagdPanther.ViewModel
 					{
 						v = new ThreadListViewModel();
 						v.RedditInfo = RedditInfo;
-						
-						await v.Initializer(x.Path);
+
+						await v.Initializer(x.Path,IsOffline);
 						ThreadListTabs.ThreadListChildrens.Add(v);
 						ThreadListTabs.SelectedTab = v;
 					}
@@ -73,7 +73,7 @@ namespace JagdPanther.ViewModel
 						
 						v.RedditInfo = RedditInfo;
 
-						await v.Initializer(path);
+						await v.Initializer(path,IsOffline);
 						if (v.ThreadList.Count == 0)
 							return;
 						ThreadListTabs.ThreadListChildrens.Add(v);
@@ -82,9 +82,9 @@ namespace JagdPanther.ViewModel
 					}
 
 				}
-				catch
+				catch (Exception e)
 				{
-					System.Windows.MessageBox.Show("板のURLが間違っている可能性があります");
+					System.Windows.MessageBox.Show("板のURLが間違っている可能性があります\r\n" + e);
 				}
 			});
 			MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>
@@ -113,6 +113,7 @@ namespace JagdPanther.ViewModel
             OpenVersionWindowCommand = ReactiveCommand.CreateAsyncTask(OpenVersionWindowExcute);
 			ChangeViewStateCommand = ReactiveCommand.CreateAsyncTask(ChangeViewStateExcute);
 			OpenCommand = ReactiveCommand.CreateAsyncTask(OpenExcute);
+			ChangeBoardTreeVisibilityCommand = ReactiveCommand.CreateAsyncTask(ChangeBoardTreeVisibilityExcute);
         }
 
 
@@ -247,7 +248,11 @@ namespace JagdPanther.ViewModel
 		}
 
 		public static bool IsOffline { get; set; }
+		public IReactiveCommand<Unit> ChangeBoardTreeVisibilityCommand { get; private set; }
 
-
+		public async Task ChangeBoardTreeVisibilityExcute(object sender)
+		{
+			MessageBus.Current.SendMessage("", "BoardTreeWidth");
+		}
 	}
 }

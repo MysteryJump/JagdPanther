@@ -33,6 +33,7 @@ namespace JagdPanther
 			two.Oriented = Orientation.Horizontal;
 			two.Oriented = Orientation.Vertical;
 			two.Oriented = Orientation.Horizontal;
+
 			MessageBus.Current.Listen<Orientation>("ChangeViewState").Subscribe(x =>
 			{
 				two.Oriented = x;
@@ -41,6 +42,8 @@ namespace JagdPanther
 				{
 					ssss.Content = x;
 				});
+			MessageBus.Current.Listen<string>("BoardTreeWidth")
+				.Subscribe(_ => boardTree.Width = boardTree.Width.Value == 0 ? new GridLength(Def.Default.BoardTreeWidth) : new GridLength(0));
 			LoadWindowState();
 		}
 
@@ -49,6 +52,7 @@ namespace JagdPanther
 			Height = Def.Default.WindowHeight;
 			Width = Def.Default.WindowWidth;
 			WindowState = Def.Default.WindowState;
+			boardTree.Width = new GridLength(Def.Default.BoardTreeWidth);
 			two.Oriented = Def.Default.IsThreeColumn ? Orientation.Vertical : Orientation.Horizontal;
 		}
 
@@ -59,6 +63,7 @@ namespace JagdPanther
 			Def.Default.WindowState = 
 				WindowState == WindowState.Minimized ? WindowState.Normal : WindowState;
 			Def.Default.IsThreeColumn = two.Oriented == Orientation.Horizontal ? false : true;
+			Def.Default.BoardTreeWidth = (int)boardTree.Width.Value;
 			Def.Default.Save();
 			base.OnClosing(e);
 		}

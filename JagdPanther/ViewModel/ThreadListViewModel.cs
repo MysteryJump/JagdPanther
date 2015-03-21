@@ -103,20 +103,48 @@ namespace JagdPanther.ViewModel
                 subs.Posts.Take(20)
                     .ToList().ForEach(x =>
                     {
-                        var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x, VoteCount = x.Upvotes - x.Downvotes, CommentCount = x.CommentCount };
+						var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x, VoteCount = x.Upvotes - x.Downvotes, CommentCount = x.CommentCount, Id = x.Id,SubredditName = subs.Name };
                         lists.Add(t);
                     });
                 return lists;
             });
             Name = subs.Title;
-			//using (var f = File.Open(Folders.PostListFolder + "\\" + path + ".xml", FileMode.Create))
-			//{
-			//	var dcs = new DataContractSerializer(typeof(ThreadListViewModel));
-			//	dcs.WriteObject(f, l);
-			//}
-            l.ForEach(ThreadList.Add);
+			var vp = path.Replace("/", "-").Remove(0,1).ToLower();
+            using (var f = File.Open(Folders.PostListFolder + "\\" + vp + ".xml", FileMode.Create))
+			{
+				var li = (ThreadList)l;
+				li.Subreddit = Name;
+				li.SubredditPath = subs.Name;
+                var dcs = new DataContractSerializer(typeof(ThreadList));
+				dcs.WriteObject(f, li);
+			}
+			l.ForEach(ThreadList.Add);
             ThreadList.Add(new Thread { Title = "次の20件を読み込む...", CommentCount = -1 });
         }
+
+		public async Task Initializer(string path,bool isOffline)
+		{
+			if (!isOffline)
+				await Initializer(path);
+			else
+			{
+				var vp = path.Replace("/", "-").Remove(0, 1).ToLower();
+				var p = Folders.PostListFolder + "\\" + vp + ".xml";
+				if (!File.Exists(p))
+				{
+					MessageBus.Current.SendMessage("Cannot open file: file dosen't exist.", "ErrorMessage");
+				}
+				using (var fs = File.Open(p, FileMode.Open))
+				{
+					var dcs = new DataContractSerializer(typeof(ThreadList));
+					var da = dcs.ReadObject(fs) as ThreadList;
+					var data = (List<Thread>)(da);
+					Name = da.Subreddit;
+					data.ForEach(ThreadList.Add);
+					ThreadList.ToList().ForEach(x => x.SubredditName = da.SubredditPath);
+				}
+			}
+		}
 		
 
         private Thread listViewSelectedItem;

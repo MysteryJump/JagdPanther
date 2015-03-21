@@ -54,7 +54,11 @@ namespace JagdPanther.Dialogs
         public bool IsLinkPost { get; set; }
         public string PostString { get; set; }
         public bool IsOk { get; set; }
-        public string Title { get; set; }
+		public new string Title
+		{
+			get;
+			set;
+		}
 		public bool IsNsfw { get; set; }
 		public string Flair { get; set; }
 
@@ -71,5 +75,16 @@ namespace JagdPanther.Dialogs
 			w.Content = f;
 			w.ShowDialog();
 		}
-	}
+		private string WindowTitle
+		{
+			get
+			{
+				return base.Title;
+			}
+			set
+			{
+				base.Title = value;
+			}
+		}
+    }
 }

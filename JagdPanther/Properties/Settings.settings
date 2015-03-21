@@ -23,5 +23,11 @@
     <Setting Name="IsThreeColumn" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ThreadPopupViewBackgroundColor" Type="System.Windows.Media.Color" Scope="User">
+      <Value Profile="(Default)">#00000000</Value>
+    </Setting>
+    <Setting Name="BoardTreeWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">75</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

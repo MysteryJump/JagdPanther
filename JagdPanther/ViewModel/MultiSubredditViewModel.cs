@@ -61,11 +61,6 @@ namespace JagdPanther.ViewModel
 		public async Task Initializer(string path)
 		{
 
-			if (MainViewModel.IsOffline)
-			{
-				MessageBus.Current.SendMessage("Getting multireddit doesn't support in offline mode.", "ErrorMessage");
-				return;
-			}
 			var subs = RedditInfo.RedditAccess.GetMultireddit(path);
 			Path = path;
 
@@ -84,6 +79,17 @@ namespace JagdPanther.ViewModel
 			Name = path;
 
 			l.ForEach(ThreadList.Add);
+		}
+
+		public async Task Initializer(string path,bool isOffline)
+		{
+			if (isOffline)
+			{
+				MessageBus.Current.SendMessage("Getting multireddit doesn't support in offline mode.", "ErrorMessage");
+				return;
+			}
+			else
+				Initializer(path);
 		}
 
 

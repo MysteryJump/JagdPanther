@@ -12,13 +12,15 @@ using System.Text.RegularExpressions;
 using System.Windows.Media;
 using System.Runtime.Serialization;
 using System.IO;
+using JagdPanther.ViewModel;
 
 namespace JagdPanther.Model
 {
     [DataContract]
     public class Thread : ReactiveObject
     {
-
+		[DataMember]
+		public string SubredditName { get; set; }
         [DataMember]
         public DateTime CreatedTime { get; set; }
         [IgnoreDataMember]
@@ -83,83 +85,104 @@ namespace JagdPanther.Model
         }
         [IgnoreDataMember]
         public IReactiveCommand<Unit> RemoveTabCommand { get; set; }
-        private async Task<List<ViewComment>> GetAndParseComments()
-        {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    var coms = new List<ViewComment>();
-                    var queue = new Queue<ViewComment>();
-                    var a = PostThread.Author.FullName;
-                    var host = new ViewComment()
-                    {
-                        Author = a,
-                        BasePostAuthor = a,
-                        ParentAnchor = null,
-                        Body = PostThread.SelfText,
-                        BodyHtml = PostThread.SelfTextHtml,
-                        FlairText = PostThread.AuthorFlairText,
-                        Children = new List<ViewComment>(),
-                        Created = PostThread.Created,
-						Source = PostThread.Url.ToString(),
-                        ParentPost = PostThread,
-                        Votes = PostThread.Upvotes - PostThread.Downvotes,
-						IsFirst = true,
-						Id = PostThread.Id
+		private async Task<List<ViewComment>> GetAndParseComments()
+		{
+			if (!MainViewModel.IsOffline)
+			{
+				return await Task.Run(() =>
+				{
+					try
+					{
+						var coms = new List<ViewComment>();
+						var queue = new Queue<ViewComment>();
+						var a = PostThread.Author.FullName;
+						SubredditName = PostThread.Subreddit;
+						var host = new ViewComment()
+						{
+							Author = a,
+							BasePostAuthor = a,
+							ParentAnchor = null,
+							Body = PostThread.SelfText,
+							BodyHtml = PostThread.SelfTextHtml,
+							FlairText = PostThread.AuthorFlairText,
+							Children = new List<ViewComment>(),
+							Created = PostThread.Created,
+							Source = PostThread.Url.ToString(),
+							ParentPost = PostThread,
+							Votes = PostThread.Upvotes - PostThread.Downvotes,
+							IsFirst = true,
+							Id = PostThread.Id
 
-                    };
-                    queue.Enqueue(host);
+						};
+						queue.Enqueue(host);
 
-					RawComments.ToList()
-                        .ForEach(x =>
-                            {
-                                var vc = new ViewComment();
-                                vc = (ViewComment)x;
-                                vc.BasePostAuthor = a;
-                                queue.Enqueue(vc);
-                            });
-                    var i = 1;
-                    while (true)
-                    {
-                        if (queue.Count == 0)
-                        {
-                            break;
-                        }
-                        var co = queue.Dequeue();
+						RawComments.ToList()
+							.ForEach(x =>
+						{
+							var vc = new ViewComment();
+							vc = (ViewComment)x;
+							vc.BasePostAuthor = a;
+							queue.Enqueue(vc);
+						});
+						var i = 1;
+						while (true)
+						{
+							if (queue.Count == 0)
+							{
+								break;
+							}
+							var co = queue.Dequeue();
 
-                        co.Children.ForEach(x =>
-                            {
-                                x.Parent = co;
-                                queue.Enqueue(x);
-                            });
-                        coms.Add(co);
-                    }
+							co.Children.ForEach(x =>
+							{
+								x.Parent = co;
+								queue.Enqueue(x);
+							});
+							coms.Add(co);
+						}
 
+						var dcs = new DataContractSerializer(typeof(Thread));
+						using (var fs = File.Open(Folders.CommentListFolder + "\\" + PostThread.Id + "-" + PostThread.Subreddit + ".xml", FileMode.Create))
+							dcs.WriteObject(fs, this);
+						return coms.OrderByDescending(x => x.IsFirst)
+							.ThenBy(x => x.Created)
+							.Where(x => x.Created != new DateTime() || x.ParentAnchor == 0)
+							.Select(x =>
+						{
+							if (x.Parent != null)
+								x.ParentAnchor = x.Parent.CommentNumber;
+							x.CommentNumber = i;
+							i++;
+							return x;
+						})
+							.ToList();
+					}
+					catch (WebException w)
+					{
+						MessageBus.Current.SendMessage(w.ToString(), "ErrorMessage");
+						return null;
+					}
+				});
+			}
+			else
+			{
+				var p = Folders.CommentListFolder + "\\" + Id + "-" + SubredditName + ".xml";
+				if (!File.Exists(p))
+				{
+					MessageBus.Current.SendMessage("Cannot open file: doesn't exist file", "ErrorMessage");
+				}
+				using (var fs = File.Open(p, FileMode.Open))
+				{
 					var dcs = new DataContractSerializer(typeof(Thread));
-					using (var fs = File.Open(Folders.CommentListFolder + "\\" + PostThread.Id + "-" + PostThread.Subreddit + ".xml", FileMode.Create))
-						dcs.WriteObject(fs, this);
-					return coms.OrderByDescending(x => x.IsFirst)
-						.ThenBy(x => x.Created)
-						.Where(x => x.Created != new DateTime() || x.ParentAnchor == 0)
-						.Select(x =>
-                            {
-                                if (x.Parent != null)
-                                    x.ParentAnchor = x.Parent.CommentNumber;
-                                x.CommentNumber = i;
-                                i++;
-                                return x;
-                            })
-                        .ToList();
-                }
-                catch (WebException w)
-                {
-                    MessageBus.Current.SendMessage(w.ToString(), "ErrorMessage");
-                    return null;
-                }
-            });
-        
-        }
+					var th = dcs.ReadObject(fs) as Thread;
+					return th.SortedComments;
+
+				}
+
+
+			}
+
+		}
 
         public Thread()
         {
@@ -222,7 +245,8 @@ namespace JagdPanther.Model
         }
         [DataMember]
         public int CommentCount { get; internal set; }
-
+		[IgnoreDataMember]
+		public string Id { get;set; }
 
 		public static Thread LoadLog(string path)
 		{

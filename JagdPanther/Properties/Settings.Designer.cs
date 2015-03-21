@@ -106,5 +106,29 @@ namespace JagdPanther.Properties {
                 this["IsThreeColumn"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#00000000")]
+        public global::System.Windows.Media.Color ThreadPopupViewBackgroundColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["ThreadPopupViewBackgroundColor"]));
+            }
+            set {
+                this["ThreadPopupViewBackgroundColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int BoardTreeWidth {
+            get {
+                return ((int)(this["BoardTreeWidth"]));
+            }
+            set {
+                this["BoardTreeWidth"] = value;
+            }
+        }
     }
 }

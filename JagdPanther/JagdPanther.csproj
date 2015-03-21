@@ -151,10 +151,14 @@
     <Compile Include="Model\RedditControl.cs" />
     <Compile Include="Model\SubredditSearcher.cs" />
     <Compile Include="Model\Thread.cs" />
+    <Compile Include="Model\ThreadList.cs" />
     <Compile Include="Model\ViewComment.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserProfileWindow.xaml.cs">
+      <DependentUpon>UserProfileWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\AccountListViewModel.cs" />
     <Compile Include="ViewModel\EditConfigurationViewModel.cs" />
@@ -167,6 +171,8 @@
     <Compile Include="ViewModel\ThreadListTabsViewModel.cs" />
     <Compile Include="ViewModel\ThreadListViewModel.cs" />
     <Compile Include="ViewModel\ThreadTabsViewModel.cs" />
+    <Compile Include="View\ColorToSolidColorBrushConverter.cs" />
+    <Compile Include="View\CommentCollectionViewer.cs" />
     <Compile Include="View\EnviromentSetting.xaml.cs">
       <DependentUpon>EnviromentSetting.xaml</DependentUpon>
     </Compile>
@@ -175,8 +181,10 @@
     <Compile Include="View\ShowPopupWindow.xaml.cs">
       <DependentUpon>ShowPopupWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ThreadViewDataTemplateSelector.cs" />
     <Compile Include="View\TwoSplitItemsControl.cs" />
     <Compile Include="View\ViewCommentConverter.cs" />
+    <Compile Include="View\VisualTreeHelper.cs" />
     <Page Include="Dialogs\EditTextWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -222,11 +230,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserProfileWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\EnviromentSetting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ShowPopupWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ThreadViewResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -270,6 +286,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="View\Settings\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

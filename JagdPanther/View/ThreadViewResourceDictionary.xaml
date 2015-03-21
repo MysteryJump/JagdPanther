@@ -1,0 +1,147 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:local="clr-namespace:JagdPanther"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:mk="clr-namespace:Markdown.Xaml;assembly=Markdown.Xaml"
+                    xmlns:sd="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+                    xmlns:v="clr-namespace:JagdPanther.View"
+                    xmlns:vm="clr-namespace:JagdPanther.ViewModel">
+    <mk:TextToFlowDocumentConverter x:Key="TextToFlowDocument"/>
+    <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    <v:ColorToSolidColorBrushConverter x:Key="ColorToSolidBrush" />
+    <DataTemplate x:Key="threadView">
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="3" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
+            <ScrollViewer>
+                <v:CommentCollectionViewer Background="{Binding BackgroundColor,
+                                                                Converter={StaticResource ColorToSolidBrush}}"
+                                           BorderBrush="{x:Null}"
+                                           BorderThickness="0"
+                                           ItemsSource="{Binding SortedComments}"
+                                           ScrollViewer.CanContentScroll="True"
+                                           VirtualizingPanel.IsVirtualizing="True"
+                                           VirtualizingPanel.ScrollUnit="Pixel"
+                                           VirtualizingPanel.VirtualizationMode="Standard">
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <VirtualizingStackPanel Margin="0,5">
+
+                                <VirtualizingStackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding CommentNumber}">
+                                        <TextBlock.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Command="{Binding WriteCommentDialogOpenCommand}"
+                                                          CommandParameter="{Binding ThisObject}"
+                                                          Header="返信する" />
+                                                <MenuItem Command="{Binding SaveCommentCommand}"
+                                                          CommandParameter="{Binding ThisObject}"
+                                                          Header="{Binding SaveCommentHeader}" />
+                                                <MenuItem Command="{Binding EditComment}"
+                                                          Header="編集する"
+                                                          IsEnabled="{Binding IsOwner}" />
+                                                <Separator />
+                                                <MenuItem Command="{Binding CopyCommentCommand}"
+                                                          CommandParameter="{Binding ThisObject}"
+                                                          Header="コメントをコピーする" />
+                                            </ContextMenu>
+                                        </TextBlock.ContextMenu>
+                                    </TextBlock>
+                                    <TextBlock Text=":" />
+                                    <TextBlock Foreground="Red"
+                                               Text="(S)"
+                                               Visibility="{Binding IsGenerator,
+                                                                    Converter={StaticResource BoolToVisibility}}" />
+                                    <TextBlock Text="No Name [" />
+                                    <TextBlock Text="{Binding FlairText}" />
+                                    <TextBlock Text="]  Vote:" />
+                                    <TextBlock Text="{Binding Votes}" />
+                                    <TextBlock Text=" 日付:" />
+                                    <TextBlock Text="{Binding CreatedString}" />
+                                    <TextBlock Text=" Author:" />
+                                    <TextBlock x:Name="ss" Text="{Binding Author}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseEnter">
+                                                <i:InvokeCommandAction Command="{Binding ShowIdCommentCommand}" CommandParameter="{Binding ElementName=ss}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
+                                    <TextBlock>
+                                        <Run />
+                                        <Underline>
+                                            <Underline.InputBindings>
+                                                <MouseBinding Command="{Binding VoteCommand}"
+                                                              CommandParameter="UpVote"
+                                                              Gesture="LeftClick" />
+                                            </Underline.InputBindings>
+                                            UpVote
+                                        </Underline>
+                                        <Run />
+                                        <Underline>
+                                            <Underline.InputBindings>
+                                                <MouseBinding Command="{Binding VoteCommand}"
+                                                              CommandParameter="DownVote"
+                                                              Gesture="LeftClick" />
+                                            </Underline.InputBindings>
+                                            DownVote
+                                        </Underline>
+                                    </TextBlock>
+                                </VirtualizingStackPanel>
+                                <Grid HorizontalAlignment="Left">
+                                    <TextBlock x:Name="anc"
+                                               HorizontalAlignment="Stretch"
+                                               Text="{Binding AnchorText}"
+                                               Visibility="{Binding IsExistParentAnchor,
+                                                                    Converter={StaticResource BoolToVisibility}}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseEnter">
+                                                <i:InvokeCommandAction Command="{Binding ShowParentCommentCommand}" CommandParameter="{Binding ElementName=anc}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
+                                </Grid>
+                                <TextBlock Text="{Binding Body}" Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />
+                                <TextBlock Visibility="{Binding IsFirst, Converter={StaticResource BoolToVisibility}}">
+                                    <LineBreak />
+                                    <Run Text="ソース：" />
+                                    <Underline Foreground="Blue">
+                                        <Run Text="{Binding Source}">
+                                            <Run.InputBindings>
+                                                <MouseBinding Command="{Binding ReadSourceCommand}" Gesture="LeftClick" />
+                                            </Run.InputBindings>
+                                        </Run>
+                                    </Underline>
+                                </TextBlock>
+                            </VirtualizingStackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </v:CommentCollectionViewer>
+            </ScrollViewer>
+            <GridSplitter Grid.Row="1"
+                          Height="2"
+                          HorizontalAlignment="Stretch"
+                          ShowsPreview="True" />
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
+                <TextBox Grid.Row="1"
+                         AcceptsReturn="True"
+                         Text="{Binding WriteText}" />
+            </Grid>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

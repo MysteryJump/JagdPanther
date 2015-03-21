@@ -23,6 +23,7 @@ namespace JagdPanther.View
 		public ShowPopupWindow()
 		{
 			InitializeComponent();
+			Background = new SolidColorBrush(Properties.Settings.Default.ThreadPopupViewBackgroundColor);
 		}
 
 		private void Window_MouseLeave(object sender, MouseEventArgs e)
