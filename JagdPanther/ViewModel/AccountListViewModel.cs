@@ -11,27 +11,42 @@ namespace JagdPanther.ViewModel
 {
 	public class AccountListViewModel : ReactiveObject
 	{
-		public ObservableCollection<Account> lists;
-		public ObservableCollection<Account> Accounts
+		private AccountList accounts;
+
+		public ObservableCollection<Account> AccountList
 		{
 			get
 			{
-				return lists;
+				return accountList;
 			}
 			set
 			{
-				lists = value;
-				this.RaiseAndSetIfChanged(ref lists, value);
+				accountList = value;
+				this.RaiseAndSetIfChanged(ref accountList, value);
 			}
 		}
+		private ObservableCollection<Account> accountList;
+
+		private Account loggedAccount;
+
+		public Account LoggedAccount
+		{
+			get { return loggedAccount; }
+			set { loggedAccount = value; this.RaiseAndSetIfChanged(ref loggedAccount, value); }
+		}
+
 
 		public AccountListViewModel()
 		{
-			Accounts = new ObservableCollection<Account>();
-			Account.LoadData().ToList().ForEach(Accounts.Add);
-			Accounts.Add(new Account() { UserName = "アカウントを追加する", IsLogged = null });
+			accounts = new AccountList();
+			accounts.Load();
+
+			AccountList = new ObservableCollection<Account>();
+			accounts.Accounts.ForEach(x => AccountList.Add(x));
+			AccountList.Remove(accounts.LoggedAccount);
 
 		}
 
+		
 	}
 }

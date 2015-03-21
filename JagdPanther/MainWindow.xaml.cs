@@ -44,6 +44,10 @@ namespace JagdPanther
 				});
 			MessageBus.Current.Listen<string>("BoardTreeWidth")
 				.Subscribe(_ => boardTree.Width = boardTree.Width.Value == 0 ? new GridLength(Def.Default.BoardTreeWidth) : new GridLength(0));
+			MessageBus.Current.Listen<IThreadListViewer>("ThreadListSelectTab")
+				.Subscribe(x => threadListTab.SelectedItem = x);
+			MessageBus.Current.Listen<Thread>("ThreadSelectTab")
+				.Subscribe(x => threadTab.SelectedItem = x);
 			LoadWindowState();
 		}
 

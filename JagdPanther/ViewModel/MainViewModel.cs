@@ -51,7 +51,7 @@ namespace JagdPanther.ViewModel
 			{
 				try
 				{
-					IThreadListViewer v;
+					IThreadListViewer v = null;
 					if (x == null)
 						return;
 
@@ -80,6 +80,7 @@ namespace JagdPanther.ViewModel
 						ThreadListTabs.SelectedTab = v;
 
 					}
+					MessageBus.Current.SendMessage(v, "ThreadListSelectTab");
 
 				}
 				catch (Exception e)
@@ -90,17 +91,9 @@ namespace JagdPanther.ViewModel
 			MessageBus.Current.Listen<Thread>("OpenNewThreadTab").Subscribe(x =>
 				{
 					ThreadTabs.ThreadTabsChildren.Add(x);
+					MessageBus.Current.SendMessage(x, "ThreadSelectTab");
 				});
-			MessageBus.Current.Listen<Account>("ChangeAccount").Subscribe((x) =>
-			{
-				RedditInfo = RedditControl.Login(x);
-				AccountList.Accounts.Where(y => y.IsLogged == true).FirstOrDefault().IsLogged = false;
-				AccountList.Accounts.Where(y => y == x).FirstOrDefault().IsLogged = true;
-            });
-			MessageBus.Current.Listen<Account>("AddAccount").Subscribe((x) =>
-			{
-				AccountList.Accounts.Add(x);
-			});
+
 		}
 
         private void RegisterCommands()

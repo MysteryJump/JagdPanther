@@ -5,14 +5,14 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:JagdPanther"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sd="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        xmlns:vm="clr-namespace:JagdPanther.ViewModel"
-        xmlns:v="clr-namespace:JagdPanther.View"
         xmlns:mk="clr-namespace:Markdown.Xaml;assembly=Markdown.Xaml"
+        xmlns:sd="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:v="clr-namespace:JagdPanther.View"
+        xmlns:vm="clr-namespace:JagdPanther.ViewModel"
         Title="{Binding Title}"
         Width="525"
         Height="350"
-        mc:Ignorable="d" >
+        mc:Ignorable="d">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
@@ -27,7 +27,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="View/ThreadViewResourceDictionary.Xaml"/>
+                <ResourceDictionary Source="View/ThreadViewResourceDictionary.Xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
                     <DataTemplate x:Key="threadListView" DataType="vm:ThreadListViewModel">
@@ -36,27 +36,27 @@
                                 <CollectionViewSource x:Key="items" Source="{Binding ThreadList}" />
                             </Grid.Resources>
                             <Grid Height="20"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Top">
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Top">
                                 <Menu Height="20">
                                     <MenuItem Command="{Binding RefreshCommand}"
-                                  Header="更新"
-                                  IsEnabled="False" />
-                                    <MenuItem Command="{Binding SubscribeCommand}" Visibility="{Binding IsSubscribed, Converter={StaticResource BoolToVisibility}}"/>
+                                              Header="更新"
+                                              IsEnabled="False" />
+                                    <MenuItem Command="{Binding SubscribeCommand}" Visibility="{Binding IsSubscribed, Converter={StaticResource BoolToVisibility}}" />
                                     <MenuItem Command="{Binding NewPostCommand}" Header="投稿する" />
                                 </Menu>
                             </Grid>
                             <ListView Margin="0,20,0,0"
-                          ItemsSource="{Binding Source={StaticResource items}}"
-                          SelectedItem="{Binding ListViewSelectedItem}">
+                                      ItemsSource="{Binding Source={StaticResource items}}"
+                                      SelectedItem="{Binding ListViewSelectedItem}">
                                 <ListView.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Command="{Binding VoteCommand}"
-                                      CommandParameter="Up"
-                                      Header="UpVote" />
+                                                  CommandParameter="Up"
+                                                  Header="UpVote" />
                                         <MenuItem Command="{Binding VoteCommand}"
-                                      CommandParameter="Down"
-                                      Header="DownVote" />
+                                                  CommandParameter="Down"
+                                                  Header="DownVote" />
                                     </ContextMenu>
                                 </ListView.ContextMenu>
                                 <i:Interaction.Triggers>
@@ -84,7 +84,7 @@
                                             <GridViewColumnHeader Content="コメント数" Tag="CommentCount" />
                                         </GridViewColumn>
                                         <GridViewColumn DisplayMemberBinding="{Binding Speed}">
-                                            <GridViewColumnHeader Content="勢い" Tag="Speed"/>
+                                            <GridViewColumnHeader Content="勢い" Tag="Speed" />
                                         </GridViewColumn>
                                     </GridView>
                                 </ListView.View>
@@ -107,7 +107,7 @@
             </MenuItem>
             <MenuItem Header="編集">
                 <MenuItem Command="{Binding OpenSettingWindowCommand}" Header="設定" />
-                <MenuItem Command="{Binding ChangeViewStateCommand}" Header="{Binding ViewStateText}"/>
+                <MenuItem Command="{Binding ChangeViewStateCommand}" Header="{Binding ViewStateText}" />
                 <MenuItem Command="{Binding ChangeBoardTreeVisibilityCommand}" Header="板一覧の可視/不可視の変更" />
             </MenuItem>
             <MenuItem Header="ヘルプ">
@@ -125,29 +125,29 @@
                 <TabControl>
                     <TabItem Header="ローカル">
                         <ListView ItemsSource="{Binding SubredditList.OwnBoardCollection.Children}" SelectedItem="{Binding SubredditList.SelectedItem}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding SubredditList.OpenSubredditCommand}" CommandParameter="{Binding SubredditList.SelectedItem}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding BoardName}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding AddNewSubredditCommand}" Header="Subredditを追加する" />
-                                <MenuItem Command="{Binding RemoveSubredditCommand}" Header="Subredditを削除する" />
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                    </ListView>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SubredditList.OpenSubredditCommand}" CommandParameter="{Binding SubredditList.SelectedItem}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding BoardName}" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding AddNewSubredditCommand}" Header="Subredditを追加する" />
+                                    <MenuItem Command="{Binding RemoveSubredditCommand}" Header="Subredditを削除する" />
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                        </ListView>
                     </TabItem>
                     <TabItem Header="購読済み">
                         <ListView ItemsSource="{Binding SubscribedSubredditList.Subreddits}" SelectedItem="{Binding SubscribedSubredditList.SelectedItem}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding}"/>
+                                    <TextBlock Text="{Binding}" />
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                             <i:Interaction.Triggers>
@@ -159,11 +159,17 @@
                     </TabItem>
                     <TabItem Header="検索する">
                         <DockPanel>
-                            <TextBox DockPanel.Dock="Top" Height="23" Text="{Binding SearchSubredditList.SearchText, Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}" />
-                            <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SearchSubredditList.Subreddits}" SelectedItem="{Binding SearchSubredditList.SelectedItem}">
+                            <TextBox Height="23"
+                                     DockPanel.Dock="Top"
+                                     Text="{Binding SearchSubredditList.SearchText,
+                                                    Mode=OneWayToSource,
+                                                    UpdateSourceTrigger=PropertyChanged}" />
+                            <ListView DockPanel.Dock="Bottom"
+                                      ItemsSource="{Binding SearchSubredditList.Subreddits}"
+                                      SelectedItem="{Binding SearchSubredditList.SelectedItem}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding}"/>
+                                        <TextBlock Text="{Binding}" />
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                                 <i:Interaction.Triggers>
@@ -186,10 +192,11 @@
                 <v:TwoSplitItemsControl x:Name="two">
                     <v:TwoSplitItemsControl.FirstItem>
                         <Grid Grid.Row="0">
-                            <TabControl ContentTemplate="{StaticResource threadListView}"
-                                    ItemsSource="{Binding ThreadListTabs.ThreadListChildrens}"
-                                    SelectedItem="{Binding ThreadListTabs.SelectedTab}"
-                                    SelectedIndex="1">
+                            <TabControl Name="threadListTab"
+                                        ContentTemplate="{StaticResource threadListView}"
+                                        ItemsSource="{Binding ThreadListTabs.ThreadListChildrens}"
+                                        SelectedIndex="1"
+                                        SelectedItem="{Binding ThreadListTabs.SelectedTab}">
                                 <TabControl.ItemTemplate>
                                     <DataTemplate DataType="vm:ThreadListViewModel">
                                         <TextBlock Text="{Binding Name}">
@@ -210,7 +217,9 @@
                     </v:TwoSplitItemsControl.FirstItem>
                     <v:TwoSplitItemsControl.SecondItem>
                         <Grid Grid.Row="2">
-                            <TabControl ContentTemplate="{StaticResource threadView}" ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}">
+                            <TabControl Name="threadTab"
+                                        ContentTemplate="{StaticResource threadView}"
+                                        ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}">
                                 <TabControl.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Title}">
@@ -235,7 +244,9 @@
         </Grid>
         <Grid Grid.Row="2">
             <StatusBar>
-                <StatusBarItem Width="auto" x:Name="ssss" HorizontalAlignment="Right" />
+                <StatusBarItem x:Name="ssss"
+                               Width="auto"
+                               HorizontalAlignment="Right" />
             </StatusBar>
         </Grid>
     </Grid>

@@ -42,21 +42,7 @@ namespace JagdPanther.Model
             }
         }
 
-		internal static RedditData Login(Account a)
-		{
-			try
-			{
-				var red = new Reddit();
-				var user = red.LogIn(a.UserName, a.Password);
-				return new RedditData { RedditAccess = red, RedditUser = user };
-			}
-			catch (WebException e)
-			{
-				System.Windows.MessageBox.Show("ログインできませんでした");
-				return null;
-			}
 
-		}
 	}
 
     public class RedditData

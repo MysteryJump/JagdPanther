@@ -18,7 +18,7 @@
                     Margin="5"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch">
-            <TabItem Header="JagdPantzer">
+            <TabItem Header="JagdPanther">
                 <ScrollViewer>
                     <TextBlock ScrollViewer.CanContentScroll="True">
                         The MIT License (MIT)
