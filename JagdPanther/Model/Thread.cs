@@ -256,5 +256,7 @@ namespace JagdPanther.Model
 				th = (Thread)dcs.ReadObject(f);
 			return th;
 		}
+		[DataMember]
+		public string Flair { get;set; }
     }
 }

@@ -98,7 +98,7 @@ namespace JagdPanther.ViewModel
 					MessageBus.Current.SendMessage(x, "ThreadSelectTab");
 				});
 
-			MessageBus.Current.Listen<Account>("ChangeAccount").Subscribe(x =>
+			MessageBus.Current.Listen<Account>("ChangeAccount-2").Subscribe(x =>
 			{
 				RedditInfo = RedditControl.Login(x.RefreshToken);
 			});
@@ -115,7 +115,8 @@ namespace JagdPanther.ViewModel
 			ChangeViewStateCommand = ReactiveCommand.CreateAsyncTask(ChangeViewStateExcute);
 			OpenCommand = ReactiveCommand.CreateAsyncTask(OpenExcute);
 			ChangeBoardTreeVisibilityCommand = ReactiveCommand.CreateAsyncTask(ChangeBoardTreeVisibilityExcute);
-        }
+			OpenInboxCommand = ReactiveCommand.CreateAsyncTask(OpenInboxExcute);
+		}
 
 		
         public RedditData RedditInfo
@@ -123,10 +124,6 @@ namespace JagdPanther.ViewModel
 			get { return redditInfo; }
 			set
 			{
-				if (redditInfo != null)
-				{
-					SubscribedSubredditList.Initialize();
-				}
 				redditInfo = value;
 			}
 		}
@@ -268,5 +265,13 @@ namespace JagdPanther.ViewModel
 		{
 			MessageBus.Current.SendMessage("", "BoardTreeWidth");
 		}
-	}
+
+		public async Task OpenInboxExcute(object sender)
+		{
+			var us = new UserProfileWindow();
+			us.DataContext = new UserProfileViewModel(RedditInfo);
+			us.ShowDialog();
+		}
+		public IReactiveCommand<Unit> OpenInboxCommand { get; set; }
+    }
 }

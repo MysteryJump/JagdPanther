@@ -103,6 +103,9 @@ namespace JagdPanther
 					case "Speed":
 						data = new List<Thread>(x.ThreadList).OrderBy(z => z.Speed).ToList();
 						break;
+					case "Flair":
+						data = new List<Thread>(x.ThreadList).OrderBy(z => z.Flair).ToList();
+						break;
 					default:
 						return;
 				}
@@ -125,6 +128,9 @@ namespace JagdPanther
 						break;
 					case "Speed":
 						data = new List<Thread>(x.ThreadList).OrderByDescending(z => z.Speed).ToList();
+						break;
+					case "Flair":
+						data = new List<Thread>(x.ThreadList).OrderByDescending(z => z.Flair).ToList();
 						break;
 					default:
 						return;

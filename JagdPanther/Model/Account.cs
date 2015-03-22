@@ -36,7 +36,9 @@ namespace JagdPanther.Model
 
 		public async Task ChangeAccountExcute(object sender)
 		{
-			MessageBus.Current.SendMessage(this, "ChangeAccount");
+			MessageBus.Current.SendMessage(this, "ChangeAccount-1");
+			MessageBus.Current.SendMessage(this, "ChangeAccount-2");
+
 		}
 
 	}

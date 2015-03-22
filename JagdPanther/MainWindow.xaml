@@ -86,6 +86,9 @@
                                         <GridViewColumn DisplayMemberBinding="{Binding Speed}">
                                             <GridViewColumnHeader Content="勢い" Tag="Speed" />
                                         </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Flair}">
+                                            <GridViewColumnHeader Content="フレアー" Tag="Flair" />
+                                        </GridViewColumn>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
@@ -114,19 +117,20 @@
                 <MenuItem Command="{Binding OpenLicenseWindowCommand}" Header="ライセンス情報" />
                 <MenuItem Command="{Binding OpenVersionWindowCommand}" Header="バージョン情報" />
             </MenuItem>
-            <MenuItem Header="アカウント" HorizontalAlignment="Right">
+            <MenuItem HorizontalAlignment="Right" Header="アカウント">
                 <MenuItem Header="アカウントを切り替える" ItemsSource="{Binding AccountList.AccountList}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding UserName}"/>
-                            <Setter Property="Command" Value="{Binding ChangeAccountCommand}"/>
+                            <Setter Property="Header" Value="{Binding UserName}" />
+                            <Setter Property="Command" Value="{Binding ChangeAccountCommand}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <MenuItem Header="アカウントを追加する" Command="{Binding AccountList.AddAccountCommand}" />
-                <Separator/>
-                <MenuItem IsEnabled="False" Header="ログイン中のアカウント"/>
-                <MenuItem Header="{Binding AccountList.LoggedAccount.UserName}" Name="logged" />
+                <MenuItem Command="{Binding AccountList.AddAccountCommand}" Header="アカウントを追加する" />
+                <Separator />
+                <MenuItem Header="ログイン中のアカウント" IsEnabled="False" />
+                <MenuItem Name="logged" Header="{Binding AccountList.LoggedAccount.UserName}" />
+                <MenuItem Header="Inbox" Command="{Binding OpenInboxCommand}"/>
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1">

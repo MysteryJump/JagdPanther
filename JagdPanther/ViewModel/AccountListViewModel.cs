@@ -50,7 +50,7 @@ namespace JagdPanther.ViewModel
 			LoggedAccount = accounts.LoggedAccount;
 			AddAccountCommand = ReactiveCommand.CreateAsyncTask(AddAccountExcute);
 
-			MessageBus.Current.Listen<Account>("ChangeAccount")
+			MessageBus.Current.Listen<Account>("ChangeAccount-1")
 				.Subscribe(x =>
 				{
 					AccountList.Add(LoggedAccount);

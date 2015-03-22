@@ -142,6 +142,8 @@
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\Folders.cs" />
     <Compile Include="Model\LoginInfo.cs" />
+    <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\MessageType.cs" />
     <Compile Include="Model\OAuthLoginInfo.cs" />
     <Compile Include="Model\PostingBeforeProcessor.cs" />
     <Compile Include="Model\ProgramInitializer.cs" />
@@ -169,6 +171,7 @@
     <Compile Include="ViewModel\ThreadListTabsViewModel.cs" />
     <Compile Include="ViewModel\ThreadListViewModel.cs" />
     <Compile Include="ViewModel\ThreadTabsViewModel.cs" />
+    <Compile Include="ViewModel\UserProfileViewModel.cs" />
     <Compile Include="View\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="View\CommentCollectionViewer.cs" />
     <Compile Include="View\EnviromentSetting.xaml.cs">

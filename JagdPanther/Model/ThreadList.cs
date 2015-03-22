@@ -29,7 +29,8 @@ namespace JagdPanther.Model
 					Created = x.CreatedTime,
 					Name = x.Title,
 					VoteCount = x.VoteCount,
-					Id = x.Id
+					Id = x.Id,
+					Flair = x.Flair
 				});
 			});
 			var th = new ThreadList
@@ -51,6 +52,7 @@ namespace JagdPanther.Model
 					VoteCount = x.VoteCount,
 					CreatedTime = x.Created,
 					Id = x.Id,
+					Flair = x.Flair
 				});
 			});
 			return tl;
@@ -73,6 +75,9 @@ namespace JagdPanther.Model
 
 			[DataMember]
 			public int VoteCount { get; set; }
+
+			[DataMember]
+			public string Flair { get; set; }
         }
 
 	}

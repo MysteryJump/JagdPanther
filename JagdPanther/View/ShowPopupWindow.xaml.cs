@@ -40,5 +40,7 @@ namespace JagdPanther.View
 		{
 			vc.ForEach(x => ddds.Items.Add(x));
 		}
+
+		public bool HasChild { get; set; }
 	}
 }
