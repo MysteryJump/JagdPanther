@@ -33,14 +33,14 @@ namespace JagdPanther.Dialogs
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			dddd.Navigate("https://www.reddit.com/api/v1/authorize?client_id=gpnimOQbPLFmiw&response_type=code&state=" + state + "&redirect_uri=http://127.0.0.1&duration=permanent&scope=identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread");
+			dddd.Navigate("https://www.reddit.com/api/v1/authorize?client_id=gpnimOQbPLFmiw&response_type=code&state=" + state + "&redirect_uri=http://google.co.jp&duration=permanent&scope=identity,edit,flair,history,modconfig,modflair,modlog,modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,subscribe,vote,wikiedit,wikiread");
 			dddd.Navigated += Dddd_Navigated;
 		}
 
 		private void Dddd_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
 		{
 			var str = e.Uri.ToString();
-			if (e.Uri.Host.Contains("127.0.0.1"))
+			if (e.Uri.Host.Contains("google.co.jp"))
 			{
 				var dic = e.Uri.Query.Split('&').ToList().ToDictionary(x =>
 				{
@@ -61,7 +61,7 @@ namespace JagdPanther.Dialogs
 				{
 					$grant_type = "authorization_code",
 					$code = code,
-					$redirect_uri = "http://127.0.0.1"
+					$redirect_uri = "http://google.co.jp"
 				};
 
 				wec.Credentials = new NetworkCredential("gpnimOQbPLFmiw", "");
