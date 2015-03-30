@@ -11,6 +11,7 @@
     <mk:TextToFlowDocumentConverter x:Key="TextToFlowDocument"/>
     <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     <v:ColorToSolidColorBrushConverter x:Key="ColorToSolidBrush" />
+    <v:ViewCommentToStringConverter x:Key="ViewCommentsToString" />
     <DataTemplate x:Key="threadView">
         <Grid DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
@@ -140,8 +141,11 @@
                 <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
                 <TextBox Grid.Row="1"
                          AcceptsReturn="True"
-                         Text="{Binding WriteText}" />
+                         Text="{Binding WriteText,Mode=TwoWay}" />
             </Grid>
         </Grid>
     </DataTemplate>
+    <HierarchicalDataTemplate x:Key="treeThreadView" ItemsSource="{Binding Children}">
+        
+    </HierarchicalDataTemplate>
 </ResourceDictionary>

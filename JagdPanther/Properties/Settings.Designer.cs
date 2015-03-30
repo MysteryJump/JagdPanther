@@ -130,5 +130,17 @@ namespace JagdPanther.Properties {
                 this["BoardTreeWidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsWebView {
+            get {
+                return ((bool)(this["IsWebView"]));
+            }
+            set {
+                this["IsWebView"] = value;
+            }
+        }
     }
 }

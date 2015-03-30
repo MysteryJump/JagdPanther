@@ -24,10 +24,10 @@
                 <ColumnDefinition Width="145" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <DockPanel>
+            <DockPanel Margin="0">
 
                 <TreeView Height="250"
-                          Margin="5"
+                          Margin="5,0"
                           VerticalAlignment="Bottom"
                           DockPanel.Dock="Bottom">
 
@@ -52,14 +52,14 @@
                     HorizontalAlignment="Right"
                     Command="{Binding OkCommmand}"
                     Content="OK"
-                    IsDefault="True" />
+                    IsDefault="True" Click="Button_Click" />
             <Button Width="75"
                     Height="25"
                     Margin="0,0,100,0"
                     HorizontalAlignment="Right"
                     Command="{Binding CancelCommand}"
                     Content="キャンセル"
-                    IsCancel="True" />
+                    IsCancel="True" Click="Button_Click_1" />
         </Grid>
     </Grid>
 </Window>

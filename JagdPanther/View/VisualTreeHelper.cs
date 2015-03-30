@@ -18,7 +18,7 @@ namespace JagdPanther.View
 			if (item == null) return false;
 			ItemsControl itemsControl = null;
 
-			itemsControl = ItemsControl.ItemsControlFromItemContainer(item) as ListBox;
+			itemsControl = ItemsControl.ItemsControlFromItemContainer(item) as ItemsControl;
 		
 
 			ScrollViewer scrollViewer = VisualTreeHelper.GetVisualChild<ScrollViewer, ItemsControl>(itemsControl);

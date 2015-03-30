@@ -95,6 +95,33 @@
                         </Grid>
                     </DataTemplate>
                 </ResourceDictionary>
+                <ResourceDictionary>
+                    <DataTemplate x:Key="threadWebView">
+                        <Grid DockPanel.Dock="Bottom">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="5*" />
+                                <RowDefinition Height="3" />
+                                <RowDefinition Height="2*" />
+                            </Grid.RowDefinitions>
+                            <v:WebBrowserEx Html="{Binding SortedComments, Converter={StaticResource ResourceKey=ViewCommentsToString}}" x:Name="mji"/>
+
+                            <GridSplitter Grid.Row="1"
+                          Height="2"
+                          HorizontalAlignment="Stretch"
+                          ShowsPreview="True" />
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="3*" />
+                                </Grid.RowDefinitions>
+                                <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
+                                <TextBox Grid.Row="1"
+                         AcceptsReturn="True"
+                         Text="{Binding WriteText,Mode=TwoWay}" />
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -236,8 +263,10 @@
                     <v:TwoSplitItemsControl.SecondItem>
                         <Grid Grid.Row="2">
                             <TabControl Name="threadTab"
-                                        ContentTemplate="{StaticResource threadView}"
                                         ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}">
+                                <TabControl.ContentTemplateSelector>
+                                    <v:ThreadViewDataTemplateSelector/>
+                                </TabControl.ContentTemplateSelector>
                                 <TabControl.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Title}">

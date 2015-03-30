@@ -60,7 +60,7 @@ namespace JagdPanther.Model
         [DataMember]
         public int VoteCount { get; set; }
         [IgnoreDataMember]
-        private List<ViewComment> sortedComments;
+		private List<ViewComment> sortedComments { get;set; }
         [DataMember]
         public List<ViewComment> SortedComments
         {
@@ -93,6 +93,7 @@ namespace JagdPanther.Model
 				{
 					try
 					{
+						ReadedItemsCount = CommentCount;
 						var coms = new List<ViewComment>();
 						var queue = new Queue<ViewComment>();
 						var a = PostThread.Author.FullName;
@@ -258,5 +259,39 @@ namespace JagdPanther.Model
 		}
 		[DataMember]
 		public string Flair { get;set; }
-    }
+
+		[DataMember]
+		public ViewComment ReadedItem { get; set; } // for itemscontrol
+
+		[DataMember]
+		public int ReadedScrollHeight { get; set; } // for webview
+
+		public void Save()
+		{
+			var dcs = new DataContractSerializer(typeof(Thread));
+			using (var fs = File.Open(Folders.CommentListFolder + "\\" + PostThread.Id + "-" + PostThread.Subreddit + ".xml", FileMode.Create))
+				dcs.WriteObject(fs, this);
+		}
+
+		[DataMember]
+		public int ReadedItemsCount { get;set; }
+
+		[IgnoreDataMember]
+		public int NewItemsCount { get { return CommentCount - ReadedItemsCount; } }
+
+		[IgnoreDataMember]
+		public List<TreeViewComment> TreeComment
+		{
+			get
+			{
+				var list = new List<TreeViewComment>();
+				RawComments.ForEach(x =>
+				{
+					TreeViewComment cx = (TreeViewComment)x;
+					//list.Add((TreeViewComment)x);
+				});
+				return list;
+			}
+		}
+	}
 }

@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace JagdPanther
 {
@@ -33,7 +34,7 @@ namespace JagdPanther
 
 		private void RegisterTags()
 		{
-			enviroment.Tag = new View.EnviromentSetting();
+			enviroment.Tag = new EnviromentSetting();
 		}
 
 		public void SelectedItem(object sender, RoutedEventArgs e)
@@ -41,14 +42,39 @@ namespace JagdPanther
 			if (beforeData != null)
 				beforeData.Save();
 			var tree = (sender as TreeViewItem).Tag;
+			if (tree == null)
+				return;
             if (!string.IsNullOrWhiteSpace((sender as TreeViewItem).Name))
 			{
 				var data = (tree as UserControl);
 				d.Content = data;
+				var dr = tree as ISettingControl;
+				dr.Load();
 			}
 			beforeData = tree as ISettingControl;
 		}
 
 		private ISettingControl beforeData;
+
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			if (DialogResult == false)
+				Properties.Settings.Default.Reload();
+			else
+				Properties.Settings.Default.Save();
+			base.OnClosing(e);
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			beforeData.Save();
+			Close();
+		}
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			DialogResult = false;
+			Close();
+		}
 	}
 }

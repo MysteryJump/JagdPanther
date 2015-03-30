@@ -16,7 +16,7 @@ using JagdPanther.View;
 namespace JagdPanther.Model
 {
     [DataContract]
-	public class ViewComment : ReactiveObject
+	public class ViewComment : ReactiveObject, IViewComment
     {
 
 		[IgnoreDataMember]
@@ -35,7 +35,7 @@ namespace JagdPanther.Model
         public string FlairText { get; set; }
         [DataMember]
         public string Author { get; set; }
-        [IgnoreDataMember]
+        [DataMember]
         public string BodyHtml { get; set; }
         [IgnoreDataMember]
         public List<ViewComment> Children { get; set; }

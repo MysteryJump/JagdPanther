@@ -24,6 +24,32 @@ namespace JagdPanther.Model
 		{ get; }
 		= ReadonlyVars.CurrentFolder + "\\logs\\comments";
 
+		public static string ThreadCssForWebView
+		{ get; }
+		= ThreadStyleFolder + "\\main.css";
 
+		public static string StyleFolder
+		{ get; }
+		= ReadonlyVars.CurrentFolder + "\\style";
+
+		public static string ThreadStyleFolder
+		{ get; }
+		= StyleFolder + "\\thread";
+
+		public static string BakaStamp
+		{ get; }
+		= ThreadStyleFolder + "\\baka.css";
+
+		public static string ThreadViewHtml
+		{ get; }
+		= ThreadStyleFolder + "\\main.html";
+
+		public static string HeaderHtml
+		{ get; }
+		= ThreadStyleFolder + "\\header.html";
+
+		public static string FooterHtml
+		{ get; }
+		= ThreadStyleFolder + "\\footer.html";
     }
 }

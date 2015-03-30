@@ -17,25 +17,8 @@ namespace JagdPanther
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-			if (!File.Exists(Folders.LoginInfoXml))
-			{
-				var s = new Dialogs.OAuthLoginWindow();
-				s.ShowDialog();
-				var ac = new AccountList()
-				{
-					Accounts = new List<Account>()
-				};
-				var a = new Account() { RefreshToken = s.RefreshToken };
-				a.GetUserName();
-                ac.Accounts.Add(a);
-				ac.LoggedAccount = a;
-				ac.Save();
-				JagdPanther.Properties.Settings.Default["IsLoggedin"] = true;
-			}
-			else
-			{
-				JagdPanther.Properties.Settings.Default["IsLoggedin"] = true;
-			}
+
+
 		}
     }
 }

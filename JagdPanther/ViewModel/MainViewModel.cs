@@ -16,6 +16,9 @@ namespace JagdPanther.ViewModel
     {
 		public MainViewModel()
 		{
+#if !DEBUG 
+			ProgramInitializer.LoginCheck();
+#endif
 			AccountList = new AccountListViewModel();
 			var a = AccountList.LoggedAccount;
 			RedditInfo = RedditControl.Login(a.RefreshToken);
@@ -24,11 +27,17 @@ namespace JagdPanther.ViewModel
 			var t = new Timer();
 			t.Interval = 2400 * 1000;
 			ProgramInitializer.CheckFolders();
+			ProgramInitializer.DownloadBakaStamp();
 			t.Elapsed += (sender, e) =>
 			{
-				if (IsOffline != true)
-					RedditInfo = RedditControl.Login(AccountList.LoggedAccount.RefreshToken);
+				lock (this)
+				{
+					if (IsOffline != true)
+						RedditInfo = RedditControl.Login(AccountList.LoggedAccount.RefreshToken);
+					MessageBus.Current.SendMessage(RedditInfo, "ChangeAccount-3");
+				}
 			};
+			t.Start();
 			if (RedditInfo == null)
 				IsOffline = true;
 
@@ -101,6 +110,7 @@ namespace JagdPanther.ViewModel
 			MessageBus.Current.Listen<Account>("ChangeAccount-2").Subscribe(x =>
 			{
 				RedditInfo = RedditControl.Login(x.RefreshToken);
+				MessageBus.Current.SendMessage(RedditInfo, "ChangeAccount-3");
 			});
 		}
 

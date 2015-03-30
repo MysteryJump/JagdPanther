@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using RedditSharp.Things;
 using RedditSharp;
 using System.Net;
+using ReactiveUI;
 
 namespace JagdPanther.Model
 {
     public class RedditControl
     {
+		[Obsolete("Use Login(string refreshToken) instead")]
         public static RedditData Login()
         {
 			var log = new OAuthLoginInfo();
@@ -46,5 +48,14 @@ namespace JagdPanther.Model
     {
         public Reddit RedditAccess { get; set; }
         public AuthenticatedUser RedditUser { get; set; }
+		public RedditData()
+		{
+			MessageBus.Current.Listen<RedditData>("ChangeAccount-3")
+				.Subscribe(x =>
+				{
+					RedditAccess = x.RedditAccess;
+					RedditUser = x.RedditUser;
+				});
+		}
     }
 }

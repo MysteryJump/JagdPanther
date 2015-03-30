@@ -72,7 +72,7 @@ namespace JagdPanther.ViewModel
                         .ToList()
                         .ForEach(x =>
                         {
-                            var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x, VoteCount = x.Upvotes - x.Downvotes, CommentCount = x.CommentCount };
+                            var t = new Thread() { Title = x.Title, CreatedTime = x.Created, PostThread = x, VoteCount = x.Upvotes - x.Downvotes, CommentCount = x.CommentCount + 1};
                             list.Add(t);
                         });
                     return list;
@@ -109,7 +109,7 @@ namespace JagdPanther.ViewModel
 							CreatedTime = x.Created,
 							PostThread = x,
 							VoteCount = x.Upvotes - x.Downvotes,
-							CommentCount = x.CommentCount,
+							CommentCount = x.CommentCount +1,
 							Id = x.Id,
 							SubredditName = subs.Name,
 							Flair = x.LinkFlairText
