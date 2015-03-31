@@ -288,7 +288,7 @@ namespace JagdPanther.Model
 				RawComments.ForEach(x =>
 				{
 					TreeViewComment cx = (TreeViewComment)x;
-					//list.Add((TreeViewComment)x);
+					list.Add((TreeViewComment)cx);
 				});
 				return list;
 			}

@@ -28,11 +28,13 @@ namespace JagdPanther.View
 		public void Save()
 		{
 			Properties.Settings.Default.IsWebView = iswebview.IsChecked == true ? true : false;
+			Properties.Settings.Default.IsTreeView = istreeview.IsChecked == true ? true : false;
 		}
 
 		public void Load()
 		{
 			iswebview.IsChecked = Properties.Settings.Default.IsWebView;
+			istreeview.IsChecked = Properties.Settings.Default.IsTreeView;
 		}
 
 	}

@@ -12,13 +12,16 @@ namespace JagdPanther.View
 	{
 		public override DataTemplate SelectTemplate(object item, DependencyObject container)
 		{
-			switch (Properties.Settings.Default.IsWebView)
-			{
-				case true:
-					return ((FrameworkElement)container).FindResource("threadWebView") as DataTemplate;
-				case false:
-					return ((FrameworkElement)container).FindResource("threadView") as DataTemplate;
-			} 
+			if (!Properties.Settings.Default.IsTreeView)
+				switch (Properties.Settings.Default.IsWebView)
+				{
+					case true:
+						return ((FrameworkElement)container).FindResource("threadWebView") as DataTemplate;
+					case false:
+						return ((FrameworkElement)container).FindResource("threadView") as DataTemplate;
+				}
+			else
+				return ((FrameworkElement)container).FindResource("threadTreeView") as DataTemplate;
 			return base.SelectTemplate(item, container);
 		}
 	}

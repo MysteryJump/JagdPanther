@@ -1,4 +1,5 @@
 using RedditSharp.Things;
+using System;
 
 namespace JagdPanther.Model
 {
@@ -12,5 +13,7 @@ namespace JagdPanther.Model
 		string Source { get; set; }
 		bool IsGenerator { get; }
 		Comment BaseComment { get; set; }
+		DateTime Created { get; set; }
+		string CreatedString { get; }
 	}
 }

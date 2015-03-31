@@ -16,6 +16,7 @@ namespace JagdPanther.ViewModel
     {
 		public MainViewModel()
 		{
+			RedditSharp.WebAgent.UserAgent = ReadonlyVars.UserAgent;
 #if !DEBUG 
 			ProgramInitializer.LoginCheck();
 #endif

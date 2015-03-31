@@ -142,5 +142,17 @@ namespace JagdPanther.Properties {
                 this["IsWebView"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsTreeView {
+            get {
+                return ((bool)(this["IsTreeView"]));
+            }
+            set {
+                this["IsTreeView"] = value;
+            }
+        }
     }
 }

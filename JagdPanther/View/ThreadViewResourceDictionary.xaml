@@ -8,7 +8,7 @@
                     xmlns:sd="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                     xmlns:v="clr-namespace:JagdPanther.View"
                     xmlns:vm="clr-namespace:JagdPanther.ViewModel">
-    <mk:TextToFlowDocumentConverter x:Key="TextToFlowDocument"/>
+    <mk:TextToFlowDocumentConverter x:Key="TextToFlowDocument" />
     <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     <v:ColorToSolidColorBrushConverter x:Key="ColorToSolidBrush" />
     <v:ViewCommentToStringConverter x:Key="ViewCommentsToString" />
@@ -141,11 +141,74 @@
                 <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
                 <TextBox Grid.Row="1"
                          AcceptsReturn="True"
-                         Text="{Binding WriteText,Mode=TwoWay}" />
+                         Text="{Binding WriteText,
+                                        Mode=TwoWay}" />
             </Grid>
         </Grid>
     </DataTemplate>
-    <HierarchicalDataTemplate x:Key="treeThreadView" ItemsSource="{Binding Children}">
-        
+    <HierarchicalDataTemplate x:Key="treeThreadViewItem" ItemsSource="{Binding Children}">
+        <StackPanel Background="Azure" Margin="5">
+            <WrapPanel Orientation="Horizontal">
+                <TextBlock Text="No Name [" />
+                <TextBlock Text="{Binding FlairText}" />
+                <TextBlock Text="]  Vote:" />
+                <TextBlock Text="{Binding Votes}" />
+                <TextBlock Text=" 日付:" />
+                <TextBlock Text="{Binding CreatedString}" />
+                <TextBlock Text=" Author:" />
+                <TextBlock x:Name="ss" Text="{Binding Author}"/>
+                <TextBlock>
+                                        <Run />
+                                        <Underline>
+                                            <Underline.InputBindings>
+                                                <MouseBinding Command="{Binding VoteCommand}"
+                                                              CommandParameter="UpVote"
+                                                              Gesture="LeftClick" />
+                                            </Underline.InputBindings>
+                                            UpVote
+                                        </Underline>
+                                        <Run />
+                                        <Underline>
+                                            <Underline.InputBindings>
+                                                <MouseBinding Command="{Binding VoteCommand}"
+                                                              CommandParameter="DownVote"
+                                                              Gesture="LeftClick" />
+                                            </Underline.InputBindings>
+                                            DownVote
+                                        </Underline>
+                </TextBlock>
+            </WrapPanel>
+            <WrapPanel>
+                <TextBlock Text="{Binding Body}"/>
+            </WrapPanel>
+        </StackPanel>
     </HierarchicalDataTemplate>
+    <DataTemplate x:Key="threadTreeView">
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="3" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
+            <ScrollViewer>
+                <TreeView ItemTemplate="{ StaticResource ResourceKey=treeThreadViewItem}" ItemsSource="{Binding TreeComment}">
+                </TreeView>
+            </ScrollViewer>
+            <GridSplitter Grid.Row="1"
+                          Height="2"
+                          HorizontalAlignment="Stretch"
+                          ShowsPreview="True" />
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
+                <TextBox Grid.Row="1"
+                         AcceptsReturn="True"
+                         Text="{Binding WriteText,
+                                        Mode=TwoWay}" />
+            </Grid>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

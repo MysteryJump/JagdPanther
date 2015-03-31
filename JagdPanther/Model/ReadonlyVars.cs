@@ -30,5 +30,9 @@ namespace JagdPanther.Model
 		public static string MachineName
 		{ get; }
 		= Environment.MachineName;
-    }
+
+		public static string UserAgent
+		{ get; }
+		= "windows:com.mysteryjump.jagdpanther:v" +  ProgramVer + " (by /u/yueshgs)";
+	}
 }

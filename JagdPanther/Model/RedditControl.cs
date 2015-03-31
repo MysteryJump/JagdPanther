@@ -53,6 +53,8 @@ namespace JagdPanther.Model
 			MessageBus.Current.Listen<RedditData>("ChangeAccount-3")
 				.Subscribe(x =>
 				{
+					if (x == null)
+						return;
 					RedditAccess = x.RedditAccess;
 					RedditUser = x.RedditUser;
 				});

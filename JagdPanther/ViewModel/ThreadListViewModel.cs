@@ -83,21 +83,23 @@ namespace JagdPanther.ViewModel
 
                 return;
             }
-            await ListViewSelectedItem.SubscribeComments();
-            if (ListViewSelectedItem.SortedComments != null)
-                MessageBus.Current.SendMessage(ListViewSelectedItem, "OpenNewThreadTab");
+			var item = ListViewSelectedItem;
+			await item.SubscribeComments();
+			if (item.SortedComments != null)
+				MessageBus.Current.SendMessage(item, "OpenNewThreadTab");
         }
         public Subreddit OwnSubreddit { get; set; }
 		public async Task Initializer(string path)
         {
-			
-			
-			var	subs = OwnSubreddit = RedditInfo.RedditAccess.GetSubreddit(path);
+
+
+			Subreddit subs = null;
 			Path = path;
 
             var l = await Task.Factory.StartNew(() =>
             {
-                var lists = new List<Thread>();
+				subs = OwnSubreddit = RedditInfo.RedditAccess.GetSubreddit(path);
+				var lists = new List<Thread>();
 
                 pageCount = 1;
                 subs.Posts.Take(20)

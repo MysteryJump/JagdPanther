@@ -10,6 +10,7 @@
     <Grid>
         <StackPanel>
             <CheckBox Content="スレッドの閲覧にWebビューを使用する" Margin="3" Name="iswebview"/>
+            <CheckBox Content="スレッドの閲覧をツリービュー方式で表示する" Margin="3" Name="istreeview"/>
         </StackPanel>
     </Grid>
 </UserControl>

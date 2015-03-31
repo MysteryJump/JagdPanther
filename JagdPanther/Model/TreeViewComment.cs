@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RedditSharp.Things;
+using System.Globalization;
 
 namespace JagdPanther.Model
 {
@@ -33,6 +34,18 @@ namespace JagdPanther.Model
 
 		public Comment BaseComment { get; set; }
 
+		public DateTime Created { get; set; }
+
+		public string CreatedString
+		{
+			get
+			{
+				return Created.ToString(CultureInfo.GetCultureInfo("ja-jp"));
+			}
+		}
+
+		public string Body { get; private set; }
+
 		public static explicit operator TreeViewComment(Comment c)
 		{
 
@@ -44,6 +57,7 @@ namespace JagdPanther.Model
 				Author = c.Author,
 				FlairText = c.AuthorFlairText,
 				BodyHtml = c.BodyHtml,
+				Body = c.Body,
 				BaseComment = c,
 				Votes = c.Upvotes - c.Downvotes,
 				Children = children,
