@@ -11,6 +11,11 @@
         <StackPanel>
             <CheckBox Content="スレッドの閲覧にWebビューを使用する" Margin="3" Name="iswebview"/>
             <CheckBox Content="スレッドの閲覧をツリービュー方式で表示する" Margin="3" Name="istreeview"/>
+            <CheckBox Margin="3" Name="isshowbaka">
+                <TextBlock>
+                    <Run>スタンプを表示する(一部サブレ及びWebView使用時のみ有効)</Run>
+                </TextBlock>
+            </CheckBox>
         </StackPanel>
     </Grid>
 </UserControl>

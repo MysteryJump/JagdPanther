@@ -29,12 +29,15 @@ namespace JagdPanther.View
 		{
 			Properties.Settings.Default.IsWebView = iswebview.IsChecked == true ? true : false;
 			Properties.Settings.Default.IsTreeView = istreeview.IsChecked == true ? true : false;
+			Properties.Settings.Default.IsShowBakaStamp = isshowbaka.IsChecked == true ? true : false;
+
 		}
 
 		public void Load()
 		{
 			iswebview.IsChecked = Properties.Settings.Default.IsWebView;
 			istreeview.IsChecked = Properties.Settings.Default.IsTreeView;
+			isshowbaka.IsChecked = Properties.Settings.Default.IsShowBakaStamp;
 		}
 
 	}

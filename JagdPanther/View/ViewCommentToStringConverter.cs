@@ -20,7 +20,12 @@ namespace JagdPanther.View
 			var sb = new StringBuilder();
 
 			var css = File.Exists(Folders.ThreadCssForWebView) ? File.ReadAllText(Folders.ThreadCssForWebView) : string.Empty;
-			var baka = File.Exists(Folders.BakaStamp) ? File.ReadAllText(Folders.BakaStamp) : string.Empty;
+			var baka = !Properties.Settings.Default.IsShowBakaStamp ? 
+				string.Empty : (File.Exists(Folders.BakaStamp) 
+				? File.ReadAllText(Folders.BakaStamp) : string.Empty);
+
+			var respopup = File.Exists(Folders.ResPopup) ? File.ReadAllText(Folders.ResPopup) : string.Empty;
+			var notifyJs = File.Exists(Folders.NotifyJs) ? File.ReadAllText(Folders.NotifyJs) : string.Empty;
 
 			if (!File.Exists(Folders.HeaderHtml))
 				sb.Append(string.Format(@"<!DOCTYPE html>
@@ -28,15 +33,18 @@ namespace JagdPanther.View
 <head>
     <meta charset=""utf-8"" />
     <title>TypeScript HTML App</title>
-    <script src=""app.js""></script>
-	<style>
-{0}
+    <script>{0}
+
 {1}
+</script>
+	<style>
+{2}
+{3}
 	</style>
 </head>
 <body>
     <dl>
-",css,baka));
+",respopup,notifyJs,css,baka));
 			else
 				sb.Append(string.Format(File.ReadAllText(Folders.HeaderHtml),css,baka));
 

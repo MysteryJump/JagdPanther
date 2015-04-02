@@ -153,7 +153,11 @@ namespace JagdPanther.ViewModel
         public async Task ExitExcute(object o)
         {
 			BoardCollection.SaveBoardCollection(SubredditList.OwnBoardCollection);
-            System.Windows.Application.Current.Shutdown();
+			if (Properties.Settings.Default.IsSaveThreadListView)
+				throw new NotImplementedException();
+			if (Properties.Settings.Default.IsSaveThreadView)
+				throw new NotImplementedException();
+			System.Windows.Application.Current.Shutdown();
         }
 
         public IReactiveCommand<Unit> OpenLicenseWindowCommand { get; set; }

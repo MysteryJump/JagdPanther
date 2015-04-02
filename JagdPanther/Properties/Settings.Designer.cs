@@ -154,5 +154,41 @@ namespace JagdPanther.Properties {
                 this["IsTreeView"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsSaveThreadListView {
+            get {
+                return ((bool)(this["IsSaveThreadListView"]));
+            }
+            set {
+                this["IsSaveThreadListView"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsSaveThreadView {
+            get {
+                return ((bool)(this["IsSaveThreadView"]));
+            }
+            set {
+                this["IsSaveThreadView"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsShowBakaStamp {
+            get {
+                return ((bool)(this["IsShowBakaStamp"]));
+            }
+            set {
+                this["IsShowBakaStamp"] = value;
+            }
+        }
     }
 }

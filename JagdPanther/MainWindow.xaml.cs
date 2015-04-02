@@ -79,6 +79,7 @@ namespace JagdPanther
 			Def.Default.IsThreeColumn = two.Oriented == Orientation.Horizontal ? false : true;
 			Def.Default.BoardTreeWidth = (int)boardTree.Width.Value;
 			Def.Default.Save();
+
 			base.OnClosing(e);
 		}
 

@@ -51,5 +51,13 @@ namespace JagdPanther.Model
 		public static string FooterHtml
 		{ get; }
 		= ThreadStyleFolder + "\\footer.html";
+
+		public static string ResPopup
+		{ get; }
+		= ThreadStyleFolder + "\\respopup.js";
+
+		public static string NotifyJs
+		{ get; }
+		= ThreadStyleFolder + "\\notifyevents.js";
     }
 }

@@ -46,7 +46,7 @@ namespace JagdPanther.Model
 		[IgnoreDataMember]
 		public bool IsGenerator { get { return BasePostAuthor == Author; } }
         [IgnoreDataMember]
-        public bool HasBody { get { return (Body != null || Body != String.Empty); } }
+		public bool HasBody { get { return !string.IsNullOrWhiteSpace(Body); } }
         public static explicit operator ViewComment(Comment v)
         {
             var lvc = new List<ViewComment>();

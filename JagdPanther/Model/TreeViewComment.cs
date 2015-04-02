@@ -61,6 +61,7 @@ namespace JagdPanther.Model
 				BaseComment = c,
 				Votes = c.Upvotes - c.Downvotes,
 				Children = children,
+				Created = c.Created
 			};
 		}
     }
