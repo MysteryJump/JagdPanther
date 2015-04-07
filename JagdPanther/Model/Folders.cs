@@ -8,13 +8,25 @@ namespace JagdPanther.Model
 {
     public static class Folders
     {
+		public static string SettingFolder
+		{ get; }
+		= ReadonlyVars.CurrentFolder + "\\settings";
+
         public static string BoardTreeXml
         { get; }
-        = ReadonlyVars.CurrentFolder + "\\boards.xml";
+        = SettingFolder + "\\boards.xml";
 
         public static string LoginInfoXml
         { get; }
-        = ReadonlyVars.CurrentFolder + "\\login.xml";
+        = SettingFolder + "\\login.xml";
+
+		public static string ThreadTabsJson
+		{ get; }
+		= SettingFolder + "\\threadtabs.json";
+
+		public static string ThreadListTabsJson
+		{ get; }
+		= SettingFolder + "\\threadlisttabs.json";
 
 		public static string PostListFolder
 		{ get; }
@@ -24,10 +36,6 @@ namespace JagdPanther.Model
 		{ get; }
 		= ReadonlyVars.CurrentFolder + "\\logs\\comments";
 
-		public static string ThreadCssForWebView
-		{ get; }
-		= ThreadStyleFolder + "\\main.css";
-
 		public static string StyleFolder
 		{ get; }
 		= ReadonlyVars.CurrentFolder + "\\style";
@@ -35,6 +43,10 @@ namespace JagdPanther.Model
 		public static string ThreadStyleFolder
 		{ get; }
 		= StyleFolder + "\\thread";
+
+		public static string ThreadCssForWebView
+		{ get; }
+		= ThreadStyleFolder + "\\main.css";
 
 		public static string BakaStamp
 		{ get; }

@@ -122,6 +122,7 @@
                         </Grid>
                     </DataTemplate>
                 </ResourceDictionary>
+                <ResourceDictionary Source="View/TabItemResourceDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -241,33 +242,9 @@
                                         ContentTemplate="{StaticResource threadListView}"
                                         ItemsSource="{Binding ThreadListTabs.ThreadListChildrens}"
                                         SelectedIndex="1"
-                                        SelectedItem="{Binding ThreadListTabs.SelectedTab}">
-                                <TabControl.ItemTemplate>
-                                    <DataTemplate DataType="vm:ThreadListViewModel">
-                                        <TextBlock Text="{Binding Name}">
-                                            <TextBlock.InputBindings>
-                                                <MouseBinding Command="{Binding RemoveTabCommand}" Gesture="MiddleClick" />
-                                            </TextBlock.InputBindings>
-                                            <TextBlock.ContextMenu>
-                                                <ContextMenu>
-                                                    <MenuItem Command="{Binding RemoveTabCommand}" Header="タブを削除する" />
-                                                    <MenuItem Command="{Binding RemoveAllTabCommand}" Header="すべてのタブを削除する" />
-                                                </ContextMenu>
-                                            </TextBlock.ContextMenu>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </TabControl.ItemTemplate>
-                            </TabControl>
-                        </Grid>
-                    </v:TwoSplitItemsControl.FirstItem>
-                    <v:TwoSplitItemsControl.SecondItem>
-                        <Grid Grid.Row="2">
-                            <TabControl Name="threadTab"
-                                        ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}">
-                                <TabControl.ContentTemplateSelector>
-                                    <v:ThreadViewDataTemplateSelector/>
-                                </TabControl.ContentTemplateSelector>
-                                <TabControl.ItemTemplate>
+                                        SelectedItem="{Binding ThreadListTabs.SelectedTab}"
+                                        ItemTemplate="{StaticResource canCloseTab}">
+                                <!--<TabControl.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Title}">
                                             <TextBlock.InputBindings>
@@ -281,7 +258,33 @@
                                             </TextBlock.ContextMenu>
                                         </TextBlock>
                                     </DataTemplate>
-                                </TabControl.ItemTemplate>
+                                </TabControl.ItemTemplate>-->
+                            </TabControl>
+                        </Grid>
+                    </v:TwoSplitItemsControl.FirstItem>
+                    <v:TwoSplitItemsControl.SecondItem>
+                        <Grid Grid.Row="2">
+                            <TabControl Name="threadTab"
+                                        ItemsSource="{Binding ThreadTabs.ThreadTabsChildren}"
+                                        ItemTemplate="{StaticResource canCloseTab}">
+                                <TabControl.ContentTemplateSelector>
+                                    <v:ThreadViewDataTemplateSelector/>
+                                </TabControl.ContentTemplateSelector>
+                                <!--<TabControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Title}">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding Command="{Binding RemoveTabCommand}" Gesture="MiddleClick" />
+                                            </TextBlock.InputBindings>
+                                            <TextBlock.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Command="{Binding RemoveTabCommand}" Header="タブを削除する" />
+                                                    <MenuItem Command="{Binding RemoveAllTabCommand}" Header="すべてのタブを削除する" />
+                                                </ContextMenu>
+                                            </TextBlock.ContextMenu>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </TabControl.ItemTemplate>-->
                             </TabControl>
                         </Grid>
 

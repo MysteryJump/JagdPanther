@@ -89,7 +89,7 @@ namespace JagdPanther.ViewModel
 				return;
 			}
 			else
-				Initializer(path);
+				await Initializer(path);
 		}
 
 

@@ -152,11 +152,12 @@ namespace JagdPanther.ViewModel
         public IReactiveCommand<Unit> ExitCommand { get; set; }        
         public async Task ExitExcute(object o)
         {
+			var ds = new WindowStateSaver(this);
 			BoardCollection.SaveBoardCollection(SubredditList.OwnBoardCollection);
 			if (Properties.Settings.Default.IsSaveThreadListView)
-				throw new NotImplementedException();
+				ds.SaveThreadListTabs();
 			if (Properties.Settings.Default.IsSaveThreadView)
-				throw new NotImplementedException();
+				ds.SaveThreadTabs();
 			System.Windows.Application.Current.Shutdown();
         }
 
@@ -270,6 +271,13 @@ namespace JagdPanther.ViewModel
 
 		public async Task OpenExcute(object sender)
 		{
+			var ds = new WindowStateSaver(this);
+			IsOffline = true;
+			if (Properties.Settings.Default.IsSaveThreadListView)
+				ds.LoadThreadListTabs();
+			if (Properties.Settings.Default.IsSaveThreadView)
+				ds.LoadThreadTabs();
+			IsOffline = false;
 			await SubscribedSubredditList.Initialize();
 		}
 

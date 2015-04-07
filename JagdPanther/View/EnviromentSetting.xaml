@@ -8,14 +8,21 @@
        d:DesignWidth="300"
        mc:Ignorable="d">
     <Grid>
+        <Grid.Resources>
+            <Style TargetType="CheckBox">
+                <Setter Property="Margin" Value="3"/>
+            </Style>
+        </Grid.Resources>
         <StackPanel>
-            <CheckBox Content="スレッドの閲覧にWebビューを使用する" Margin="3" Name="iswebview"/>
-            <CheckBox Content="スレッドの閲覧をツリービュー方式で表示する" Margin="3" Name="istreeview"/>
-            <CheckBox Margin="3" Name="isshowbaka">
+            <CheckBox Content="スレッドの閲覧にWebビューを使用する"  Name="iswebview"/>
+            <CheckBox Content="スレッドの閲覧をツリービュー方式で表示する"  Name="istreeview"/>
+            <CheckBox  Name="isshowbaka">
                 <TextBlock>
                     <Run>スタンプを表示する(一部サブレ及びWebView使用時のみ有効)</Run>
                 </TextBlock>
             </CheckBox>
+            <CheckBox Content="終了時にスレッドリストのタブを保存する" Name="issavethreadlisttabs" />
+            <CheckBox Content="終了時にコメントビューのタブを保存する" Name="issavethreadtabs"/>
         </StackPanel>
     </Grid>
 </UserControl>

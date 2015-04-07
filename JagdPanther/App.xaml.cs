@@ -34,7 +34,7 @@ namespace JagdPanther
 			{
 				MessageBox.Show("多重起動してる悪い子はだ～れぇだ？");
 				Current.Shutdown(-1);
-				System.Threading.Thread.Sleep(5000);
+				System.Threading.Thread.Sleep(500);
 				return;
 			}
 

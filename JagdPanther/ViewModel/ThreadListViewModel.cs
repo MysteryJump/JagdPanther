@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace JagdPanther.ViewModel
 {
-	public class ThreadListViewModel : ReactiveObject, IThreadListViewer
+	public class ThreadListViewModel : ReactiveObject, IThreadListViewer, ITab
     {
         private ObservableCollection<Thread> threads;
         private int pageCount;
@@ -136,6 +136,8 @@ namespace JagdPanther.ViewModel
 
 		public async Task Initializer(string path,bool isOffline)
 		{
+			if (string.IsNullOrWhiteSpace(path))
+				return;
 			if (!isOffline)
 				await Initializer(path);
 			else
@@ -145,6 +147,7 @@ namespace JagdPanther.ViewModel
 				if (!File.Exists(p))
 				{
 					MessageBus.Current.SendMessage("Cannot open file: file dosen't exist.", "ErrorMessage");
+					return;
 				}
 				using (var fs = File.Open(p, FileMode.Open))
 				{
@@ -204,7 +207,7 @@ namespace JagdPanther.ViewModel
         }
 
 		public IReactiveCommand<Unit> RemoveTabCommand { get;set; }
-		public IReactiveCommand<Unit> RemoveAllTabCommand { get; private set; }
+		public IReactiveCommand<Unit> RemoveAllTabCommand { get; set; }
 
 		public async Task RemoveTabExcute(object sender)
 		{
@@ -241,5 +244,18 @@ namespace JagdPanther.ViewModel
 		}
 
 		public bool IsSubscribed { get { return false; } }
+
+		public string Title
+		{
+			get
+			{
+				return Name;
+			}
+
+			set
+			{
+				Name = value;
+			}
+		}
 	}
 }

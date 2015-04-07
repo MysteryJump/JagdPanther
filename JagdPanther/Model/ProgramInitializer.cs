@@ -18,7 +18,8 @@ namespace JagdPanther.Model
 				Folders.CommentListFolder,
 				Folders.PostListFolder,
 				Folders.StyleFolder,
-				Folders.ThreadStyleFolder
+				Folders.ThreadStyleFolder,
+				Folders.SettingFolder,
 			};
 			CheckTargetFolder(lists);
 		}

@@ -17,7 +17,7 @@ using JagdPanther.ViewModel;
 namespace JagdPanther.Model
 {
     [DataContract]
-    public class Thread : ReactiveObject
+	public class Thread : ReactiveObject, ITab
     {
 		[DataMember]
 		public string SubredditName { get; set; }
@@ -48,6 +48,7 @@ namespace JagdPanther.Model
         {
             get
 			{
+
 				//if (rawComments == null)
 				return PostThread.Comments.ToList();
 				//return rawComments;
@@ -171,6 +172,7 @@ namespace JagdPanther.Model
 				if (!File.Exists(p))
 				{
 					MessageBus.Current.SendMessage("Cannot open file: doesn't exist file", "ErrorMessage");
+					return null;
 				}
 				using (var fs = File.Open(p, FileMode.Open))
 				{
@@ -230,7 +232,7 @@ namespace JagdPanther.Model
         [IgnoreDataMember]
 		public Color BackgroundColor { get { return Properties.Settings.Default.ThreadViewBackgroundColor; } }
         [IgnoreDataMember]
-		public ReactiveCommand<Unit> RemoveAllTabCommand { get; private set; }
+		public IReactiveCommand<Unit> RemoveAllTabCommand { get; set; }
 
 		public async Task RemoveAllTabExcute(object sender)
 		{
@@ -288,7 +290,7 @@ namespace JagdPanther.Model
 				RawComments.ForEach(x =>
 				{
 					TreeViewComment cx = (TreeViewComment)x;
-					list.Add((TreeViewComment)cx);
+					list.Add(cx);
 				});
 				return list;
 			}

@@ -161,6 +161,7 @@
     </Compile>
     <Compile Include="ViewModel\AccountListViewModel.cs" />
     <Compile Include="ViewModel\EditConfigurationViewModel.cs" />
+    <Compile Include="ViewModel\ITab.cs" />
     <Compile Include="ViewModel\IThreadListViewer.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MultiSubredditViewModel.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="ViewModel\ThreadListViewModel.cs" />
     <Compile Include="ViewModel\ThreadTabsViewModel.cs" />
     <Compile Include="ViewModel\UserProfileViewModel.cs" />
+    <Compile Include="ViewModel\WindowStateSaver.cs" />
     <Compile Include="View\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="View\CommentCollectionViewer.cs" />
     <Compile Include="View\EnviromentSetting.xaml.cs">
@@ -183,6 +185,7 @@
     </Compile>
     <Compile Include="View\ThreadViewDataTemplateSelector.cs" />
     <Compile Include="View\TwoSplitItemsControl.cs" />
+    <Compile Include="View\UnableSelectTreeViewItemBehavior.cs" />
     <Compile Include="View\ViewCommentToStringConverter.cs" />
     <Compile Include="View\ViewCommentConverter.cs" />
     <Compile Include="View\VisualTreeHelper.cs" />
@@ -241,6 +244,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\TabItemResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ThreadViewResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -287,6 +294,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="View\Behaviors\" />
     <Folder Include="View\Settings\" />
   </ItemGroup>
   <ItemGroup>

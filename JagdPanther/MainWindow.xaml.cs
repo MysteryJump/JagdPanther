@@ -50,10 +50,6 @@ namespace JagdPanther
 				.Subscribe(x =>
 				{
 					threadTab.SelectedItem = x;
-					if (Def.Default.IsWebView)
-					{
-
-					}
 				});
 			MessageBus.Current.Listen<Account>("ChangeLoggedUser")
 				.Subscribe(x => logged.Header = x.UserName);

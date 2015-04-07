@@ -147,7 +147,7 @@
         </Grid>
     </DataTemplate>
     <HierarchicalDataTemplate x:Key="treeThreadViewItem" ItemsSource="{Binding Children}">
-        <StackPanel Background="Azure" Margin="5">
+        <StackPanel Margin="5" Background="Azure">
             <WrapPanel Orientation="Horizontal">
                 <TextBlock Text="No Name [" />
                 <TextBlock Text="{Binding FlairText}" />
@@ -156,30 +156,30 @@
                 <TextBlock Text=" 日付:" />
                 <TextBlock Text="{Binding CreatedString}" />
                 <TextBlock Text=" Author:" />
-                <TextBlock x:Name="ss" Text="{Binding Author}"/>
+                <TextBlock x:Name="ss" Text="{Binding Author}" />
                 <TextBlock>
-                                        <Run />
-                                        <Underline>
-                                            <Underline.InputBindings>
-                                                <MouseBinding Command="{Binding VoteCommand}"
-                                                              CommandParameter="UpVote"
-                                                              Gesture="LeftClick" />
-                                            </Underline.InputBindings>
-                                            UpVote
-                                        </Underline>
-                                        <Run />
-                                        <Underline>
-                                            <Underline.InputBindings>
-                                                <MouseBinding Command="{Binding VoteCommand}"
-                                                              CommandParameter="DownVote"
-                                                              Gesture="LeftClick" />
-                                            </Underline.InputBindings>
-                                            DownVote
-                                        </Underline>
+                    <Run />
+                    <Underline>
+                        <Underline.InputBindings>
+                            <MouseBinding Command="{Binding VoteCommand}"
+                                          CommandParameter="UpVote"
+                                          Gesture="LeftClick" />
+                        </Underline.InputBindings>
+                        UpVote
+                    </Underline>
+                    <Run />
+                    <Underline>
+                        <Underline.InputBindings>
+                            <MouseBinding Command="{Binding VoteCommand}"
+                                          CommandParameter="DownVote"
+                                          Gesture="LeftClick" />
+                        </Underline.InputBindings>
+                        DownVote
+                    </Underline>
                 </TextBlock>
             </WrapPanel>
             <WrapPanel>
-                <TextBlock Text="{Binding Body}"/>
+                <TextBlock Text="{Binding Body}" />
             </WrapPanel>
         </StackPanel>
     </HierarchicalDataTemplate>
@@ -191,7 +191,11 @@
                 <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
             <ScrollViewer>
-                <TreeView ItemTemplate="{ StaticResource ResourceKey=treeThreadViewItem}" ItemsSource="{Binding TreeComment}">
+
+                <TreeView ItemTemplate="{StaticResource ResourceKey=treeThreadViewItem}" ItemsSource="{Binding TreeComment}">
+                    <i:Interaction.Behaviors>
+                        <v:UnableSelectTreeViewItemBehavior/>
+                    </i:Interaction.Behaviors>
                 </TreeView>
             </ScrollViewer>
             <GridSplitter Grid.Row="1"

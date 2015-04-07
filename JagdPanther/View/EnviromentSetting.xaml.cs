@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Set = JagdPanther.Properties.Settings;
 
 namespace JagdPanther.View
 {
@@ -27,17 +28,20 @@ namespace JagdPanther.View
 
 		public void Save()
 		{
-			Properties.Settings.Default.IsWebView = iswebview.IsChecked == true ? true : false;
-			Properties.Settings.Default.IsTreeView = istreeview.IsChecked == true ? true : false;
-			Properties.Settings.Default.IsShowBakaStamp = isshowbaka.IsChecked == true ? true : false;
-
+			Set.Default.IsWebView = iswebview.IsChecked == true ? true : false;
+			Set.Default.IsTreeView = istreeview.IsChecked == true ? true : false;
+			Set.Default.IsShowBakaStamp = isshowbaka.IsChecked == true ? true : false;
+			Set.Default.IsSaveThreadListView = issavethreadlisttabs.IsChecked == true ? true : false;
+			Set.Default.IsSaveThreadView = issavethreadtabs.IsChecked == true ? true : false;
 		}
 
 		public void Load()
 		{
-			iswebview.IsChecked = Properties.Settings.Default.IsWebView;
-			istreeview.IsChecked = Properties.Settings.Default.IsTreeView;
-			isshowbaka.IsChecked = Properties.Settings.Default.IsShowBakaStamp;
+			iswebview.IsChecked = Set.Default.IsWebView;
+			istreeview.IsChecked = Set.Default.IsTreeView;
+			isshowbaka.IsChecked = Set.Default.IsShowBakaStamp;
+			issavethreadtabs.IsChecked = Set.Default.IsSaveThreadView;
+			issavethreadlisttabs.IsChecked = Set.Default.IsSaveThreadListView;
 		}
 
 	}
