@@ -40,7 +40,8 @@ namespace JagdPanther.Dialogs
 		private void Dddd_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
 		{
 			var str = e.Uri.ToString();
-			if (e.Uri.Host.Contains("google.co.jp"))
+			url.Text = str;
+			if (e.Uri.Host.Contains("google"))
 			{
 				var dic = e.Uri.Query.Split('&').ToList().ToDictionary(x =>
 				{
@@ -51,8 +52,17 @@ namespace JagdPanther.Dialogs
 				});
 				if (dic.ContainsKey("error"))
 				{
-					Application.Current.Shutdown();
-					Thread.Sleep(5000);
+					switch (dic["error"])
+					{
+						case "access_denied":
+							MessageBox.Show("アクセスが拒否されました");
+							break;
+                        default:
+							break;
+					}
+					MessageBox.Show("未知のエラーが発生しました");
+					Environment.Exit(-1);
+					return;
 				}
 				var code = dic["code"];
 
@@ -69,7 +79,7 @@ namespace JagdPanther.Dialogs
 				var jr = JToken.Parse(Encoding.UTF8.GetString(data));
 				RefreshToken = jr["refresh_token"].ToString();
 				AccessToken = jr["access_token"].ToString();
-				this.Close();
+				Close();
             }
 		}
 

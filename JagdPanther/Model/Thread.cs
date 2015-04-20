@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Runtime.Serialization;
 using System.IO;
 using JagdPanther.ViewModel;
+using System.Windows;
 
 namespace JagdPanther.Model
 {
@@ -97,25 +98,8 @@ namespace JagdPanther.Model
 						ReadedItemsCount = CommentCount;
 						var coms = new List<ViewComment>();
 						var queue = new Queue<ViewComment>();
-						var a = PostThread.Author.FullName;
 						SubredditName = PostThread.Subreddit;
-						var host = new ViewComment()
-						{
-							Author = a,
-							BasePostAuthor = a,
-							ParentAnchor = null,
-							Body = PostThread.SelfText,
-							BodyHtml = PostThread.SelfTextHtml,
-							FlairText = PostThread.AuthorFlairText,
-							Children = new List<ViewComment>(),
-							Created = PostThread.Created,
-							Source = PostThread.Url.ToString(),
-							ParentPost = PostThread,
-							Votes = PostThread.Upvotes - PostThread.Downvotes,
-							IsFirst = true,
-							Id = PostThread.Id
-
-						};
+						var host = CreateFirst();
 						queue.Enqueue(host);
 
 						RawComments.ToList()
@@ -123,7 +107,7 @@ namespace JagdPanther.Model
 						{
 							var vc = new ViewComment();
 							vc = (ViewComment)x;
-							vc.BasePostAuthor = a;
+							vc.BasePostAuthor = host.BasePostAuthor;
 							queue.Enqueue(vc);
 						});
 						var i = 1;
@@ -209,25 +193,38 @@ namespace JagdPanther.Model
             get { return writeText; }
             set { writeText = value; this.RaiseAndSetIfChanged(ref writeText, value); }
         }
-
+		[IgnoreDataMember]
+		public bool IsEnableWrite
+		{
+			get { return isEnableWrite; }
+			set { isEnableWrite = value; this.RaiseAndSetIfChanged(ref isEnableWrite, value); }
+		} = true;
+		[IgnoreDataMember]
+		private bool isEnableWrite;
 
         public async Task WriteCommentExcute(object sender)
         {
-			var pos = new PostingBeforeProcessor(WriteText);
-            pos.ReplaceEndOfLine();
+			try {
+				var pos = new PostingBeforeProcessor(WriteText);
+				pos.ReplaceEndOfLine();
 
-            var reg = Regex.Match(pos.ProcessedText, @">>(\d+)");
-            var value = reg.Groups[1].Value;
-            if (value != "")
-            {
-                var anc = int.Parse(value);
-                SortedComments[anc - 1].BaseComment.Reply(Regex.Replace(writeText, @">>(\d+)", ""));
-            }
-            else
-            {
-                PostThread.Comment(writeText);
-            }
-			WriteText = "";
+				var reg = Regex.Match(pos.ProcessedText, @">>(\d+)");
+				var value = reg.Groups[1].Value;
+				if (value != "")
+				{
+					var anc = int.Parse(value);
+					SortedComments[anc - 1].BaseComment.Reply(Regex.Replace(writeText, @">>(\d+)", ""));
+				}
+				else
+				{
+					PostThread.Comment(writeText);
+				}
+				WriteText = "";
+			}
+			catch
+			{
+				MessageBox.Show("書き込みに失敗しました");
+			}
         }
         [IgnoreDataMember]
 		public Color BackgroundColor { get { return Properties.Settings.Default.ThreadViewBackgroundColor; } }
@@ -294,6 +291,38 @@ namespace JagdPanther.Model
 				});
 				return list;
 			}
+		}
+
+		[IgnoreDataMember]
+		public ViewComment FirstComment
+		{
+			get
+			{
+				return CreateFirst();
+			}
+		}
+
+		private ViewComment CreateFirst()
+		{
+			var a = PostThread.Author.FullName;
+
+			return new ViewComment()
+			{
+				Author = a,
+				BasePostAuthor = a,
+				ParentAnchor = null,
+				Body = PostThread.SelfText,
+				BodyHtml = PostThread.SelfTextHtml,
+				FlairText = PostThread.AuthorFlairText,
+				Children = new List<ViewComment>(),
+				Created = PostThread.Created,
+				Source = PostThread.Url.ToString(),
+				ParentPost = PostThread,
+				Votes = PostThread.Upvotes - PostThread.Downvotes,
+				IsFirst = true,
+				Id = PostThread.Id
+
+			};
 		}
 	}
 }

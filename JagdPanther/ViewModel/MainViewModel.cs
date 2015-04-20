@@ -23,17 +23,19 @@ namespace JagdPanther.ViewModel
 			AccountList = new AccountListViewModel();
 			var a = AccountList.LoggedAccount;
 			RedditInfo = RedditControl.Login(a.RefreshToken);
-			a.UserName = RedditInfo.RedditUser.Name;
-
+			if (RedditInfo != null)
+				a.UserName = RedditInfo.RedditUser.Name;
+			else
+				IsOffline = true;
 			var t = new Timer();
 			t.Interval = 2400 * 1000;
-			ProgramInitializer.CheckFolders();
-			ProgramInitializer.DownloadBakaStamp();
+			if (!IsOffline)
+				ProgramInitializer.DownloadBakaStamp();
 			t.Elapsed += (sender, e) =>
 			{
 				lock (this)
 				{
-					if (IsOffline != true)
+					if (!IsOffline)
 						RedditInfo = RedditControl.Login(AccountList.LoggedAccount.RefreshToken);
 					MessageBus.Current.SendMessage(RedditInfo, "ChangeAccount-3");
 				}
@@ -128,7 +130,6 @@ namespace JagdPanther.ViewModel
 			ChangeBoardTreeVisibilityCommand = ReactiveCommand.CreateAsyncTask(ChangeBoardTreeVisibilityExcute);
 			OpenInboxCommand = ReactiveCommand.CreateAsyncTask(OpenInboxExcute);
 		}
-
 		
         public RedditData RedditInfo
 		{

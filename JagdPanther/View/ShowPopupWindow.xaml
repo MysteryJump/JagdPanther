@@ -75,6 +75,7 @@
                                 </TextBlock>
                             </StackPanel>
                             <TextBlock x:Name="anc"
+                                       Tag="true"
                                        Width="50"
                                        HorizontalAlignment="Left"
                                        Text="{Binding AnchorText}"

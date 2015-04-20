@@ -44,5 +44,47 @@ namespace JagdPanther.View
 			issavethreadlisttabs.IsChecked = Set.Default.IsSaveThreadListView;
 		}
 
+		private void issavethreadtabs_Checked(object sender, RoutedEventArgs e)
+		{
+			if ((sender as CheckBox).IsChecked == true)
+			{
+				istreeview.IsEnabled = false;
+				istreeview.IsChecked = false;
+			}
+			else
+			{
+				istreeview.IsEnabled = true;
+			}
+		}
+
+		private void istreeview_Checked(object sender, RoutedEventArgs e)
+		{
+			if ((sender as CheckBox).IsChecked == true)
+			{
+				issavethreadtabs.IsEnabled = false;
+				issavethreadtabs.IsChecked = false;
+
+				isshowbaka.IsEnabled = false;
+				isshowbaka.IsChecked = false;
+			}
+			else
+			{
+				isshowbaka.IsEnabled = true;
+				issavethreadtabs.IsEnabled = true;
+			}
+		}
+
+		private void iswebview_Checked(object sender, RoutedEventArgs e)
+		{
+			if ((sender as CheckBox).IsChecked == true)
+			{
+				istreeview.IsChecked = false;
+				istreeview.IsEnabled = false;
+			}
+			else
+			{
+				istreeview.IsEnabled = true;
+			}
+		}
 	}
 }

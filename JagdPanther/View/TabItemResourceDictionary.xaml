@@ -7,7 +7,7 @@
                     <Setter Property="Foreground" Value="#FFCBCBCB"/>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Foreground" Value="Aqua"/>
+                            <Setter Property="Foreground" Value="Black"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>

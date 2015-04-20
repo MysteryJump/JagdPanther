@@ -138,7 +138,9 @@
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
-                <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
+                <Button Command="{Binding WriteCommentCommand}"
+                        Content="書き込み"
+                        IsEnabled="{Binding IsEnableWrite}" />
                 <TextBox Grid.Row="1"
                          AcceptsReturn="True"
                          Text="{Binding WriteText,
@@ -191,12 +193,60 @@
                 <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
             <ScrollViewer>
-
-                <TreeView ItemTemplate="{StaticResource ResourceKey=treeThreadViewItem}" ItemsSource="{Binding TreeComment}">
-                    <i:Interaction.Behaviors>
-                        <v:UnableSelectTreeViewItemBehavior/>
-                    </i:Interaction.Behaviors>
-                </TreeView>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Margin="3"
+                                DataContext="{Binding FirstComment}"
+                                Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="No Name [" />
+                            <TextBlock Text="{Binding FlairText}" />
+                            <TextBlock Text="]  Vote:" />
+                            <TextBlock Text="{Binding Votes}" />
+                            <TextBlock Text=" 日付:" />
+                            <TextBlock Text="{Binding CreatedString}" />
+                            <TextBlock Text=" Author:" />
+                            <TextBlock x:Name="ss" Text="{Binding Author}" />
+                            <TextBlock>
+                                <Run />
+                                <Underline>
+                                    <Underline.InputBindings>
+                                        <MouseBinding Command="{Binding VoteCommand}"
+                                                      CommandParameter="UpVote"
+                                                      Gesture="LeftClick" />
+                                    </Underline.InputBindings>
+                                    UpVote
+                                </Underline>
+                                <Run />
+                                <Underline>
+                                    <Underline.InputBindings>
+                                        <MouseBinding Command="{Binding VoteCommand}"
+                                                      CommandParameter="DownVote"
+                                                      Gesture="LeftClick" />
+                                    </Underline.InputBindings>
+                                    DownVote
+                                </Underline>
+                            </TextBlock>
+                            <TextBlock Text="{Binding Body}" Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>
+                                <Run Text="ソース：" />
+                                <Underline Foreground="Blue">
+                                    <Run Text="{Binding Source}">
+                                        <Run.InputBindings>
+                                            <MouseBinding Command="{Binding ReadSourceCommand}" Gesture="LeftClick" />
+                                        </Run.InputBindings>
+                                    </Run>
+                                </Underline>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                    <TreeView ItemTemplate="{StaticResource ResourceKey=treeThreadViewItem}" ItemsSource="{Binding TreeComment}">
+                        <i:Interaction.Behaviors>
+                            <v:UnableSelectTreeViewItemBehavior />
+                        </i:Interaction.Behaviors>
+                    </TreeView>
+                </StackPanel>
             </ScrollViewer>
             <GridSplitter Grid.Row="1"
                           Height="2"
@@ -207,7 +257,9 @@
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
-                <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
+                <Button Command="{Binding WriteCommentCommand}"
+                        Content="書き込み"
+                        IsEnabled="{Binding IsEnableWrite}" />
                 <TextBox Grid.Row="1"
                          AcceptsReturn="True"
                          Text="{Binding WriteText,
