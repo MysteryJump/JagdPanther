@@ -1,0 +1,70 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:Class="JagdPanther.View.ThreadListViewDictionary"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+    <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    <DataTemplate x:Key="threadListView" DataType="vm:ThreadListViewModel">
+        <Grid>
+            <Grid.Resources>
+                <CollectionViewSource x:Key="items" Source="{Binding ThreadList}" />
+            </Grid.Resources>
+            <Grid Height="20"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Top">
+                <Menu Height="20">
+                    <MenuItem Command="{Binding RefreshCommand}"
+                                              Header="更新"
+                                              IsEnabled="False" />
+                    <MenuItem Command="{Binding SubscribeCommand}" Visibility="{Binding IsSubscribed, Converter={StaticResource BoolToVisibility}}" />
+                    <MenuItem Command="{Binding NewPostCommand}" Header="投稿する" />
+                </Menu>
+            </Grid>
+            <ListView Margin="0,20,0,0"
+                                      ItemsSource="{Binding Source={StaticResource items}}"
+                                      SelectedItem="{Binding ListViewSelectedItem}">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding VoteCommand}"
+                                                  CommandParameter="Up"
+                                                  Header="UpVote" />
+                        <MenuItem Command="{Binding VoteCommand}"
+                                                  CommandParameter="Down"
+                                                  Header="DownVote" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectedCommand}" CommandParameter="{Binding ListViewSelectedItem}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListView.Resources>
+                    <Style TargetType="GridViewColumnHeader">
+                        <EventSetter Event="Click" Handler="ThreadListColumnClicked" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Title}">
+                            <GridViewColumnHeader Content="タイトル" Tag="Title" />
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding CreatedTimeString}">
+                            <GridViewColumnHeader Content="作成時刻" Tag="CreatedTime" />
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding VoteCount}">
+                            <GridViewColumnHeader Content="Vote数" Tag="VoteCount" />
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding CommentCount}">
+                            <GridViewColumnHeader Content="コメント数" Tag="CommentCount" />
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Speed}">
+                            <GridViewColumnHeader Content="勢い" Tag="Speed" />
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Flair}">
+                            <GridViewColumnHeader Content="フレアー" Tag="Flair" />
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

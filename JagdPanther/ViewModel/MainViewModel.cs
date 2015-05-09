@@ -1,5 +1,6 @@
 ﻿using JagdPanther.Dialogs;
 using JagdPanther.Model;
+using JagdPanther.View;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,8 @@ namespace JagdPanther.ViewModel
 			RegisterCommands();
 			InitilizeViewModels();
 			RegisterMessageListener();
-
+			var ds = new DesignLoader();
+			ds.Load();
 			Title = ReadonlyVars.ProgramName + " " + ReadonlyVars.ProgramVer;
 
 		}
@@ -150,8 +152,8 @@ namespace JagdPanther.ViewModel
             set { title = value; this.RaiseAndSetIfChanged(ref title, value); }
         }
         
-        public IReactiveCommand<Unit> ExitCommand { get; set; }        
-        public async Task ExitExcute(object o)
+        public IReactiveCommand<Unit> ExitCommand { get; set; }
+		private async Task ExitExcute(object o)
         {
 			var ds = new WindowStateSaver(this);
 			BoardCollection.SaveBoardCollection(SubredditList.OwnBoardCollection);
@@ -164,14 +166,14 @@ namespace JagdPanther.ViewModel
 
         public IReactiveCommand<Unit> OpenLicenseWindowCommand { get; set; }
 
-        public async Task OpenLicenseWindowExcute(object sender)
+        private async Task OpenLicenseWindowExcute(object sender)
         {
             var w = new LicenseInfo();
             w.ShowDialog();
         }
         public IReactiveCommand<Unit> OpenVersionWindowCommand { get; set; }
 
-        public async Task OpenVersionWindowExcute(object sender)
+		private async Task OpenVersionWindowExcute(object sender)
         {
             var w = new VersionWindow();
             w.ShowDialog();
@@ -194,7 +196,7 @@ namespace JagdPanther.ViewModel
 
 		public IReactiveCommand<Unit> AddNewSubredditCommand { get;set; }
 
-		public async Task AddNewSubredditExcute(object sender)
+		private async Task AddNewSubredditExcute(object sender)
 		{
 			var w = new NewBoardWindow();
 			w.ShowDialog();
@@ -211,14 +213,14 @@ namespace JagdPanther.ViewModel
 		}
 
 		public IReactiveCommand<Unit> RemoveSubredditCommand { get;set; }
-		public async Task RemoveSubredditExcute(object sender)
+		private async Task RemoveSubredditExcute(object sender)
 		{
 			SubredditList.OwnBoardCollection.Children.Remove(SubredditList.SelectedItem);
 		}
 
 		public IReactiveCommand<Unit> OpenSettingWindowCommand { get;set; }
 
-		public async Task OpenSettingWindowExcute(object sender)
+		private async Task OpenSettingWindowExcute(object sender)
 		{
 			var r = new SettingWindow();
 			r.ShowDialog();
@@ -264,13 +266,13 @@ namespace JagdPanther.ViewModel
 		public IReactiveCommand<Unit> OpenCommand { get; private set; }
 		public SearchSubredditListViewModel SearchSubredditList { get; private set; }
 
-		public async Task ChangeViewStateExcute(object sender)
+		private async Task ChangeViewStateExcute(object sender)
 		{
 			RightColumnOriented = RightColumnOriented == Orientation.Horizontal ? Orientation.Vertical : Orientation.Horizontal;
 			MessageBus.Current.SendMessage(RightColumnOriented, "ChangeViewState");
 		}
 
-		public async Task OpenExcute(object sender)
+		private async Task OpenExcute(object sender)
 		{
 			var ds = new WindowStateSaver(this);
 			IsOffline = true;
@@ -285,17 +287,20 @@ namespace JagdPanther.ViewModel
 		public static bool IsOffline { get; set; }
 		public IReactiveCommand<Unit> ChangeBoardTreeVisibilityCommand { get; private set; }
 
-		public async Task ChangeBoardTreeVisibilityExcute(object sender)
+		private async Task ChangeBoardTreeVisibilityExcute(object sender)
 		{
 			MessageBus.Current.SendMessage("", "BoardTreeWidth");
 		}
 
-		public async Task OpenInboxExcute(object sender)
+		private async Task OpenInboxExcute(object sender)
 		{
 			var us = new UserProfileWindow();
 			us.DataContext = new UserProfileViewModel(RedditInfo);
 			us.ShowDialog();
 		}
 		public IReactiveCommand<Unit> OpenInboxCommand { get; set; }
+
+		// i hate stateic public property
+		public static DesignDictionary DesignJsonData { get; internal set; }
     }
 }

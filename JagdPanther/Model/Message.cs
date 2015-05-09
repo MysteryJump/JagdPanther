@@ -38,7 +38,7 @@ namespace JagdPanther.Model
 		public Comment BaseMessage { get; set; }
 		public IReactiveCommand<Unit> SetAsReadedCommand { get; set; }
 
-		public async Task SetAsReadedExcute(object sender)
+		private async Task SetAsReadedExcute(object sender)
 		{
 			var ms = sender as Message;
 			MessageBus.Current.SendMessage(ms, "SetAsReadComment");

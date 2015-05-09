@@ -50,6 +50,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -61,7 +64,7 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI">
       <HintPath>..\packages\reactiveui-core.6.4.0.1\lib\Net45\ReactiveUI.dll</HintPath>
@@ -176,6 +179,7 @@
     <Compile Include="ViewModel\WindowStateSaver.cs" />
     <Compile Include="View\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="View\CommentCollectionViewer.cs" />
+    <Compile Include="View\DesignLoader.cs" />
     <Compile Include="View\EnviromentSetting.xaml.cs">
       <DependentUpon>EnviromentSetting.xaml</DependentUpon>
     </Compile>
@@ -184,6 +188,7 @@
     <Compile Include="View\ShowPopupWindow.xaml.cs">
       <DependentUpon>ShowPopupWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ThreadListViewDictionary.cs" />
     <Compile Include="View\ThreadViewDataTemplateSelector.cs" />
     <Compile Include="View\TwoSplitItemsControl.cs" />
     <Compile Include="View\UnableSelectTreeViewItemBehavior.cs" />
@@ -253,6 +258,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\ThreadListViewResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ThreadViewResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -309,6 +318,13 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>SET TargetDirectory=$(TargetDir)\style
+
+echo "$(TargetDir)\style"
+echo "$(SolutionDir)\style"
+xcopy "$(SolutionDir)\style" "$(TargetDir)\style" /e /y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -36,8 +36,8 @@ namespace JagdPanther.Model
 			wec.Credentials = new NetworkCredential("gpnimOQbPLFmiw", "");
 			var n = new NameValueCollection()
 			{
-				$grant_type = "refresh_token",
-				$refresh_token = refreshToken
+				["grant_type"] = "refresh_token",
+				["refresh_token"] = refreshToken
 			};
 			var x = wec.UploadValues("https://www.reddit.com/api/v1/access_token", n);
 			return JToken.Parse(Encoding.UTF8.GetString(x))["access_token"].ToString();

@@ -22,7 +22,7 @@ namespace JagdPanther.Model
 
 		public IReactiveCommand<Unit> OpenSubredditCommand { get; set; }
 
-		public async Task OpenSubredditExcute(object sender)
+		private async Task OpenSubredditExcute(object sender)
 		{
 			MessageBus.Current.SendMessage(sender.ToString(), "OpenNewSubreddit");
 		}

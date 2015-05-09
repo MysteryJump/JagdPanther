@@ -44,6 +44,10 @@ namespace JagdPanther.Model
 		{ get; }
 		= StyleFolder + "\\thread";
 
+		public static string JsonStyleFolder
+		{ get; }
+		= StyleFolder + "\\json";
+
 		public static string ThreadCssForWebView
 		{ get; }
 		= ThreadStyleFolder + "\\main.css";

@@ -69,9 +69,9 @@ namespace JagdPanther.Dialogs
 				var wec = new WebClient();
 				var ne = new NameValueCollection()
 				{
-					$grant_type = "authorization_code",
-					$code = code,
-					$redirect_uri = "http://google.co.jp"
+					["grant_type"] = "authorization_code",
+					["code"] = code,
+					["redirect_uri"] = "http://google.co.jp"
 				};
 
 				wec.Credentials = new NetworkCredential("gpnimOQbPLFmiw", "");

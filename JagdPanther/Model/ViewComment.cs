@@ -12,6 +12,8 @@ using System.Runtime.Serialization;
 using System.Globalization;
 using System.Windows.Controls;
 using JagdPanther.View;
+using System.Windows.Media;
+using JagdPanther.ViewModel;
 
 namespace JagdPanther.Model
 {
@@ -250,5 +252,13 @@ namespace JagdPanther.Model
 		{
 			ResponsePopup.ShowIdPopup(sender as TextBlock);
 		}
+
+		// design info
+
+		[IgnoreDataMember]
+		public string ThreadOwnerHeader { get { return MainViewModel.DesignJsonData["res", "thread-owner-text"].Value; } }
+
+		[IgnoreDataMember]
+		public Color ThreadOwnerColor { get { return (Color)ColorConverter.ConvertFromString(MainViewModel.DesignJsonData["res", "thread-owner-color"].Value); } }
     }
 }

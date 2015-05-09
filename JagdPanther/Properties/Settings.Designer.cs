@@ -190,5 +190,17 @@ namespace JagdPanther.Properties {
                 this["IsShowBakaStamp"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("default")]
+        public string DesignStyleName {
+            get {
+                return ((string)(this["DesignStyleName"]));
+            }
+            set {
+                this["DesignStyleName"] = value;
+            }
+        }
     }
 }

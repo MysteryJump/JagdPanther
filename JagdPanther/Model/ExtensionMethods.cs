@@ -11,7 +11,7 @@ namespace JagdPanther
 {
 	public static class ExtensionMethods
 	{
-		public static DateTime LastTime { get;set; }
+		public static DateTime LastTime { get; set; }
 		private static readonly DateTime UNIX_EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 		public static long ToUnixTimeSeconds(this DateTimeOffset dateTime)
@@ -37,6 +37,13 @@ namespace JagdPanther
 			object item = control.Items[count - 1];
 			control.ScrollIntoView(item);
 		}
+
+		public static void ForEach<TKey,TValue>(this Dictionary<TKey, TValue> dic, Action<KeyValuePair<TKey,TValue>> action)
+		{
+			dic.ToList()
+				.ForEach(action);
+
+        }
 
 	}
 }

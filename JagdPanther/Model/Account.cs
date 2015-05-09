@@ -34,7 +34,7 @@ namespace JagdPanther.Model
 			UserName = rd.RedditUser.Name;
 		}
 
-		public async Task ChangeAccountExcute(object sender)
+		private async Task ChangeAccountExcute(object sender)
 		{
 			MessageBus.Current.SendMessage(this, "ChangeAccount-1");
 			MessageBus.Current.SendMessage(this, "ChangeAccount-2");

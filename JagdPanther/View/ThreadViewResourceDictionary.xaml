@@ -20,8 +20,7 @@
                 <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
             <ScrollViewer>
-                <v:CommentCollectionViewer Background="{Binding BackgroundColor,
-                                                                Converter={StaticResource ColorToSolidBrush}}"
+                <v:CommentCollectionViewer Background="{Binding BackgroundData}"
                                            BorderBrush="{x:Null}"
                                            BorderThickness="0"
                                            ItemsSource="{Binding SortedComments}"
@@ -55,8 +54,8 @@
                                         </TextBlock.ContextMenu>
                                     </TextBlock>
                                     <TextBlock Text=":" />
-                                    <TextBlock Foreground="Red"
-                                               Text="(S)"
+                                    <TextBlock Foreground="{Binding ThreadOwnerColor, Converter={StaticResource ResourceKey=ColorToSolidBrush}}"
+                                               Text="{Binding ThreadOwnerHeader}"
                                                Visibility="{Binding IsGenerator,
                                                                     Converter={StaticResource BoolToVisibility}}" />
                                     <TextBlock Text="No Name [" />
@@ -186,13 +185,13 @@
         </StackPanel>
     </HierarchicalDataTemplate>
     <DataTemplate x:Key="threadTreeView">
-        <Grid DockPanel.Dock="Bottom">
+        <Grid DockPanel.Dock="Bottom" Background="{Binding BackgroundData}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*" />
                 <RowDefinition Height="3" />
                 <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
-            <ScrollViewer>
+            <ScrollViewer Background="Transparent">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Margin="3"
                                 DataContext="{Binding FirstComment}"
@@ -241,7 +240,7 @@
                             </TextBlock>
                         </StackPanel>
                     </StackPanel>
-                    <TreeView ItemTemplate="{StaticResource ResourceKey=treeThreadViewItem}" ItemsSource="{Binding TreeComment}">
+                    <TreeView ItemTemplate="{StaticResource ResourceKey=treeThreadViewItem}" ItemsSource="{Binding TreeComment}" Background="Transparent">
                         <i:Interaction.Behaviors>
                             <v:UnableSelectTreeViewItemBehavior />
                         </i:Interaction.Behaviors>
@@ -264,6 +263,31 @@
                          AcceptsReturn="True"
                          Text="{Binding WriteText,
                                         Mode=TwoWay}" />
+            </Grid>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="threadWebView">
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="3" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
+            <v:WebBrowserEx Html="{Binding SortedComments, Converter={StaticResource ResourceKey=ViewCommentsToString}}" x:Name="mji"/>
+
+            <GridSplitter Grid.Row="1"
+                          Height="2"
+                          HorizontalAlignment="Stretch"
+                          ShowsPreview="True" />
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <Button Command="{Binding WriteCommentCommand}" Content="書き込み" />
+                <TextBox Grid.Row="1"
+                         AcceptsReturn="True"
+                         Text="{Binding WriteText,Mode=TwoWay}" />
             </Grid>
         </Grid>
     </DataTemplate>

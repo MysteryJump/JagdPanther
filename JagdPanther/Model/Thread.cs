@@ -14,6 +14,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using JagdPanther.ViewModel;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace JagdPanther.Model
 {
@@ -173,6 +174,7 @@ namespace JagdPanther.Model
 
         public Thread()
         {
+            IsEnableWrite = true;
             RemoveTabCommand = ReactiveCommand.CreateAsyncTask(RemoveTabExcute);
             WriteCommentCommand = ReactiveCommand.CreateAsyncTask(WriteCommentExcute);
 			RemoveAllTabCommand = ReactiveCommand.CreateAsyncTask(RemoveAllTabExcute);
@@ -198,11 +200,11 @@ namespace JagdPanther.Model
 		{
 			get { return isEnableWrite; }
 			set { isEnableWrite = value; this.RaiseAndSetIfChanged(ref isEnableWrite, value); }
-		} = true;
+		}
 		[IgnoreDataMember]
 		private bool isEnableWrite;
 
-        public async Task WriteCommentExcute(object sender)
+        private async Task WriteCommentExcute(object sender)
         {
 			try {
 				var pos = new PostingBeforeProcessor(WriteText);
@@ -226,9 +228,44 @@ namespace JagdPanther.Model
 				MessageBox.Show("書き込みに失敗しました");
 			}
         }
+		// design info
         [IgnoreDataMember]
-		public Color BackgroundColor { get { return Properties.Settings.Default.ThreadViewBackgroundColor; } }
-        [IgnoreDataMember]
+		public Color BackgroundColor { get { return (Color)ColorConverter.ConvertFromString(MainViewModel.DesignJsonData["thread","background-color"].Value); } }
+
+		[IgnoreDataMember]
+		public bool IsUseBackgroundImage { get { return Convert.ToBoolean(MainViewModel.DesignJsonData["thread", "is-use-background-image"].Value); } }
+
+		[IgnoreDataMember]
+		public string BackgroundImagePath { get { return MainViewModel.DesignJsonData["thread", "background-image-path"].Value; } }
+
+		[IgnoreDataMember]
+		public Brush BackgroundData
+		{
+			get
+			{
+				Brush b = null;
+				if (IsUseBackgroundImage)
+				{
+					var img = new BitmapImage();
+					img.BeginInit();
+					img.CacheOption = BitmapCacheOption.OnLoad;
+					img.CreateOptions = BitmapCreateOptions.None;
+					img.UriSource = new Uri(BackgroundImagePath);
+					img.EndInit();
+					img.Freeze();
+					b = new ImageBrush(img);
+				}
+				else
+				{
+					b = new SolidColorBrush(BackgroundColor);
+				}
+				return b;
+			}
+		}
+
+		// end design info
+
+		[IgnoreDataMember]
 		public IReactiveCommand<Unit> RemoveAllTabCommand { get; set; }
 
 		public async Task RemoveAllTabExcute(object sender)
